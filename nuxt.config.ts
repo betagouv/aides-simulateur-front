@@ -34,6 +34,7 @@ export default defineNuxtConfig({
 
   modules: [
     'vue-dsfr-nuxt-module',
+    '@nuxt/content'
   ],
 
   css: [

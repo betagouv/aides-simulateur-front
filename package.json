@@ -15,6 +15,7 @@
     "@gouvfr/dsfr": "~1.12.1",
     "@gouvminint/vue-dsfr": "^6.0.0",
     "@iconify-json/ri": "^1.2.5",
+    "@nuxt/content": "^3.0.1",
     "nuxt": "^3.13.1",
     "vue": "^3.5.1",
     "vue-dsfr-nuxt-module": "^2.0.0",
