@@ -9,6 +9,15 @@ export default defineAppConfig({
         to: '/content/apropos',
         icon: { name: 'ri-flag-line', ssr: true },
       },
+      {
+        label: 'Affichage',
+        icon: { name: 'fr-icon-theme-fill', ssr: true },
+        button: true,
+        onClick: () => {
+          const { isThemeModalOpen } = useDsfrScheme()
+          isThemeModalOpen.value = true
+        },
+      }
     ],
   },
   footerProps: {
