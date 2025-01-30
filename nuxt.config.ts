@@ -34,7 +34,8 @@ export default defineNuxtConfig({
 
   modules: [
     'vue-dsfr-nuxt-module',
-    '@nuxt/content'
+    '@nuxt/content',
+    '@pinia/nuxt',
   ],
 
   css: [
@@ -46,6 +47,20 @@ export default defineNuxtConfig({
 
     '@gouvminint/vue-dsfr/styles',
   ],
+
+  components: [
+    {
+      path: '~/components',
+      pathPrefix: false,
+    },
+  ],
+
+  imports: {
+    dirs: [
+      'composables/**',
+      'stores/**',
+    ],
+  },
 
   ignore: [
     '**/*.test.*',
