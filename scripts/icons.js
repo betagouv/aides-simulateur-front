@@ -7,6 +7,7 @@ import { icons as riCollection } from '@iconify-json/ri'
  */
 const riIconNames = [
   'arrow-right-line',
+  'flag-line'
 ]
 
 /**

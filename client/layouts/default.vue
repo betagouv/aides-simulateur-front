@@ -33,4 +33,5 @@ const skipLinks = [
     v-bind="footerProps"
     tabindex="0"
   />
+  <SchemeModal />
 </template>
