@@ -1,25 +1,10 @@
 <script setup lang="ts">
-import type { Preferences, UseSchemeResult } from '@gouvminint/vue-dsfr'
 import darkThemeSvg from '@gouvfr/dsfr/dist/artwork/pictograms/environment/moon.svg'
 import lightThemeSvg from '@gouvfr/dsfr/dist/artwork/pictograms/environment/sun.svg'
 import systemThemeSvg from '@gouvfr/dsfr/dist/artwork/pictograms/system/system.svg'
 
-const { isThemeModalOpen } = useDsfrScheme()
-
-const preferences: Preferences = reactive({
-  theme: 'light',
-  scheme: 'light',
-})
-
-onMounted(() => {
-  const { theme, scheme, setScheme } = useScheme() as UseSchemeResult
-  preferences.scheme = scheme.value as 'light' | 'dark' | 'system'
-
-  watchEffect(() => { preferences.theme = theme.value as 'light' | 'dark' })
-
-  watchEffect(() => setScheme(preferences.scheme))
-})
-
+const schemeStore = useSchemeStore()
+const { preferences, isModalOpen } = storeToRefs(schemeStore)
 const options = [
   {
     label: 'Thème clair',
@@ -43,9 +28,9 @@ const options = [
 <template>
   <div class="fr-container fr-my-2v">
     <DsfrModal
-      :opened="isThemeModalOpen"
+      :opened="isModalOpen"
       title="Changer le thème"
-      @close="isThemeModalOpen = false"
+      @close="() => schemeStore.closeModal()"
     >
       <DsfrRadioButtonSet
         v-model="preferences.scheme"
