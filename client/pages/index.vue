@@ -13,21 +13,9 @@ useHead({ title: 'Page d’accueil - Gabarit de démarrage VueDsfr' })
     </h1>
 
     <p>
-      <NuxtLink to="/apropos">
+      <NuxtLink to="/content/apropos">
         À propos
       </NuxtLink>
-    </p>
-
-    <p>
-      <span class="fr-icon-ancient-gate-fill" /> <!-- Icône DSFR -->
-       (<code>&lt;span class="fr-icon-ancient-gate-fill" /></code>)
-    </p>
-    <p>
-      <VIcon
-        ssr
-        name="ri-flag-line"
-      />  <!-- Icône Iconify -->
-       (<code>&lt;VIcon ssr name="ri-flag-line" /></code>)
     </p>
   </div>
 </template>
