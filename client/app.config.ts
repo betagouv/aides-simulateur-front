@@ -14,8 +14,7 @@ export default defineAppConfig({
         icon: { name: 'fr-icon-theme-fill', ssr: true },
         button: true,
         onClick: () => {
-          const { isThemeModalOpen } = useDsfrScheme()
-          isThemeModalOpen.value = true
+          useSchemeStore().openModal()
         },
       }
     ],

@@ -11,7 +11,7 @@ useSeoMeta({
 
 <template>
   <template v-if="!post">
-    <div>Post not found</div>
+    <div>Contenu introuvable</div>
   </template>
   <template v-else>
     <ContentRenderer :value="post" />
