@@ -2,33 +2,32 @@
 
 Interface graphique du simulateur aides-simplifiées.
 
-NVM (conseillé)
-https://pnpm.io/fr/ (fortement conseillé)
+## Pré-requis
 
-Node.js v22
-Nuxt.js (Vue.js inside)
-Pinia
+L'application `aides-simulateur-front` nécessite en particulier cet environnement : 
 
+* [Node.js](https://nodejs.org/fr) : environnement d'exécution JavaScript (version 22)
 
-**Gabarit de démarrage de VueDsfr pour Nuxt 3**
+Pour la gestion des évolutions de l'ensemble des dépendances, nous utilisons en particulier :
 
-Nous vous recommandons de regarder la [documentation de Nuxt 3](https://nuxt.com/docs/getting-started/introduction)
-et la [documentation de VueDsfr](https://vue-dsfr.netlify.app).
+* [NVM](https://github.com/nvm-sh/nvm) pour la gestion de évolutions de versions de Node.js (conseillé)
+* [PNPM](https://pnpm.io/fr/) pour la gestion des évolutions des dépendances (fortement conseillé)
 
 ## Installation des dépendances
 
+Parmi les dépendances structurantes de l'application, il y a :
+* [Nuxt.js](https://nuxt.com) : framework [Vue.js](https://fr.vuejs.org) ([documentation](https://nuxt.com/docs/getting-started/introduction))
+* [Pinia](https://pinia.vuejs.org) : librairie officielle de gestion de store Vue.js (pour le partage d'état entre pages de l'application)
+* [VueDsfr](https://vue-ds.fr) : bibliothèque de composants du système de design de l'État français ([documentation](https://vue-dsfr.netlify.app))
+
+Pour installer l'ensemble des librairies dont dépend `aides-simulateur-front`, exécuter la commande suivante dans un terminal shell :
+
 ```bash
-# npm
+# si npm
 npm install
 
-# pnpm
+# si pnpm
 pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
 ```
 
 ## Lancer nuxt en mode développement
@@ -41,12 +40,6 @@ npm run dev
 
 # pnpm
 pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
 ## Générer le code de production
@@ -59,12 +52,6 @@ npm run build
 
 # pnpm
 pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
 ```
 
 Prévisualisation du code de prod (nécessite un build préalable) :
@@ -75,11 +62,4 @@ npm run preview
 
 # pnpm
 pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
 ```
-
