@@ -22,7 +22,6 @@ const skipLinks = [
   <main
     id="content"
     role="main"
-    class="fr-container"
     tabindex="0"
   >
     <slot />
