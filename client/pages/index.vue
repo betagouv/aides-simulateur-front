@@ -1,9 +1,24 @@
 <script setup lang="ts">
-import demenagementPictogram from '@/assets/custom-pictograms/demenagement.svg' // does not render
-import parentalitePictogram from '@/assets/custom-pictograms/parentalite.svg' // does not render
-// import accessibilityPictogram from '@gouvfr/dsfr/dist/artwork/pictograms/accessibility/accessibility.svg' // Not exported in DSFR, probably a missing export
-import housePictogram from '@gouvfr/dsfr/dist/artwork/pictograms/buildings/house.svg' // does not render, all its siblings do though
-// import housePictogram from '@gouvfr/dsfr/dist/artwork/pictograms/buildings/factory.svg' // this one renders
+import demenagementPictogram from '@/assets/custom-pictograms/demenagement.svg'
+
+/**
+ * This one does not render
+ */
+import parentalitePictogram from '@/assets/custom-pictograms/parentalite.svg'
+
+/**
+ * Missing export in DSFR, so we import it manually
+ * @see https://github.com/GouvernementFR/dsfr/issues/1086
+ */
+// import accessibilityPictogram from '@gouvfr/dsfr/dist/artwork/pictograms/accessibility/accessibility.svg'
+import accessibilityPictogram from '@/assets/custom-pictograms/accessibility.svg'
+
+/**
+ * The one exported from @gouvfr/dsfr does not render (all its siblings do though), so we import it manually
+ */
+// import housePictogram from '@gouvfr/dsfr/dist/artwork/pictograms/buildings/house.svg'
+import housePictogram from '@/assets/custom-pictograms/house.svg'
+
 import moneyPictogram from '@gouvfr/dsfr/dist/artwork/pictograms/institutions/money.svg'
 
 definePageMeta({
@@ -14,7 +29,7 @@ useHead({ title: 'Page d’accueil - Gabarit de démarrage VueDsfr' })
 const baselineTitle = 'Les aides, en toute clarté'
 const baselineSubtitle = 'Trouvez rapidement les aides auxquelles vous avez droit.'
 
-const simulationTiles = [
+const simulationTiles: DsfrTileProps[] = [
   {
     id: 'demenagement-logement',
     title: 'Déménagement & logement',
@@ -29,18 +44,18 @@ const simulationTiles = [
   }
 ]
 
-const voteTiles = [
+const voteTiles: DsfrTileProps[] = [
   {
     id: 'parentalite',
     title: 'Devenir parent',
     to: '/vote?thematique=parentalite',
-    svgPictogram: parentalitePictogram
+    svgPath: parentalitePictogram
   },
   {
     id: 'perte-autonomie',
     title: 'Perte d’autonomie d’un proche',
     to: '/vote?thematique=perte-autonomie',
-    // imgSrc: accessibilityPictogram
+    svgPath: accessibilityPictogram
   },
   {
     id: 'factures',
@@ -67,19 +82,11 @@ const voteTiles = [
           <h2>
             Découvrir les aides possibles en fonction de votre situation
           </h2>
-          <div
-            v-for="tile in simulationTiles"
-            :key="tile.id"
-          >
-            <DsfrTile
-              :title="tile.title"
-              :img-src="tile.imgSrc"
-              :svg-path="tile.svgPath"
-              horizontal
-              title-tag="h2"
-              :to="tile.to"
-            />
-          </div>
+          <DsfrTiles
+            :tiles="simulationTiles"
+            horizontal
+            title-tag="h2"
+          />
         </div>
       </div>
     </div>
