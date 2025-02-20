@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import demenagementPictogram from '@/assets/custom-pictograms/demenagement.svg' // does not render
+import parentalitePictogram from '@/assets/custom-pictograms/parentalite.svg' // does not render
 // import accessibilityPictogram from '@gouvfr/dsfr/dist/artwork/pictograms/accessibility/accessibility.svg' // Not exported in DSFR, probably a missing export
-import housePictogram from '@gouvfr/dsfr/dist/artwork/pictograms/buildings/house.svg'
+import housePictogram from '@gouvfr/dsfr/dist/artwork/pictograms/buildings/house.svg' // does not render, all its siblings do though
+// import housePictogram from '@gouvfr/dsfr/dist/artwork/pictograms/buildings/factory.svg' // this one renders
 import moneyPictogram from '@gouvfr/dsfr/dist/artwork/pictograms/institutions/money.svg'
 
 definePageMeta({
@@ -16,13 +19,13 @@ const simulationTiles = [
     id: 'demenagement-logement',
     title: 'Déménagement & logement',
     to: '/simulateurs/demenagement-logement',
-    svgPath: '/custom-pictograms/demenagement.svg' // @todo: make custom pictogram loading work
+    svgPath: demenagementPictogram
   },
   {
     id: 'renovation-logement',
     title: 'Rénovation du logement',
     to: '#',
-    imgSrc: housePictogram
+    svgPath: housePictogram
   }
 ]
 
@@ -31,7 +34,7 @@ const voteTiles = [
     id: 'parentalite',
     title: 'Devenir parent',
     to: '/vote?thematique=parentalite',
-    imgSrc: '/custom-pictograms/parentalite.svg', // @todo: add parentalite custom pictogram
+    svgPictogram: parentalitePictogram
   },
   {
     id: 'perte-autonomie',
@@ -43,7 +46,7 @@ const voteTiles = [
     id: 'factures',
     title: 'Difficultés à payer ses factures',
     to: '/vote?thematique=factures',
-    imgSrc: moneyPictogram
+    svgPath: moneyPictogram
   }
 ]
 </script>
