@@ -2,6 +2,19 @@ import { defineNuxtConfig } from 'nuxt/config'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  sourcemap: {
+    server: true,
+    client: true
+  },
+  vite: {
+    build: {
+      sourcemap: true,
+    },
+    css: {
+      devSourcemap: true
+    }
+  },
+
   app: {
     head: {
       htmlAttrs: {
