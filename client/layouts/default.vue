@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { headerProps, footerProps } = useAppConfig()
-
+const { showHeader, showFooter } = useIframeDisplay()
 const skipLinks = [
   {
     id: 'content',
@@ -16,19 +16,18 @@ const skipLinks = [
 <template>
   <DsfrSkipLinks :links="skipLinks" />
   <DsfrHeader
-    v-if="headerProps"
+    v-if="headerProps && showHeader"
     v-bind="headerProps"
   />
   <main
     id="content"
     role="main"
-    class="fr-container"
     tabindex="0"
   >
     <slot />
   </main>
   <DsfrFooter
-    v-if="footerProps"
+    v-if="footerProps && showFooter"
     id="footer"
     v-bind="footerProps"
     tabindex="0"

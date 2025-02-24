@@ -29,6 +29,17 @@ npm install
 # si pnpm
 pnpm install
 ```
+## Vue-dsfr
+
+Pour pouvoir exécuter le script icons, installer les icônes de vue-dsfr, exécuter la commande suivante dans un terminal shell :
+
+```bash
+# si npm
+npm i -g @gouvminint/vue-dsfr
+
+# si pnpm
+pnpm i -g @gouvminint/vue-dsfr
+```
 
 ## Lancer nuxt en mode développement
 
