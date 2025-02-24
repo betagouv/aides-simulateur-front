@@ -28,7 +28,7 @@ export function useIframeDisplay () {
     if (!isIframe.value) { return true }
 
     // Désactiver le footer si l'option du iframe est 'header-only'
-    if (displayOption.value === 'header-only') { return false }
+    if (displayOption.value === 'header-only' || displayOption.value === 'no-header') { return false }
 
     return true
   })
