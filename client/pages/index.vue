@@ -1,11 +1,4 @@
 <script setup lang="ts">
-import demenagementPictogram from '@/assets/custom-pictograms/demenagement.svg'
-
-/**
- * This one does not render
- */
-import parentalitePictogram from '@/assets/custom-pictograms/parentalite.svg'
-
 /**
  * Missing export in DSFR, so we import it manually
  * @see https://github.com/GouvernementFR/dsfr/issues/1086
@@ -13,11 +6,20 @@ import parentalitePictogram from '@/assets/custom-pictograms/parentalite.svg'
 // import accessibilityPictogram from '@gouvfr/dsfr/dist/artwork/pictograms/accessibility/accessibility.svg'
 import accessibilityPictogram from '@/assets/custom-pictograms/accessibility.svg'
 
+import demenagementPictogram from '@/assets/custom-pictograms/demenagement.svg'
 /**
  * The one exported from @gouvfr/dsfr does not render (all its siblings do though), so we import it manually
  */
 // import housePictogram from '@gouvfr/dsfr/dist/artwork/pictograms/buildings/house.svg'
 import housePictogram from '@/assets/custom-pictograms/house.svg'
+
+/**
+ * This one does not render
+ */
+import parentalitePictogram from '@/assets/custom-pictograms/parentalite.svg'
+
+import cityHallPictogram from '@gouvfr/dsfr/dist/artwork/pictograms/buildings/city-hall.svg'
+import internetPictogram from '@gouvfr/dsfr/dist/artwork/pictograms/digital/internet.svg'
 
 import moneyPictogram from '@gouvfr/dsfr/dist/artwork/pictograms/institutions/money.svg'
 
@@ -26,8 +28,8 @@ definePageMeta({
 })
 
 useHead({ title: 'Page d’accueil - Gabarit de démarrage VueDsfr' })
-const baselineTitle = 'Les aides, en toute clarté'
-const baselineSubtitle = 'Trouvez rapidement les aides auxquelles vous avez droit.'
+const baselineTitle = 'Trouvez les aides adaptées à votre situation'
+const baselineSubtitle = 'Un service simple et rapide pour savoir à quelles aides vous avez droit.'
 
 const simulationTiles: DsfrTileProps[] = [
   {
@@ -67,21 +69,18 @@ const voteTiles: DsfrTileProps[] = [
 </script>
 
 <template>
-  <section class="fr-background-alt--blue-france fr-py-12w">
-    <div class="fr-container">
-      <div class="fr-grid-row fr-grid-row--gutters">
-        <div class="fr-col-12 fr-col-lg-6">
-          <h1>
+  <AsBackgroundWaves background-color="alt--blue-france">
+    <AsSection>
+      <div class="as-home-banner fr-grid-row fr-grid-row--gutters">
+        <div class="as-home-banner__column fr-col-12 fr-col-lg-6">
+          <h1 class="fr-display--md">
             {{ baselineTitle }}
           </h1>
-          <p>
+          <p class="as-home-banner__baseline">
             {{ baselineSubtitle }}
           </p>
         </div>
-        <div class="fr-col-12 fr-col-lg-6">
-          <h2>
-            Découvrir les aides possibles en fonction de votre situation
-          </h2>
+        <div class="as-home-banner__column fr-col-12 fr-col-md-6 fr-col-offset-xl-1 fr-col-xl-5">
           <DsfrTiles
             :tiles="simulationTiles"
             horizontal
@@ -89,10 +88,13 @@ const voteTiles: DsfrTileProps[] = [
           />
         </div>
       </div>
-    </div>
-  </section>
-  <section class="fr-background-default--grey fr-pt-12w fr-pb-8w">
-    <div class="fr-container">
+    </AsSection>
+  </AsBackgroundWaves>
+  <AsBackgroundWaves
+    subtle
+    background-color="default--grey"
+  >
+    <AsSection>
       <h2 class="fr-title">
         Voter pour les prochaines thématiques
       </h2>
@@ -120,49 +122,88 @@ const voteTiles: DsfrTileProps[] = [
         icon-right
         @click="onClick()"
       />
-    </div>
-  </section>
-  <section class="fr-background-default--grey">
-    <div class="fr-container">
-      <hr class="as-section-separator">
-    </div>
-  </section>
-  <section class="fr-background-default--grey fr-pt-8w fr-pb-12w">
-    <div class="fr-container">
+    </AsSection>
+    <AsSectionSeparator />
+    <AsSection>
       <h2 class="fr-title">
         Simuler toutes les aides auxquelles j’ai droit
       </h2>
-      <div>
-        <div class="fr-grid-row fr-grid-row--gutters">
-          <div class="fr-col-12 fr-col-md-6">
-            <DsfrCard
-              horizontal
-              title="1jeune1solution.gouv.fr"
-              description="Simulateur tout public avec de nombreuses aides pour les moins de 30 ans. Évaluez vos droits à plus de 1000 aides."
-              link="https://www.1jeune1solution.gouv.fr/mes-aides"
-              title-tag="h3"
-            />
-          </div>
-          <div class="fr-col-12 fr-col-md-6">
-            <DsfrCard
-              horizontal
-              title="mesdroitsociaux.gouv.fr"
-              description="Simulateur tout public. Évaluez vos droits à près de 60 aides."
-              link="https://www.mesdroitssociaux.gouv.fr/"
-              title-tag="h3"
-            />
-          </div>
+      <div class="fr-grid-row fr-grid-row--gutters">
+        <div class="fr-col-12 fr-col-md-6">
+          <DsfrCard
+            horizontal
+            title="1jeune1solution.gouv.fr"
+            description="Simulateur tout public avec de nombreuses aides pour les moins de 30 ans. Évaluez vos droits à plus de 1000 aides."
+            link="https://www.1jeune1solution.gouv.fr/mes-aides"
+            title-tag="h3"
+          />
+        </div>
+        <div class="fr-col-12 fr-col-md-6">
+          <DsfrCard
+            horizontal
+            title="mesdroitsociaux.gouv.fr"
+            description="Simulateur tout public. Évaluez vos droits à près de 60 aides."
+            link="https://www.mesdroitssociaux.gouv.fr/"
+            title-tag="h3"
+          />
         </div>
       </div>
-    </div>
-  </section>
+    </AsSection>
+  </AsBackgroundWaves>
+  <AsBackgroundWaves
+    contrast
+    background-color="alt--blue-france"
+  >
+    <AsSection>
+      <hgroup class="fr-mb-6w">
+        <h2 class="fr-display--xs fr-text-inverted--grey">
+          <span style="color: var(--pink-macaron-850-200);">
+            Vous souhaitez améliorer l'accès aux aides ?
+          </span><br>Aides simplifiées vous accompagne !
+        </h2>
+        <p class="fr-text--xl fr-text-inverted--grey">
+          Aides simplifiées permet aux citoyens de trouver facilement les aides auxquelles ils sont éligibles et de
+          simplifier leur parcours administratif. Nous collaborons avec des acteurs publics et des plateformes en ligne
+          pour intégrer notre service et fluidifier l’accès aux dispositifs existants.
+        </p>
+      </hgroup>
+      <div class="fr-grid-row fr-grid-row--gutters">
+        <div class="fr-col-12 fr-col-md-6">
+          <DsfrTile
+            title="Vous êtes une administration ou vous opérez un service public ?"
+            description="Facilitez l’accès aux aides sur votre territoire ou sur votre domaine de compétence et optimisez le passage de la simulation au dépôt de dossier."
+            title-tag="h3"
+            to="/partenaires"
+            horizontal
+            :svg-path="cityHallPictogram"
+          />
+        </div>
+        <div class="fr-col-12 fr-col-md-6">
+          <DsfrTile
+            title="Vous êtes une plateforme en ligne ?"
+            description="Offrez à vos usagers un accès simple et fiable aux aides pertinentes pour eux en intégrant nos simulateurs en quelques minutes via API ou iFrame."
+            title-tag="h3"
+            to="/integrer-nos-simulateurs"
+            horizontal
+            :svg-path="internetPictogram"
+          />
+        </div>
+      </div>
+    </AsSection>
+  </AsBackgroundWaves>
 </template>
 
 <style scoped lang="scss">
-.as-section-separator {
-  border-top: 1px solid var(--border-open-blue-france);
-  margin-top: 0;
-  margin-bottom: 0;
-  padding: 0;
+.as-home-banner {
+  .as-home-banner__column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  & p.as-home-banner__baseline {
+    font-size: 1.8rem;
+    line-height: 1.4;
+  }
 }
 </style>
