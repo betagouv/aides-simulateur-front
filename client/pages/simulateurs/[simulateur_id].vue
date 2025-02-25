@@ -16,13 +16,13 @@ const simulateur = computed<Simulateur | undefined>(() => {
   return simulateurs.find(s => s.id === simulateurId.value)
 })
 
-// Handle simulator is not found
-if (!simulateur.value) {
-  throw createError({
-    statusCode: 404,
-    message: 'Simulateur non trouvé'
-  })
-}
+const crumbs = computed(() => {
+  return [
+    { text: 'Accueil', to: '/' },
+    { text: 'Simulateurs', to: '/simulateurs' },
+    { text: simulateur.value.title, to: `/simulateurs/${simulateur.value.id}` }
+  ]
+})
 
 // Load pictogram dynamically
 const pictogram = ref<string | undefined>()
@@ -33,24 +33,7 @@ simulateur.value.pictogram()
 </script>
 
 <template>
-  <AsSection
-    type="breadcrumb"
-    background-color="default--grey"
-  >
-    <div class="fr-grid-row fr-grid-row--gutters">
-      <div class="fr-col-12">
-        <DsfrBreadcrumb
-          class="fr-m-0"
-          breadcrumb-id="fil-ariane"
-          :links="[
-            { text: 'Accueil', to: '/' },
-            { text: 'Simulateurs', to: '/simulateurs' },
-            { text: simulateur.title, to: `/simulateurs/${simulateur.id}` },
-          ]"
-        />
-      </div>
-    </div>
-  </AsSection>
+  <AsBreadcrumbSection :crumbs="crumbs" />
   <AsSection
     v-if="simulateur"
     type="simulation-header"
