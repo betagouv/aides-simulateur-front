@@ -48,17 +48,17 @@ const simulationTiles: DsfrTileProps[] = [
 const voteTiles: DsfrTileProps[] = [
   {
     title: 'Devenir parent',
-    to: '/vote?thematique=parentalite',
+    to: '/voter-prochains-simulateurs?thematique=parentalite',
     svgPath: parentalitePictogram
   },
   {
     title: 'Perte d’autonomie d’un proche',
-    to: '/vote?thematique=perte-autonomie',
+    to: '/voter-prochains-simulateurs?thematique=perte-autonomie',
     svgPath: accessibilityPictogram
   },
   {
     title: 'Difficultés à payer ses factures',
-    to: '/vote?thematique=factures',
+    to: '/voter-prochains-simulateurs?thematique=factures',
     svgPath: moneyPictogram
   }
 ]
@@ -116,7 +116,7 @@ const voteTiles: DsfrTileProps[] = [
         class="fr-mt-4w"
         secondary
         icon-right
-        @click="onClick()"
+        @click="navigateTo('/voter-prochains-simulateurs')"
       />
     </AsSection>
     <AsSectionSeparator />
