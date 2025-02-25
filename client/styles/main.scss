@@ -8,12 +8,31 @@
   --as-contrast-text--disabled: var(--grey-850);
   --as-contrast-text--highlight: var(--pink-macaron-850);
 }
+
 .as-contrast-text {
   color: var(--as-contrast-text);
 }
+
 .as-contrast-text--disabled {
   color: var(--as-contrast-text--disabled);
 }
+
 .as-contrast-text--highlight {
   color: var(--as-contrast-text--highlight);
+}
+
+.as-title-gradient,
+.fr-header__service-title {
+  [data-fr-theme="light"] & {
+    background: linear-gradient(45deg, #2828B2 30%, #8F8FFC 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  [data-fr-theme="dark"] & {
+    background: linear-gradient(45deg, #8585F6 30%, #CCCCFA 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 }
