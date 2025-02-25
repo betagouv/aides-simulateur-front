@@ -17,10 +17,17 @@ const { height } = useElementSize(backgroundContainer)
 
 const opacity = props.subtle ? 0.25 : 0.8
 
-const themeVariant = ref<'light' | 'dark'>('light')
+const schemeStore = useSchemeStore()
+const { preferences } = storeToRefs(schemeStore)
+
+const mixBlendMode = computed(() => {
+  return preferences.value.theme === 'dark' ? 'lighten' : 'darken'
+})
 
 const styleVariant = computed<StyleVariant>(() => {
-  return props.contrast ? `${themeVariant.value}-contrast` : themeVariant.value
+  return props.contrast
+    ? `${preferences.value.theme}-contrast`
+    : preferences.value.theme
 })
 
 const styleVariants: Record<StyleVariant, Record<string, string>> = {
@@ -46,7 +53,7 @@ const styleVariants: Record<StyleVariant, Record<string, string>> = {
     'as-wave-top': '#272747',
   },
   'dark-contrast': {
-    'as-gradient-overlay': 'linear-gradient(90deg, #000091 10%, rgba(0, 0, 145, 0.25) 65%, rgba(225, 0, 15, 0.05) 100%))',
+    'as-gradient-overlay': 'linear-gradient(90deg, #000091 10%, rgba(0, 0, 145, 0.25) 65%, rgba(225, 0, 15, 0.05) 100%)',
     'as-waves-bg': '#3535D4',
     'as-wave-bottom': '#272747',
     'as-wave-middle': '#313178',
@@ -58,11 +65,7 @@ const colors = computed(() => {
   return styleVariants[styleVariant.value]
 })
 
-const mixBlendMode = computed(() => {
-  return themeVariant.value === 'dark' ? 'lighten' : 'darken'
-})
-
-const wavesSvgPaths = [
+const waves = [
   {
     name: 'xs',
     breakpoint: 0,
@@ -121,7 +124,8 @@ const wavesSvgPaths = [
 ]
 
 const wave = computed(() => {
-  return [...wavesSvgPaths]
+  // Find the largest breakpoint that is smaller than the current container height
+  return [...waves]
     .sort((a, b) => a.breakpoint - b.breakpoint)
     .filter(({ breakpoint }) => height.value > breakpoint)
     .pop()
@@ -132,9 +136,10 @@ const wave = computed(() => {
   <div
     ref="backgroundContainer"
     class="as-background-container"
-    :class="[{
-      [`fr-background-${backgroundColor}`]: Boolean(backgroundColor),
-    }]"
+    :class="[
+      `as-background-container--${styleVariant}`,
+      { [`fr-background-${backgroundColor}`]: Boolean(backgroundColor) },
+    ]"
   >
     <div
       v-if="wave"
@@ -161,12 +166,7 @@ const wave = computed(() => {
           height: wave.name === 'xs' ? `${(height - 50)}px` : `${wave.height}px`,
         }"
       >
-        <div
-          v-if="false"
-          style="width: 100%; background: red;"
-        />
         <svg
-          v-else
           aria-hidden="true"
           :height="wave.name === 'xs' ? `${(height - 50)}px` : `${wave.height}px`"
           :width="wave.width"
@@ -222,7 +222,6 @@ const wave = computed(() => {
   right: 0;
   bottom: 0;
   z-index: 0;
-  width: 100%;
 
   .waves-background,
   .waves-foreground {
@@ -241,6 +240,7 @@ const wave = computed(() => {
   }
 
   &.waves-container--xs {
+
     .waves-background,
     .waves-foreground {
       height: 25px;

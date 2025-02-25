@@ -19,8 +19,8 @@ const crumbs = [
       :crumbs="crumbs"
     />
     <AsSection type="page-header">
-      <h1 class="fr-text-inverted--grey">
-        <span class="as-contrast-text-highlight">
+      <h1 class="as-contrast-text">
+        <span class="as-contrast-text--highlight">
           Vous êtes une administration :
         </span><br>facilitez le parcours d'accès aux aides
       </h1>

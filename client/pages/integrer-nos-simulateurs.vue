@@ -18,7 +18,7 @@ const crumbs = [
       type="page-header"
     >
       <h1 class="fr-text-inverted--grey">
-        <span class="as-contrast-text-highlight">
+        <span class="as-contrast-text--highlight">
           Vous opérez une plateforme numérique :
         </span><br>intégrez un de nos simulateurs
       </h1>

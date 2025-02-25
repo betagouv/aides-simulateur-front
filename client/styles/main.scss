@@ -1,3 +1,19 @@
-.as-contrast-text-highlight {
-  color: var(--pink-macaron-850-200);
+:root {
+  // Colors
+  --grey-1000: #FFFFFF;
+  --grey-850: #CECECE;
+  --pink-macaron-850: #fcc0b4;
+  // Semantic tokens
+  --as-contrast-text: var(--grey-1000);
+  --as-contrast-text--disabled: var(--grey-850);
+  --as-contrast-text--highlight: var(--pink-macaron-850);
+}
+.as-contrast-text {
+  color: var(--as-contrast-text);
+}
+.as-contrast-text--disabled {
+  color: var(--as-contrast-text--disabled);
+}
+.as-contrast-text--highlight {
+  color: var(--as-contrast-text--highlight);
 }

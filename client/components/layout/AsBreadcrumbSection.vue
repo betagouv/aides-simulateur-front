@@ -9,8 +9,8 @@ const props = withDefaults(defineProps<{
 const styles = computed(() => {
   if (!props.contrast) { return {} }
   return {
-    '--text-mention-grey': 'var(--text-inverted-grey)',
-    '--text-default-grey': 'var(--background-disabled-grey)'
+    '--text-default-grey': 'var(--as-contrast-text--disabled)',
+    '--text-mention-grey': 'var(--as-contrast-text)',
   }
 })
 </script>

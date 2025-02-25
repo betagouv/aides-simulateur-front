@@ -156,12 +156,12 @@ const voteTiles: DsfrTileProps[] = [
   >
     <AsSection>
       <hgroup class="fr-mb-6w">
-        <h2 class="fr-display--xs fr-text-inverted--grey">
-          <span class="as-contrast-text-highlight">
+        <h2 class="fr-display--xs as-contrast-text">
+          <span class="as-contrast-text--highlight">
             Vous souhaitez améliorer l'accès aux aides ?
           </span><br>Aides simplifiées vous accompagne !
         </h2>
-        <p class="fr-text--xl fr-text-inverted--grey">
+        <p class="fr-text--xl as-contrast-text">
           Aides simplifiées permet aux citoyens de trouver facilement les aides auxquelles ils sont éligibles et de
           simplifier leur parcours administratif. Nous collaborons avec des acteurs publics et des plateformes en ligne
           pour intégrer notre service et fluidifier l’accès aux dispositifs existants.
