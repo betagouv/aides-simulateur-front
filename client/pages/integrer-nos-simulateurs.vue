@@ -17,7 +17,7 @@ const crumbs = [
     <AsSection
       type="page-header"
     >
-      <h1 class="fr-text-inverted--grey">
+      <h1 class="as-contrast-text">
         <span class="as-contrast-text--highlight">
           Vous opérez une plateforme numérique :
         </span><br>intégrez un de nos simulateurs
