@@ -12,8 +12,9 @@ definePageMeta({
 const route = useRoute()
 const simulateurId = ref(route.params.simulateur_id)
 
-const simulateur = computed<Simulateur | undefined>(() => {
-  return simulateurs.find(s => s.id === simulateurId.value)
+const simulateur = computed<Simulateur>(() => {
+  // We can safely cast here because we validated the route
+  return simulateurs.find(s => s.id === simulateurId.value) as Simulateur
 })
 
 const crumbs = computed(() => {
