@@ -5,11 +5,6 @@ export default defineAppConfig({
     logoText: ['République', 'Française'],
     quickLinks: [
       {
-        label: 'À propos',
-        to: '/content/apropos',
-        icon: { name: 'ri-flag-line', ssr: true },
-      },
-      {
         label: 'Affichage',
         icon: { name: 'ri-sun-line', ssr: true },
         iconAttrs: {
