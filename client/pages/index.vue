@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { DsfrTileProps } from '@gouvminint/vue-dsfr'
 /**
  * Missing export in DSFR, so we import it manually
  * @see https://github.com/GouvernementFR/dsfr/issues/1086
@@ -33,13 +34,11 @@ const baselineSubtitle = 'Un service simple et rapide pour savoir à quelles aid
 
 const simulationTiles: DsfrTileProps[] = [
   {
-    id: 'demenagement-logement',
     title: 'Déménagement & logement',
     to: '/simulateurs/demenagement-logement',
     svgPath: demenagementPictogram
   },
   {
-    id: 'renovation-logement',
     title: 'Rénovation du logement',
     to: '#',
     svgPath: housePictogram
@@ -48,19 +47,16 @@ const simulationTiles: DsfrTileProps[] = [
 
 const voteTiles: DsfrTileProps[] = [
   {
-    id: 'parentalite',
     title: 'Devenir parent',
     to: '/vote?thematique=parentalite',
     svgPath: parentalitePictogram
   },
   {
-    id: 'perte-autonomie',
     title: 'Perte d’autonomie d’un proche',
     to: '/vote?thematique=perte-autonomie',
     svgPath: accessibilityPictogram
   },
   {
-    id: 'factures',
     title: 'Difficultés à payer ses factures',
     to: '/vote?thematique=factures',
     svgPath: moneyPictogram
@@ -81,23 +77,47 @@ const voteTiles: DsfrTileProps[] = [
           </p>
         </div>
         <div class="as-home-banner__column fr-col-12 fr-col-md-6 fr-col-offset-xl-1 fr-col-xl-5">
-          <DsfrTiles :tiles="simulationTiles" horizontal title-tag="h2" />
+          <DsfrTiles
+            :tiles="simulationTiles"
+            horizontal
+            title-tag="h2"
+          />
         </div>
       </div>
     </AsSection>
   </AsBackgroundWaves>
-  <AsBackgroundWaves subtle background-color="default--grey">
+  <AsBackgroundWaves
+    subtle
+    background-color="default--grey"
+  >
     <AsSection type="grouped-first">
       <h2 class="fr-title">
         Voter pour les prochaines thématiques
       </h2>
       <div class="fr-grid-row fr-grid-row--gutters">
-        <div v-for="tile in voteTiles" :key="tile.id" class="fr-col-12 fr-col-sm-6 fr-col-md-4">
-          <DsfrTile :title="tile.title" title-tag="h2" horizontal :img-src="tile.imgSrc" :svg-path="tile.svgPath" />
+        <div
+          v-for="tile in voteTiles"
+          :key="tile.id"
+          class="fr-col-12 fr-col-sm-6 fr-col-md-4"
+        >
+          <DsfrTile
+            :title="tile.title"
+            title-tag="h2"
+            horizontal
+            :img-src="tile.imgSrc"
+            :svg-path="tile.svgPath"
+          />
         </div>
       </div>
-      <DsfrButton type="button" label="Je vote pour les thématiques qui m’intéressent" icon="ri-arrow-right-line"
-        class="fr-mt-4w" secondary icon-right @click="onClick()" />
+      <DsfrButton
+        type="button"
+        label="Je vote pour les thématiques qui m’intéressent"
+        icon="ri-arrow-right-line"
+        class="fr-mt-4w"
+        secondary
+        icon-right
+        @click="onClick()"
+      />
     </AsSection>
     <AsSectionSeparator />
     <AsSection type="grouped-last">
@@ -106,19 +126,30 @@ const voteTiles: DsfrTileProps[] = [
       </h2>
       <div class="fr-grid-row fr-grid-row--gutters">
         <div class="fr-col-12 fr-col-md-6">
-          <DsfrCard horizontal title="1jeune1solution.gouv.fr"
+          <DsfrCard
+            horizontal
+            title="1jeune1solution.gouv.fr"
             description="Simulateur tout public avec de nombreuses aides pour les moins de 30 ans. Évaluez vos droits à plus de 1000 aides."
-            link="https://www.1jeune1solution.gouv.fr/mes-aides" title-tag="h3" />
+            link="https://www.1jeune1solution.gouv.fr/mes-aides"
+            title-tag="h3"
+          />
         </div>
         <div class="fr-col-12 fr-col-md-6">
-          <DsfrCard horizontal title="mesdroitsociaux.gouv.fr"
+          <DsfrCard
+            horizontal
+            title="mesdroitsociaux.gouv.fr"
             description="Simulateur tout public. Évaluez vos droits à près de 60 aides."
-            link="https://www.mesdroitssociaux.gouv.fr/" title-tag="h3" />
+            link="https://www.mesdroitssociaux.gouv.fr/"
+            title-tag="h3"
+          />
         </div>
       </div>
     </AsSection>
   </AsBackgroundWaves>
-  <AsBackgroundWaves contrast background-color="alt--blue-france">
+  <AsBackgroundWaves
+    contrast
+    background-color="alt--blue-france"
+  >
     <AsSection>
       <hgroup class="fr-mb-6w">
         <h2 class="fr-display--xs as-contrast-text">
@@ -134,14 +165,24 @@ const voteTiles: DsfrTileProps[] = [
       </hgroup>
       <div class="fr-grid-row fr-grid-row--gutters">
         <div class="fr-col-12 fr-col-md-6">
-          <DsfrTile title="Vous êtes une administration ou vous opérez un service public ?"
+          <DsfrTile
+            title="Vous êtes une administration ou vous opérez un service public ?"
             description="Facilitez l’accès aux aides sur votre territoire ou sur votre domaine de compétence et optimisez le passage de la simulation au dépôt de dossier."
-            title-tag="h3" to="/partenaires" horizontal :svg-path="cityHallPictogram" />
+            title-tag="h3"
+            to="/partenaires"
+            horizontal
+            :svg-path="cityHallPictogram"
+          />
         </div>
         <div class="fr-col-12 fr-col-md-6">
-          <DsfrTile title="Vous êtes une plateforme en ligne ?"
+          <DsfrTile
+            title="Vous êtes une plateforme en ligne ?"
             description="Offrez à vos usagers un accès simple et fiable aux aides pertinentes pour eux en intégrant nos simulateurs en quelques minutes via API ou iFrame."
-            title-tag="h3" to="/integrer-nos-simulateurs" horizontal :svg-path="internetPictogram" />
+            title-tag="h3"
+            to="/integrer-nos-simulateurs"
+            horizontal
+            :svg-path="internetPictogram"
+          />
         </div>
       </div>
     </AsSection>
