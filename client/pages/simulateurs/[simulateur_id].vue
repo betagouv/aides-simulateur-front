@@ -41,7 +41,7 @@ simulateur.value.pictogram()
       <div class="fr-col-12">
         <DsfrBreadcrumb
           class="fr-m-0"
-          breadcrumb-id="mon-fil-dariane"
+          breadcrumb-id="fil-ariane"
           :links="[
             { text: 'Accueil', to: '/' },
             { text: 'Simulateurs', to: '/simulateurs' },

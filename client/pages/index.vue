@@ -94,7 +94,7 @@ const voteTiles: DsfrTileProps[] = [
     subtle
     background-color="default--grey"
   >
-    <AsSection>
+    <AsSection type="grouped-first">
       <h2 class="fr-title">
         Voter pour les prochaines thématiques
       </h2>
@@ -124,7 +124,7 @@ const voteTiles: DsfrTileProps[] = [
       />
     </AsSection>
     <AsSectionSeparator />
-    <AsSection>
+    <AsSection type="grouped-last">
       <h2 class="fr-title">
         Simuler toutes les aides auxquelles j’ai droit
       </h2>
@@ -157,7 +157,7 @@ const voteTiles: DsfrTileProps[] = [
     <AsSection>
       <hgroup class="fr-mb-6w">
         <h2 class="fr-display--xs fr-text-inverted--grey">
-          <span style="color: var(--pink-macaron-850-200);">
+          <span class="as-contrast-text-highlight">
             Vous souhaitez améliorer l'accès aux aides ?
           </span><br>Aides simplifiées vous accompagne !
         </h2>
