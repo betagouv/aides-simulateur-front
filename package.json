@@ -20,6 +20,7 @@
     "@iconify-json/ri": "^1.2.5",
     "@nuxt/content": "^3.0.1",
     "@pinia/nuxt": "^0.9.0",
+    "@vueuse/core": "^12.7.0",
     "iframe-resizer": "^5.3.3",
     "lockfile": "^1.0.4",
     "nuxt": "^3.13.1",
