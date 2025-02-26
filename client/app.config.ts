@@ -1,7 +1,7 @@
 export default defineAppConfig({
   headerProps: {
     serviceTitle: 'aides simplifiées',
-    serviceDescription: 'La bonne aide, au bon endroit, au bon moment',
+    serviceDescription: 'La bonne aide, au bon moment, au bon endroit',
     logoText: ['République', 'Française'],
     quickLinks: [
       {
