@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 const props = withDefaults(defineProps<{
   type?: 'default' | 'grouped-first' | 'grouped' | 'grouped-last' | 'user-action' | 'simulation-header' | 'page-header' | 'breadcrumb'
-  backgroundColor?: 'default--grey' | 'alt--blue-france' | 'action-high--blue-france'
 }>(), {
   type: 'default',
 })
@@ -21,17 +20,16 @@ const paddingsClasses = paddingsClassesVariants[props.type]
 </script>
 
 <template>
-  <section
-    class="as-section"
+  <component
+    :is="type === 'breadcrumb' ? 'div' : 'section'"
     :class="[{
-      [ `fr-background-${backgroundColor}`]: Boolean(backgroundColor),
       [paddingsClasses]: Boolean(paddingsClasses),
     }]"
   >
     <div class="fr-container">
       <slot />
     </div>
-  </section>
+  </component>
 </template>
 
 <style lang="scss">

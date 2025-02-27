@@ -6,22 +6,23 @@ const crumbs = [
 </script>
 
 <template>
-  <AsBackgroundWaves
+  <BrandBackgroundContainer
+    textured
     contrast
-    background-color="alt--blue-france"
+    blue
   >
-    <AsBreadcrumbSection
+    <BreadcrumbSectionContainer
       contrast
       :crumbs="crumbs"
     />
-    <AsSection
+    <SectionContainer
       type="page-header"
     >
-      <h1 class="as-contrast-text">
-        <span class="as-contrast-text--highlight">
-          Vous opérez une plateforme numérique :
+      <h1 class="brand-contrast-text">
+        <span class="brand-contrast-text--highlight">
+          Vous opérez une plateforme numérique&nbsp;:
         </span><br>intégrez un de nos simulateurs
       </h1>
-    </AsSection>
-  </AsBackgroundWaves>
+    </SectionContainer>
+  </BrandBackgroundContainer>
 </template>

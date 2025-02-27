@@ -11,10 +11,12 @@ const crumbs = computed(() => {
 </script>
 
 <template>
-    <AsBreadcrumbSection :crumbs="crumbs" />
-    <AsSection type="page-header">
-        <h1>
-            Simulateurs
-        </h1>
-    </AsSection>
+  <BrandBackgroundContainer>
+    <BreadcrumbSectionContainer :crumbs="crumbs" />
+    <SectionContainer type="page-header">
+      <h1>
+        Simulateurs
+      </h1>
+    </SectionContainer>
+  </BrandBackgroundContainer>
 </template>

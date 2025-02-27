@@ -1,71 +1,75 @@
 <script lang="ts" setup>
-import { useElementSize } from '@vueuse/core'
-
 const props = withDefaults(defineProps<{
-  backgroundColor?: 'default--grey' | 'alt--blue-france' | 'action-high--blue-france'
+  containerHeight?: number | null
   contrast?: boolean
-  subtle?: boolean
+  theme?: 'light' | 'dark'
 }>(), {
+  containerHeight: null,
   contrast: false,
-  subtle: false,
+  theme: 'light',
 })
+const {
+  containerHeight,
+  contrast,
+  theme,
+} = toRefs(props)
 
-type StyleVariant = 'light' | 'light-contrast' | 'dark' | 'dark-contrast'
+const minContainerHeight = 50
+type StyleVariantName = 'light' | 'light-contrast' | 'dark' | 'dark-contrast'
 
-const backgroundContainer = ref(null)
-const { height } = useElementSize(backgroundContainer)
-
-const opacity = props.subtle ? 0.25 : 0.8
-
-const schemeStore = useSchemeStore()
-const { preferences } = storeToRefs(schemeStore)
-
-const mixBlendMode = computed(() => {
-  return preferences.value.theme === 'dark' ? 'lighten' : 'darken'
-})
-
-const styleVariant = computed<StyleVariant>(() => {
-  return props.contrast
-    ? `${preferences.value.theme}-contrast`
-    : preferences.value.theme
-})
-
-const styleVariants: Record<StyleVariant, Record<string, string>> = {
+const styleVariants: Record<StyleVariantName, Record<string, string>> = {
   'light': {
-    'as-gradient-overlay': 'linear-gradient(90deg, #FFF 10%, rgba(255, 255, 255, 0.00) 100%)',
-    'as-waves-bg': '#FFFFFF',
-    'as-wave-bottom': '#B3B3F9',
-    'as-wave-middle': '#CACAFB',
-    'as-wave-top': '#E3E3FD',
+    'brand-gradient-overlay': 'linear-gradient(90deg, #FFF 10%, rgba(255, 255, 255, 0.00) 100%)',
+    'brand-waves-bg': '#FFFFFF',
+    'brand-wave-bottom': '#B3B3F9',
+    'brand-wave-middle': '#CACAFB',
+    'brand-wave-top': '#E3E3FD',
   },
   'light-contrast': {
-    'as-gradient-overlay': 'linear-gradient(90deg, #000091 10%, rgba(0, 0, 145, 0.25) 65%, rgba(225, 0, 15, 0.05) 100%)',
-    'as-waves-bg': '#3535D4',
-    'as-wave-bottom': '#8585F6',
-    'as-wave-middle': '#6A6AF4',
-    'as-wave-top': '#5050E7',
+    'brand-gradient-overlay': 'linear-gradient(90deg, #000091 10%, rgba(0, 0, 145, 0.25) 65%, rgba(225, 0, 15, 0.05) 100%)',
+    'brand-waves-bg': '#3535D4',
+    'brand-wave-bottom': '#8585F6',
+    'brand-wave-middle': '#6A6AF4',
+    'brand-wave-top': '#5050E7',
   },
   'dark': {
-    'as-gradient-overlay': 'linear-gradient(90deg, #1E1E1E 10%, rgba(30, 30, 30, 0.00) 100%)',
-    'as-waves-bg': '#1E1E1E',
-    'as-wave-bottom': '#3232AE',
-    'as-wave-middle': '#313178',
-    'as-wave-top': '#272747',
+    'brand-gradient-overlay': 'linear-gradient(90deg, #1E1E1E 10%, rgba(30, 30, 30, 0.00) 100%)',
+    'brand-waves-bg': '#1E1E1E',
+    'brand-wave-bottom': '#3232AE',
+    'brand-wave-middle': '#313178',
+    'brand-wave-top': '#272747',
   },
   'dark-contrast': {
-    'as-gradient-overlay': 'linear-gradient(90deg, #000091 10%, rgba(0, 0, 145, 0.25) 65%, rgba(225, 0, 15, 0.05) 100%)',
-    'as-waves-bg': '#3535D4',
-    'as-wave-bottom': '#272747',
-    'as-wave-middle': '#313178',
-    'as-wave-top': '#3232AE',
+    'brand-gradient-overlay': 'linear-gradient(90deg, #000091 10%, rgba(0, 0, 145, 0.25) 65%, rgba(225, 0, 15, 0.05) 100%)',
+    'brand-waves-bg': '#3535D4',
+    'brand-wave-bottom': '#272747',
+    'brand-wave-middle': '#313178',
+    'brand-wave-top': '#3232AE',
   }
 }
 
-const colors = computed(() => {
-  return styleVariants[styleVariant.value]
+const styleVariantName = computed<StyleVariantName>(() => {
+  return contrast.value
+    ? `${theme.value}-contrast`
+    : theme.value
+})
+const styleVariant = computed(() => {
+  return styleVariants[styleVariantName.value]
 })
 
-const waves = [
+interface WaveDefinition {
+  name: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+  breakpoint: number
+  width: number
+  height: number
+  waves: {
+    top: string
+    middle: string
+    bottom: string
+  }
+}
+
+const waves: WaveDefinition[] = [
   {
     name: 'xs',
     breakpoint: 0,
@@ -122,100 +126,82 @@ const waves = [
     }
   }
 ]
-
-const wave = computed(() => {
+const wave = computed<WaveDefinition | null>(() => {
+  if (containerHeight.value === null) {
+    return null
+  }
   // Find the largest breakpoint that is smaller than the current container height
   return [...waves]
     .sort((a, b) => a.breakpoint - b.breakpoint)
-    .filter(({ breakpoint }) => height.value > breakpoint)
-    .pop()
+    .filter(({ breakpoint }) => (containerHeight.value as number) > breakpoint)
+    ?.pop() ?? null
 })
 </script>
 
 <template>
   <div
-    ref="backgroundContainer"
-    class="as-background-container"
+    v-if="wave && containerHeight && (containerHeight > minContainerHeight)"
+    class="waves-container"
     :class="[
-      `as-background-container--${styleVariant}`,
-      { [`fr-background-${backgroundColor}`]: Boolean(backgroundColor) },
+      `waves-container--${wave.name}`,
     ]"
+    :style="{
+      background: styleVariant['brand-waves-bg'],
+    }"
   >
     <div
-      v-if="wave"
-      class="waves-container"
-      :class="[
-        `waves-container--${wave.name}`,
-      ]"
+      class="waves-background"
       :style="{
-        background: colors['as-waves-bg'],
-        mixBlendMode,
-        opacity,
+        background: styleVariant['brand-waves-bg'],
+      }"
+    />
+    <div
+      class="waves"
+      :style="{
+        height: wave.name === 'xs' ? `${(containerHeight - 50)}px` : `${wave.height}px`,
       }"
     >
-      <div
-        class="waves-background"
-        :style="{
-          background: colors['as-waves-bg'],
-        }"
-      />
-
-      <div
-        class="waves"
-        :style="{
-          height: wave.name === 'xs' ? `${(height - 50)}px` : `${wave.height}px`,
-        }"
+      <svg
+        aria-hidden="true"
+        :height="wave.name === 'xs' ? `${(containerHeight - 50)}px` : `${wave.height}px`"
+        :width="wave.width"
+        preserveAspectRatio="none"
+        :viewBox="`0 0 ${wave.width} ${wave.height}`"
+        xmlns="http://www.w3.org/2000/svg"
       >
-        <svg
-          aria-hidden="true"
-          :height="wave.name === 'xs' ? `${(height - 50)}px` : `${wave.height}px`"
-          :width="wave.width"
-          preserveAspectRatio="none"
-          :viewBox="`0 0 ${wave.width} ${wave.height}`"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            class="as-wave-top"
-            :d="wave.waves.top"
-            :fill="colors['as-wave-top']"
-          />
-          <path
-            class="as-wave-middle"
-            :d="wave.waves.middle"
-            :fill="colors['as-wave-middle']"
-          />
-          <path
-            class="as-wave-bottom"
-            :d="wave.waves.bottom"
-            :fill="colors['as-wave-bottom']"
-          />
-        </svg>
-      </div>
-      <div
-        class="waves-foreground"
-        :style="{
-          background: colors['as-wave-bottom'],
-        }"
-      />
-      <div
-        class="gradient-overlay"
-        :style="{
-          background: colors['as-gradient-overlay'],
-        }"
-      />
+        <path
+          class="brand-wave-top"
+          :d="wave.waves.top"
+          :fill="styleVariant['brand-wave-top']"
+        />
+        <path
+          class="brand-wave-middle"
+          :d="wave.waves.middle"
+          :fill="styleVariant['brand-wave-middle']"
+        />
+        <path
+          class="brand-wave-bottom"
+          :d="wave.waves.bottom"
+          :fill="styleVariant['brand-wave-bottom']"
+        />
+      </svg>
     </div>
-    <div class="content-container">
-      <slot />
-    </div>
+    <div
+      class="waves-foreground"
+      :style="{
+        background: styleVariant['brand-wave-bottom'],
+      }"
+    />
+    <div
+      class="gradient-overlay"
+      :style="{
+        background: styleVariant['brand-gradient-overlay'],
+      }"
+    />
   </div>
 </template>
 
 <style scoped lang="scss">
-.as-background-container {
-  position: relative;
-  width: 100%;
-}
-
 .waves-container {
   position: absolute;
   top: 0;

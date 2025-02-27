@@ -34,35 +34,39 @@ simulateur.value.pictogram()
 </script>
 
 <template>
-  <AsBreadcrumbSection :crumbs="crumbs" />
-  <AsSection
-    v-if="simulateur"
-    type="simulation-header"
-    background-color="default--grey"
+  <BrandBackgroundContainer>
+    <BreadcrumbSectionContainer :crumbs="crumbs" />
+    <SectionContainer
+      v-if="simulateur"
+      type="simulation-header"
+    >
+      <div class="fr-grid-row fr-grid-row--gutters">
+        <div class="fr-col-3 fr-col-sm-2 fr-col-md-1">
+          <DsfrPictogram
+            v-if="pictogram"
+            :svg-path="pictogram"
+          />
+        </div>
+        <div class="title-container fr-col-9 fr-col-sm-10 fr-col-md-11">
+          <h1 class="fr-h5 fr-m-0">
+            {{ simulateur.title }}
+          </h1>
+        </div>
+      </div>
+    </SectionContainer>
+  </BrandBackgroundContainer>
+  <BrandBackgroundContainer
+    textured
+    blue
   >
-    <div class="fr-grid-row fr-grid-row--gutters">
-      <div class="fr-col-3 fr-col-sm-2 fr-col-md-1">
-        <DsfrPictogram
-          v-if="pictogram"
-          :svg-path="pictogram"
-        />
-      </div>
-      <div class="title-container fr-col-9 fr-col-sm-10 fr-col-md-11">
-        <h1 class="fr-h5 fr-m-0">
-          {{ simulateur.title }}
-        </h1>
-      </div>
-    </div>
-  </AsSection>
-  <AsBackgroundWaves background-color="alt--blue-france">
-    <AsSection type="user-action">
+    <SectionContainer type="user-action">
       <div class="fr-grid-row fr-grid-row--gutters">
         <div class="fr-col-12 fr-col-offset-md-1 fr-col-md-10 fr-col-offset-lg-2 fr-col-lg-8">
           Simulation form for "{{ simulateur.title }}"
         </div>
       </div>
-    </AsSection>
-  </AsBackgroundWaves>
+    </SectionContainer>
+  </BrandBackgroundContainer>
 </template>
 
 <style scoped lang="scss">

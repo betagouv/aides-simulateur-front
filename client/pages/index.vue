@@ -16,7 +16,7 @@ definePageMeta({
 })
 
 useHead({ title: 'Page d’accueil - Gabarit de démarrage VueDsfr' })
-const baselineTitle = 'Trouvez les aides adaptées à votre situation'
+const baselineTitle = 'Trouvez les aides&nbsp;adaptées à&nbsp;votre&nbsp;situation'
 const baselineSubtitle = 'Un service simple et rapide pour savoir à quelles aides vous avez droit.'
 
 const simulationTiles: DsfrTileProps[] = [
@@ -34,18 +34,22 @@ const simulationTiles: DsfrTileProps[] = [
 </script>
 
 <template>
-  <AsBackgroundWaves background-color="alt--blue-france">
-    <AsSection>
-      <div class="as-home-banner fr-grid-row fr-grid-row--gutters">
-        <div class="as-home-banner__column fr-col-12 fr-col-lg-6">
-          <h1 class="as-site-title as-title-gradient">
-            {{ baselineTitle }}
-          </h1>
-          <p class="fr-text--xl as-home-banner__baseline">
+  <BrandBackgroundContainer
+    textured
+    blue
+  >
+    <SectionContainer>
+      <div class="brand-home-banner fr-grid-row fr-grid-row--gutters">
+        <div class="brand-home-banner__column fr-col-12 fr-col-lg-6">
+          <h1
+            class="brand-site-title brand-title-gradient"
+            v-html="baselineTitle"
+          />
+          <p class="fr-text--xl brand-home-banner__baseline">
             {{ baselineSubtitle }}
           </p>
         </div>
-        <div class="as-home-banner__column fr-col-12 fr-col-md-6 fr-col-offset-xl-1 fr-col-xl-5">
+        <div class="brand-home-banner__column fr-col-12 fr-col-md-6 fr-col-offset-xl-1 fr-col-xl-5">
           <DsfrTiles
             :tiles="simulationTiles"
             horizontal
@@ -53,13 +57,13 @@ const simulationTiles: DsfrTileProps[] = [
           />
         </div>
       </div>
-    </AsSection>
-  </AsBackgroundWaves>
-  <AsBackgroundWaves
+    </SectionContainer>
+  </BrandBackgroundContainer>
+  <BrandBackgroundContainer
+    textured
     subtle
-    background-color="default--grey"
   >
-    <AsSection>
+    <SectionContainer>
       <h2 class="fr-title">
         Pour aller plus loin, utilisez ces simulateurs pour évaluer tous vos droits
       </h2>
@@ -83,20 +87,21 @@ const simulationTiles: DsfrTileProps[] = [
           />
         </div>
       </div>
-    </AsSection>
-  </AsBackgroundWaves>
-  <AsBackgroundWaves
+    </SectionContainer>
+  </BrandBackgroundContainer>
+  <BrandBackgroundContainer
+    textured
     contrast
-    background-color="alt--blue-france"
+    blue
   >
-    <AsSection>
+    <SectionContainer>
       <hgroup class="fr-mb-6w">
-        <h2 class="fr-display--xs as-contrast-text">
-          <span class="as-contrast-text--highlight">
+        <h2 class="fr-display--xs brand-contrast-text">
+          <span class="brand-contrast-text--highlight">
             Vous souhaitez améliorer l'accès aux aides ?
           </span><br>Aides simplifiées vous accompagne !
         </h2>
-        <p class="fr-text--xl as-contrast-text">
+        <p class="fr-text--xl brand-contrast-text">
           Aides simplifiées permet aux citoyens de trouver facilement les aides auxquelles ils sont éligibles et de
           simplifier leur parcours administratif. Nous collaborons avec des acteurs publics et des plateformes en ligne
           pour intégrer notre service et fluidifier l’accès aux dispositifs existants.
@@ -105,7 +110,7 @@ const simulationTiles: DsfrTileProps[] = [
       <div class="fr-grid-row fr-grid-row--gutters">
         <div class="fr-col-12 fr-col-md-6">
           <DsfrTile
-            title="Vous êtes une administration ou vous opérez un service public ?"
+            title="Vous êtes une administration ou vous opérez un service public&nbsp;?"
             description="Facilitez l’accès aux aides sur votre territoire ou sur votre domaine de compétence et optimisez le passage de la simulation au dépôt de dossier."
             title-tag="h3"
             to="/partenaires"
@@ -115,7 +120,7 @@ const simulationTiles: DsfrTileProps[] = [
         </div>
         <div class="fr-col-12 fr-col-md-6">
           <DsfrTile
-            title="Vous êtes une plateforme en ligne ?"
+            title="Vous êtes une plateforme en ligne&nbsp;?"
             description="Offrez à vos usagers un accès simple et fiable aux aides pertinentes pour eux en intégrant nos simulateurs en quelques minutes via API ou iFrame."
             title-tag="h3"
             to="/integrer-nos-simulateurs"
@@ -124,19 +129,19 @@ const simulationTiles: DsfrTileProps[] = [
           />
         </div>
       </div>
-    </AsSection>
-  </AsBackgroundWaves>
+    </SectionContainer>
+  </BrandBackgroundContainer>
 </template>
 
 <style scoped lang="scss">
-.as-home-banner {
-  .as-home-banner__column {
+.brand-home-banner {
+  .brand-home-banner__column {
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
 
-  .as-site-title {
+  .brand-site-title {
     @media (min-width: 36em) {
       font-size: 3.5rem !important;
       line-height: 4rem !important;
@@ -148,7 +153,7 @@ const simulationTiles: DsfrTileProps[] = [
     }
   }
 
-  & p.as-home-banner__baseline {
+  & p.brand-home-banner__baseline {
     @media (min-width: 48em) {
       font-size: 1.8rem !important;
       line-height: 1.4 !important;

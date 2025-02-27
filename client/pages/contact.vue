@@ -11,9 +11,12 @@ const crumbs = computed(() => {
 </script>
 
 <template>
-  <AsBreadcrumbSection :crumbs="crumbs" />
-  <AsBackgroundWaves subtle>
-    <AsSection type="page-full">
+  <BrandBackgroundContainer
+    textured
+    subtle
+  >
+    <BreadcrumbSectionContainer :crumbs="crumbs" />
+    <SectionContainer type="page-full">
       <h1>
         Contactez-nous
       </h1>
@@ -23,6 +26,6 @@ const crumbs = computed(() => {
       <p class="fr-text--xl">
         Écrivez-nous à <strong>aides.simplifiees@numerique.gouv.fr</strong>
       </p>
-    </AsSection>
-  </AsBackgroundWaves>
+    </SectionContainer>
+  </BrandBackgroundContainer>
 </template>

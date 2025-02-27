@@ -10,20 +10,21 @@ const crumbs = [
 </script>
 
 <template>
-  <AsBackgroundWaves
+  <BrandBackgroundContainer
+    textured
     contrast
-    background-color="alt--blue-france"
+    blue
   >
-    <AsBreadcrumbSection
+    <BreadcrumbSectionContainer
       contrast
       :crumbs="crumbs"
     />
-    <AsSection type="page-header">
-      <h1 class="as-contrast-text">
-        <span class="as-contrast-text--highlight">
-          Vous êtes une administration :
+    <SectionContainer type="page-header">
+      <h1 class="brand-contrast-text">
+        <span class="brand-contrast-text--highlight">
+          Vous êtes une administration&nbsp;:
         </span><br>facilitez le parcours d'accès aux aides
       </h1>
-    </AsSection>
-  </AsBackgroundWaves>
+    </SectionContainer>
+  </BrandBackgroundContainer>
 </template>

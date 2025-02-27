@@ -9,14 +9,14 @@ const props = withDefaults(defineProps<{
 const styles = computed(() => {
   if (!props.contrast) { return {} }
   return {
-    '--text-default-grey': 'var(--as-contrast-text--disabled)',
-    '--text-mention-grey': 'var(--as-contrast-text)',
+    '--text-default-grey': 'var(--brand-contrast-text--disabled)',
+    '--text-mention-grey': 'var(--brand-contrast-text)',
   }
 })
 </script>
 
 <template>
-  <AsSection
+  <SectionContainer
     type="breadcrumb"
   >
     <div class="fr-grid-row fr-grid-row--gutters">
@@ -29,5 +29,5 @@ const styles = computed(() => {
         />
       </div>
     </div>
-  </AsSection>
+  </SectionContainer>
 </template>

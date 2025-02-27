@@ -35,7 +35,7 @@ const navItems = [
     to: '/contact',
   },
   {
-    text: 'Qui sommes-nous ?',
+    text: 'Qui sommes-nous ?',
     to: 'https://beta.gouv.fr/startups/droit-data-gouv-fr-simulateurs-de-droits.html',
     target: '_blank',
   },

@@ -1,11 +1,11 @@
 <template>
   <div class="fr-container">
-    <hr class="as-section-separator">
+    <hr class="section-separator">
   </div>
 </template>
 
 <style scoped lang="scss">
-.as-section-separator {
+.section-separator {
   border-top: 1px solid var(--border-open-blue-france);
   margin-top: 0;
   margin-bottom: 0;
