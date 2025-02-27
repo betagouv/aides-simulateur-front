@@ -61,7 +61,7 @@ const simulationTiles: DsfrTileProps[] = [
   >
     <AsSection>
       <h2 class="fr-title">
-        Simuler toutes les aides auxquelles j’ai droit
+        Pour aller plus loin, utilisez ces simulateurs pour évaluer tous vos droits
       </h2>
       <div class="fr-grid-row fr-grid-row--gutters">
         <div class="fr-col-12 fr-col-md-6">
