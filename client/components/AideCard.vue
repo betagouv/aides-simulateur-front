@@ -119,9 +119,11 @@ defineExpose({ goToTargetLink })
           />
         </ul>
       </div>
-      <div>
-        {{ montant }}€
-      </div>
+      <AideMontant
+        v-if="montant"
+        :montant="montant"
+        size="lg"
+      />
     </div>
   </div>
 </template>
