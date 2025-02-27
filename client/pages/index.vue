@@ -1,11 +1,5 @@
 <script setup lang="ts">
 import type { DsfrTileProps } from '@gouvminint/vue-dsfr'
-/**
- * Missing export in DSFR, so we import it manually
- * @see https://github.com/GouvernementFR/dsfr/issues/1086
- */
-// import accessibilityPictogram from '@gouvfr/dsfr/dist/artwork/pictograms/accessibility/accessibility.svg'
-import accessibilityPictogram from '@/assets/custom-pictograms/accessibility.svg'
 
 import demenagementPictogram from '@/assets/custom-pictograms/demenagement.svg'
 /**
@@ -14,15 +8,8 @@ import demenagementPictogram from '@/assets/custom-pictograms/demenagement.svg'
 // import housePictogram from '@gouvfr/dsfr/dist/artwork/pictograms/buildings/house.svg'
 import housePictogram from '@/assets/custom-pictograms/house.svg'
 
-/**
- * This one does not render
- */
-import parentalitePictogram from '@/assets/custom-pictograms/parentalite.svg'
-
 import cityHallPictogram from '@gouvfr/dsfr/dist/artwork/pictograms/buildings/city-hall.svg'
 import internetPictogram from '@gouvfr/dsfr/dist/artwork/pictograms/digital/internet.svg'
-
-import moneyPictogram from '@gouvfr/dsfr/dist/artwork/pictograms/institutions/money.svg'
 
 definePageMeta({
   layout: 'default',
@@ -42,24 +29,6 @@ const simulationTiles: DsfrTileProps[] = [
     title: 'Rénovation du logement',
     to: '#',
     svgPath: housePictogram
-  }
-]
-
-const voteTiles: DsfrTileProps[] = [
-  {
-    title: 'Devenir parent',
-    to: '/voter-prochains-simulateurs?thematique=parentalite',
-    svgPath: parentalitePictogram
-  },
-  {
-    title: 'Perte d’autonomie d’un proche',
-    to: '/voter-prochains-simulateurs?thematique=perte-autonomie',
-    svgPath: accessibilityPictogram
-  },
-  {
-    title: 'Difficultés à payer ses factures',
-    to: '/voter-prochains-simulateurs?thematique=factures',
-    svgPath: moneyPictogram
   }
 ]
 </script>
@@ -90,37 +59,7 @@ const voteTiles: DsfrTileProps[] = [
     subtle
     background-color="default--grey"
   >
-    <AsSection type="grouped-first">
-      <h2 class="fr-title">
-        Voter pour les prochaines thématiques
-      </h2>
-      <div class="fr-grid-row fr-grid-row--gutters">
-        <div
-          v-for="tile in voteTiles"
-          :key="tile.id"
-          class="fr-col-12 fr-col-sm-6 fr-col-md-4"
-        >
-          <DsfrTile
-            :title="tile.title"
-            title-tag="h2"
-            horizontal
-            :img-src="tile.imgSrc"
-            :svg-path="tile.svgPath"
-          />
-        </div>
-      </div>
-      <DsfrButton
-        type="button"
-        label="Je vote pour les thématiques qui m’intéressent"
-        icon="ri-arrow-right-line"
-        class="fr-mt-4w"
-        secondary
-        icon-right
-        @click="navigateTo('/voter-prochains-simulateurs')"
-      />
-    </AsSection>
-    <AsSectionSeparator />
-    <AsSection type="grouped-last">
+    <AsSection>
       <h2 class="fr-title">
         Simuler toutes les aides auxquelles j’ai droit
       </h2>
