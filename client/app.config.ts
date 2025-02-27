@@ -23,7 +23,7 @@ export default defineAppConfig({
     licenceTo: 'https://www.etalab.gouv.fr/licence-ouverte-open-licence',
     licenceName: 'Licence ouverte 2.0',
     a11yCompliance: 'partiellement conforme',
-    descText: 'Description du service',
+    descText: 'La bonne aide, au bon moment, au bon endroit',
     operatorImgAlt: 'Logo de l\'opérateur',
     operatorLinkText: 'Nom de l\'opérateur',
     operatorTo: 'https://www.interieur.gouv.fr',
