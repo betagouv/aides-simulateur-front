@@ -14,9 +14,11 @@ const crumbs = computed(() => {
   <BrandBackgroundContainer>
     <BreadcrumbSectionContainer :crumbs="crumbs" />
     <SectionContainer type="page-header">
-      <h1>
-        Simulateurs
-      </h1>
+      <div class="fr-grid-row fr-grid-row--gutters">
+        <h1 class="fr-col-12">
+          Simulateurs
+        </h1>
+      </div>
     </SectionContainer>
   </BrandBackgroundContainer>
 </template>
