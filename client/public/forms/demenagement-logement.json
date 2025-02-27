@@ -1,0 +1,75 @@
+{
+  "id": "demenagement-logement",
+  "title": "Aides financières au déménagement et au logement",
+  "description": "Répondez à ces questions pour découvrir les aides auxquelles vous avez droit",
+  "categories" : [
+    {
+      "id": "profil",
+      "title": "Profil",
+      "questions": [
+        {
+          "id": "situation-familiale",
+          "title": "Quelle(s) situation(s) corresponde(nt) à votre profil ?",
+          "description": "Texte de description additionnel",
+          "type": "radio",
+          "choices": [
+            {
+              "id": "celibataire",
+              "title": "Célibataire"
+            },
+            {
+              "id": "couple",
+              "title": "Couple"
+            },
+            {
+              "id": "separe",
+              "title": "Séparé ou divorcé"
+            },
+            {
+              "id": "veuf",
+              "title": "Veuf"
+            }
+          ],
+          "nextQuestion": [
+            {"condition": "situation-familiale=couple || situation-familiale=veuf", "question": "situation-professionnelle"},
+            {"condition": "age>18", "question": "boursier"}
+          ]
+        },
+        {
+          "id": "situation-professionnelle",
+          "title": "Situation professionnelle",
+          "type": "radio",
+          "choices": [
+            {
+              "id": "salarie",
+              "title": "Salarié"
+            },
+            {
+              "id": "independant",
+              "title": "Indépendant"
+            },
+            {
+              "id": "chomeur",
+              "title": "Chômeur"
+            }
+          ]
+        },
+        {
+          "id": "boursier",
+          "title": "Etes vous boursier ?",
+          "type": "radio",
+          "choices": [
+            {
+              "id": "boursier",
+              "title": "Oui"
+            },
+            {
+              "id": "non-boursier",
+              "title": "Non"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
