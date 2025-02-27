@@ -38,7 +38,7 @@ simulateur.value.pictogram()
     <BreadcrumbSectionContainer :crumbs="crumbs" />
     <SectionContainer
       v-if="simulateur"
-      type="simulation-header"
+      type="page-header"
     >
       <div class="fr-grid-row fr-grid-row--gutters">
         <div class="fr-col-3 fr-col-sm-2 fr-col-md-1">
@@ -59,7 +59,7 @@ simulateur.value.pictogram()
     textured
     blue
   >
-    <SectionContainer type="user-action">
+    <SectionContainer type="page-footer">
       <div class="fr-grid-row fr-grid-row--gutters">
         <div class="fr-col-12 fr-col-offset-md-1 fr-col-md-10 fr-col-offset-lg-2 fr-col-lg-8">
           Simulation form for "{{ simulateur.title }}"

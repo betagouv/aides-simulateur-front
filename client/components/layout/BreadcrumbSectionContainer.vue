@@ -16,9 +16,7 @@ const styles = computed(() => {
 </script>
 
 <template>
-  <SectionContainer
-    type="breadcrumb"
-  >
+  <SectionContainer type="page-breadcrumb">
     <div class="fr-grid-row fr-grid-row--gutters">
       <div class="fr-col-12">
         <DsfrBreadcrumb
