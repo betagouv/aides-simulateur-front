@@ -9,7 +9,7 @@ definePageMeta({
 })
 
 const route = useRoute()
-const aideId = ref(route.params.simulateur_id)
+const aideId = ref(route.params.aide_id)
 
 const aide = computed<Aide>(() => {
   // We can safely cast here because we validated the route
