@@ -2,7 +2,7 @@
   "id": "demenagement-logement",
   "title": "Aides financières au déménagement et au logement",
   "description": "Répondez à ces questions pour découvrir les aides auxquelles vous avez droit",
-  "categories" : [
+  "steps" : [
     {
       "id": "profil",
       "title": "Profil",
@@ -30,7 +30,7 @@
               "title": "Veuf"
             }
           ],
-          "nextQuestion": [
+          "bypassToQuestion": [
             {"condition": "situation-familiale=couple || situation-familiale=veuf", "question": "situation-professionnelle"},
             {"condition": "age>18", "question": "boursier"}
           ]

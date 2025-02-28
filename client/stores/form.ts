@@ -1,34 +1,32 @@
 // client/stores/form.ts
-interface FormChoice {
+interface SurveyChoice {
   id: string
   title: string
 }
 
-//TODO: refacto : SurveyQuestion (validator)
-interface FormQuestion {
+interface SurveyQuestion {
   id: string
   title: string
   type: 'radio' | 'checkbox' | 'number' | 'date'
-  choices?: FormChoice[]
-  nextQuestion?: Array<{
+  choices?: SurveyChoice[]
+  bypassToQuestion?: Array<{
     condition: string
     question: string
   }>
 }
 
-//TODO: refacto : SurveyStep
-interface FormCategory {
+// TODO: refacto : SurveyStep
+interface SurveyStep {
   id: string
   title: string
-  questions: FormQuestion[]
+  questions: SurveyQuestion[]
 }
 
-//TODO: refacto : SurveySchema
-interface FormDefinition {
+interface SurveySchema {
   id: string
   title: string
   description: string
-  categories: FormCategory[]
+  steps: SurveyStep[]
 }
 
 export const useFormStore = defineStore('form', () => {
@@ -39,57 +37,58 @@ export const useFormStore = defineStore('form', () => {
   const currentQuestionId = ref<string | null>(null)
 
   // Current category being displayed
-  const currentCategoryId = ref<string | null>(null)
+  const currentStepId = ref<string | null>(null)
 
   // Form definition loaded from JSON
-  const formDefinition = ref<FormDefinition | null>(null)
+  const surveySchema = ref<SurveySchema | null>(null)
 
   // Function to set an answer
-  function setAnswer(questionId: string, value: any) {
+  function setAnswer (questionId: string, value: any) {
     answers.value[questionId] = value
   }
 
   // Load form definition from a JSON file
-  async function loadFormDefinition(formId: string) {
+  async function loadSurveySchema (formId: string) {
     try {
       // You might need to adjust the path based on your project structure
       const response = await fetch(`/forms/${formId}.json`)
       const data = await response.json()
-      formDefinition.value = data
+      surveySchema.value = data
 
       // Initialize with the first category and question if available
-      if (data.categories && data.categories.length > 0) {
-        currentCategoryId.value = data.categories[0].id
+      if (data.steps && data.steps.length > 0) {
+        currentStepId.value = data.steps[0].id
 
-        if (data.categories[0].questions && data.categories[0].questions.length > 0) {
-          currentQuestionId.value = data.categories[0].questions[0].id
+        if (data.steps[0].questions && data.steps[0].questions.length > 0) {
+          currentQuestionId.value = data.steps[0].questions[0].id
         }
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Error loading form definition:', error)
     }
   }
 
   // Get the current category
-  const currentCategory = computed(() => {
-    if (!formDefinition.value || !currentCategoryId.value) return null
+  const currentStep = computed(() => {
+    if (!surveySchema.value || !currentStepId.value) { return null }
 
-    return formDefinition.value.categories.find(
-      (category) => category.id === currentCategoryId.value
+    return surveySchema.value.steps.find(
+      category => category.id === currentStepId.value
     )
   })
 
   const nextCategory = computed(() => {
-    if (!formDefinition.value || !currentCategoryId.value) return null
+    if (!surveySchema.value || !currentStepId.value) { return null }
 
     // Find the index of the current category
-    const currentCategoryIndex = formDefinition.value.categories.findIndex(
-      (category) => category.id === currentCategoryId.value
+    const currentStepIndex = surveySchema.value.steps.findIndex(
+      category => category.id === currentStepId.value
     )
 
     // Check if there is a next category
-    if (currentCategoryIndex < formDefinition.value.categories.length - 1) {
-      return formDefinition.value.categories[currentCategoryIndex + 1]
+    if (currentStepIndex < surveySchema.value.steps.length - 1) {
+      return surveySchema.value.steps[currentStepIndex + 1]
     }
 
     // No next category available
@@ -98,16 +97,16 @@ export const useFormStore = defineStore('form', () => {
 
   // Get the current question
   const currentQuestion = computed(() => {
-    if (!currentCategory.value || !currentQuestionId.value) return null
+    if (!currentStep.value || !currentQuestionId.value) { return null }
 
-    return currentCategory.value.questions.find(
-      (question) => question.id === currentQuestionId.value
+    return currentStep.value.questions.find(
+      question => question.id === currentQuestionId.value
     )
   })
 
   // Evaluate a condition string
-  function evaluateCondition(conditionStr: string): boolean {
-    if (!conditionStr) return true
+  function evaluateCondition (conditionStr: string): boolean {
+    if (!conditionStr) { return true }
 
     // Create a context with answers
     const context: Record<string, any> = {}
@@ -126,7 +125,7 @@ export const useFormStore = defineStore('form', () => {
 
     try {
       // Replace question IDs with values in the condition
-      const conditionWithValues = conditionStr.replace(/([a-zA-Z_][a-zA-Z0-9_-]*)/g, (match) => {
+      const conditionWithValues = conditionStr.replace(/([a-z_][\w-]*)/gi, (match) => {
         const normalized = match.replace(/-/g, '_')
         return normalized in context ? context[normalized].toString() : 'undefined'
       })
@@ -135,22 +134,23 @@ export const useFormStore = defineStore('form', () => {
       // NOTE: Using eval is typically not recommended for security reasons
       // In a production app, consider using a proper expression evaluator
       return eval(conditionWithValues)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Error evaluating condition:', conditionStr, error)
       return false
     }
   }
 
   // Determine the next question based on answers
-  function getNextQuestionId(): string | null {
-    if (!currentQuestion.value) return null
+  function getBypassToQuestionId (): string | null {
+    if (!currentQuestion.value) { return null }
 
     const question = currentQuestion.value
 
-    // If there's a nextQuestion array with conditions
-    if (question.nextQuestion && question.nextQuestion.length > 0) {
+    // If there's a bypassToQuestion array with conditions
+    if (question.bypassToQuestion && question.bypassToQuestion.length > 0) {
       // Find the first matching condition
-      for (const next of question.nextQuestion) {
+      for (const next of question.bypassToQuestion) {
         if (evaluateCondition(next.condition)) {
           return next.question
         }
@@ -158,23 +158,23 @@ export const useFormStore = defineStore('form', () => {
     }
 
     // If no conditions matched, find the next question in the current category
-    const currentQuestionIndex = currentCategory.value.questions.findIndex(
+    const currentQuestionIndex = currentStep.value.questions.findIndex(
       (q: any) => q.id === currentQuestionId.value
     )
 
-    if (currentQuestionIndex < currentCategory.value.questions.length - 1) {
-      return currentCategory.value.questions[currentQuestionIndex + 1].id
+    if (currentQuestionIndex < currentStep.value.questions.length - 1) {
+      return currentStep.value.questions[currentQuestionIndex + 1].id
     }
 
     // If there are no more questions in this category, move to the next category
-    const currentCategoryIndex = formDefinition.value.categories.findIndex(
-      (cat: any) => cat.id === currentCategoryId.value
+    const currentStepIndex = surveySchema.value.steps.findIndex(
+      (cat: any) => cat.id === currentStepId.value
     )
 
-    if (currentCategoryIndex < formDefinition.value.categories.length - 1) {
-      const nextCategory = formDefinition.value.categories[currentCategoryIndex + 1]
+    if (currentStepIndex < surveySchema.value.steps.length - 1) {
+      const nextCategory = surveySchema.value.steps[currentStepIndex + 1]
       if (nextCategory.questions && nextCategory.questions.length > 0) {
-        currentCategoryId.value = nextCategory.id
+        currentStepId.value = nextCategory.id
         return nextCategory.questions[0].id
       }
     }
@@ -184,34 +184,34 @@ export const useFormStore = defineStore('form', () => {
   }
 
   // Go to the next question
-  function goToNextQuestion() {
-    const nextQuestionId = getNextQuestionId()
-    if (nextQuestionId) {
-      currentQuestionId.value = nextQuestionId
+  function goToNextQuestion () {
+    const bypassToQuestionId = getBypassToQuestionId()
+    if (bypassToQuestionId) {
+      currentQuestionId.value = bypassToQuestionId
       return true
     }
     return false
   }
 
   // Go to the previous question (simplified navigation)
-  function goToPreviousQuestion() {
-    const currentQuestionIndex = currentCategory.value.questions.findIndex(
+  function goToPreviousQuestion () {
+    const currentQuestionIndex = currentStep.value.questions.findIndex(
       (q: any) => q.id === currentQuestionId.value
     )
 
     if (currentQuestionIndex > 0) {
-      currentQuestionId.value = currentCategory.value.questions[currentQuestionIndex - 1].id
+      currentQuestionId.value = currentStep.value.questions[currentQuestionIndex - 1].id
       return true
     }
 
     // If we're at the first question of a category, go to the previous category
-    const currentCategoryIndex = formDefinition.value.categories.findIndex(
-      (cat: any) => cat.id === currentCategoryId.value
+    const currentStepIndex = surveySchema.value.steps.findIndex(
+      (cat: any) => cat.id === currentStepId.value
     )
 
-    if (currentCategoryIndex > 0) {
-      const prevCategory = formDefinition.value.categories[currentCategoryIndex - 1]
-      currentCategoryId.value = prevCategory.id
+    if (currentStepIndex > 0) {
+      const prevCategory = surveySchema.value.steps[currentStepIndex - 1]
+      currentStepId.value = prevCategory.id
 
       if (prevCategory.questions && prevCategory.questions.length > 0) {
         currentQuestionId.value = prevCategory.questions[prevCategory.questions.length - 1].id
@@ -223,25 +223,25 @@ export const useFormStore = defineStore('form', () => {
   }
 
   // Reset the form
-  function resetForm() {
+  function resetForm () {
     answers.value = {}
 
     // Reset to first category/question
-    if (formDefinition.value && formDefinition.value.categories.length > 0) {
-      currentCategoryId.value = formDefinition.value.categories[0].id
+    if (surveySchema.value && surveySchema.value.steps.length > 0) {
+      currentStepId.value = surveySchema.value.steps[0].id
 
-      if (formDefinition.value.categories[0].questions.length > 0) {
-        currentQuestionId.value = formDefinition.value.categories[0].questions[0].id
+      if (surveySchema.value.steps[0].questions.length > 0) {
+        currentQuestionId.value = surveySchema.value.steps[0].questions[0].id
       }
     }
   }
 
   // Calculate progress
   const progress = computed(() => {
-    if (!formDefinition.value) return 0
+    if (!surveySchema.value) { return 0 }
 
     // Count all questions
-    const totalQuestions = formDefinition.value.categories.reduce(
+    const totalQuestions = surveySchema.value.steps.reduce(
       (count: number, category: any) => count + (category.questions ? category.questions.length : 0),
       0
     )
@@ -254,39 +254,40 @@ export const useFormStore = defineStore('form', () => {
 
   // Check if we're at the last question
   const isLastQuestion = computed(() => {
-    return getNextQuestionId() === null
+    return getBypassToQuestionId() === null
   })
 
-
   // Current step tracking (category index + 1)
-const currentCategoryIndex = computed(() => {
-  if (!formDefinition.value || !currentCategory.value) { return 1 }
-  const index = formDefinition.value.categories.findIndex(cat => cat.id === currentCategory.value?.id)
-  return index + 1
-})
+  const currentStepIndex = computed(() => {
+    if (!surveySchema.value || !currentStep.value) { return 1 }
+    const index = surveySchema.value.steps.findIndex(cat => cat.id === currentStep.value?.id)
+    return index + 1
+  })
 
-const totalCategoriesNumber = computed(() => {
-  if (!formDefinition.value) { return 1 }
-  return formDefinition.value.categories.length
-})
+  const totalCategoriesNumber = computed(() => {
+    if (!surveySchema.value) { return 1 }
+    return surveySchema.value.steps.length
+  })
 
   return {
     answers,
     currentQuestionId,
-    currentCategoryId,
-    formDefinition,
-    currentCategory,
+    currentStepId,
+    surveySchema,
+    currentStep,
     nextCategory,
     currentQuestion,
     progress,
     isLastQuestion,
-    //For Interface display
-    currentCategoryIndex,
+    // For Interface display
+    currentStepIndex,
     totalCategoriesNumber,
     setAnswer,
-    loadFormDefinition,
+    loadSurveySchema,
     goToNextQuestion,
     goToPreviousQuestion,
     resetForm
   }
+}, {
+  persist: true
 })

@@ -49,6 +49,7 @@ export default defineNuxtConfig({
     'vue-dsfr-nuxt-module',
     '@nuxt/content',
     '@pinia/nuxt',
+    'pinia-plugin-persistedstate/nuxt',
   ],
 
   css: [
