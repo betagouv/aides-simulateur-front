@@ -1,4 +1,15 @@
 # CHANGELOG
+## 0.2.0 [#14](https://github.com/betagouv/aides-simulateur-front/pull/14)
+
+* Ajout de fonctionnalité.
+* Détail :
+  * Création du fond dynamique qui signe l'identité d'aides-simplifiées
+    * Pour permettre l'utilisation de plusieurs fonds en fonction de la hauteur du conteneur à décorer, ajout de l'utilitaire `useElementSize` de la libraire `VueUse` pour ces nombreux utilitaires légers.
+  * Création d'un composant `SectionContainer` pour gérer les styles des sections html
+  * Ajout d'une feuille de style globale à l'application pour les styles customisés
+  * Création d'un composant pour la section fil d'Arianne
+  * Ajout du menu de navigation principal
+  * Création de différentes pages statiques
 
 ## 0.1.0 [#21](https://github.com/betagouv/aides-simulateur-front/pull/21)
 
