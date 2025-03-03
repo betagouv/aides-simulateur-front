@@ -2,11 +2,20 @@
   "id": "demenagement-logement",
   "title": "Aides financières au déménagement et au logement",
   "description": "Répondez à ces questions pour découvrir les aides auxquelles vous avez droit",
-  "steps" : [
+  "steps": [
     {
       "id": "profil",
       "title": "Profil",
       "questions": [
+        {
+          "id": "age-nombre",
+          "title": "Quel âge avez-vous ?",
+          "description": "Indiquez votre âge",
+          "type": "number",
+          "bypassToQuestion": [
+            { "condition": "age-nombre>18", "question": "boursier" }
+          ]
+        },
         {
           "id": "situation-familiale",
           "title": "Quelle(s) situation(s) corresponde(nt) à votre profil ?",
@@ -31,8 +40,8 @@
             }
           ],
           "bypassToQuestion": [
-            {"condition": "situation-familiale=couple || situation-familiale=veuf", "question": "situation-professionnelle"},
-            {"condition": "age>18", "question": "boursier"}
+            { "condition": "situation-familiale=couple || situation-familiale=veuf", "question": "situation-professionnelle" },
+            { "condition": "age>18", "question": "boursier" }
           ]
         },
         {
@@ -67,9 +76,105 @@
               "id": "non-boursier",
               "title": "Non"
             }
+          ],
+          "bypassToQuestion": [
+            { "condition": "boursier=boursier", "question": "boursier-montant" }
           ]
         }
       ]
+    },
+    {
+      "id": "situation",
+      "title": "Situation",
+      "questions": [
+        {
+          "id": "revenu-familial",
+          "title": "Revenus du foyer",
+          "description": "Texte de description additionnel",
+          "type": "radio",
+          "choices": [
+            {
+              "id": "0_1000",
+              "title": "1000 €"
+            },
+            {
+              "id": "1000_4000",
+              "title": "4000 €"
+            }
+          ]
+        },
+        {
+          "id": "montant-loyer",
+          "title": "Quel est le montant de votre loyer mensuel ?",
+          "description": "Indiquez le montant en euros, sans les charges",
+          "type": "number"
+        }
+      ]
+    },
+    {
+      "id": "preferences",
+      "title": "Préférences",
+      "questions": [
+        {
+          "id": "services-interets",
+          "title": "Quels services vous intéressent ?",
+          "description": "Sélectionnez tous les services qui vous intéressent",
+          "type": "checkbox",
+          "choices": [
+            {
+              "id": "aide-demenagement",
+              "title": "Aide au déménagement"
+            },
+            {
+              "id": "aide-caution",
+              "title": "Garantie de caution locative"
+            },
+            {
+              "id": "aide-renovation",
+              "title": "Aide à la rénovation"
+            },
+            {
+              "id": "aide-energie",
+              "title": "Aide pour les factures d'énergie"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dates",
+      "title": "Informations temporelles",
+      "questions": [
+        {
+          "id": "date-emmenagement",
+          "title": "Date prévue d'emménagement",
+          "description": "À quelle date prévoyez-vous d'emménager dans votre nouveau logement ?",
+          "type": "date"
+        },
+        {
+          "id": "date-naissance",
+          "title": "Date de naissance",
+          "description": "Indiquez votre date de naissance",
+          "type": "date"
+        }
+      ]
     }
-  ]
+  ],
+  "triggeredQuestions": [
+            {
+              "id": "boursier-montant",
+              "title": "Montant de votre bourse",
+              "type": "number",
+              "nextQuestion": "boursier-date-debut",
+              "bypassToQuestion": [
+                { "condition": "age-nombre>28", "question": "date-emmenagement" }
+              ]
+            },
+            {
+              "id": "boursier-date-debut",
+              "title": "Date de début de votre bourse",
+              "type": "date",
+              "nextQuestion": "services-interets"
+            }
+          ]
 }

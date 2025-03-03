@@ -1,26 +1,29 @@
-<script setup lang="ts">
+<script lang="ts" setup>
+import { type SurveyQuestion } from '@/stores/survey'
+
 const props = defineProps<{
-  question: any
+  question: SurveyQuestion
+  modelValue: string | undefined
 }>()
 
-const formStore = useFormStore()
-const { answers, setAnswer } = formStore
+const emit = defineEmits<{
+  'update:modelValue': [value: string]
+}>()
 
-const modelValue = computed({
-  get: () => answers[props.question.id],
-  set: (value) => setAnswer(props.question.id, value)
-})
+function handleChange(value: string) {
+  emit('update:modelValue', value)
+}
 </script>
 
 <template>
   <div class="question-container">
     <DsfrInputGroup
-      v-model="modelValue"
+      :model-value="modelValue"
       type="date"
       :name="question.id"
       :label="question.title"
-      :hint="question.hint"
       label-visible
+      @update:model-value="handleChange"
     />
   </div>
 </template>

@@ -1,4 +1,10 @@
 <script lang="ts" setup>
+import RadioButtonQuestion from './RadioButtonQuestion.vue'
+import MultiSelectQuestion from './MultiSelectQuestion.vue'
+import NumberQuestion from './NumberQuestion.vue'
+import DateQuestion from './DateQuestion.vue'
+import { type SurveyQuestion } from '@/stores/survey'
+
 const props = defineProps<{
   simulateurId: string
 }>()
@@ -31,7 +37,6 @@ onMounted(async () => {
   console.log('Loading form definition for:', simulateurId)
   try {
     await loadSurveySchema(simulateurId)
-    console.log('Form definition loaded:', surveySchema.value)
     isLoading.value = false
   }
   catch (error) {
@@ -40,20 +45,14 @@ onMounted(async () => {
   }
 })
 
-// Radio button selection
-function handleRadioChange (value: string | number | boolean) {
-  if (currentQuestion.value) {
-    setAnswer(currentQuestion.value.id, value)
-  }
-}
-
-// Input change handler for number and date
-function handleInputChange (questionId: string, value: string | number) {
+// Handle updates from question components
+function handleQuestionUpdate(questionId: string, value: any) {
+  console.log('----- setAnswer', questionId, value)
   setAnswer(questionId, value)
 }
 
 // Navigation functions
-function handleNext () {
+function handleNext() {
   if (isLastQuestion.value) {
     // Handle form completion, maybe redirect to results
     submitForm()
@@ -63,11 +62,11 @@ function handleNext () {
   }
 }
 
-function handlePrevious () {
+function handlePrevious() {
   goToPreviousQuestion()
 }
 
-function submitForm () {
+function submitForm() {
   // Process the final form data from the answers store
   console.log('Form submitted with answers:', answers.value)
   // You might want to send this data to an API, or calculate results
@@ -88,11 +87,11 @@ function submitForm () {
       </h2>
       <div
         class="fr-stepper__steps"
-        data-fr-current-step="1"
-        data-fr-steps="3"
+        :data-fr-current-step="currentStepIndex"
+        :data-fr-steps="totalCategoriesNumber"
       />
       <p class="fr-stepper__details">
-        <span class="fr-text--bold">Étape suivante :</span>
+        <span class="fr-text--bold">Étape suivante :</span>
         {{ nextCategory?.title }}
       </p>
     </div>
@@ -107,42 +106,35 @@ function submitForm () {
           {{ currentQuestion?.title }}
         </h2>
         <p>{{ currentQuestion?.description }}</p>
-        <template v-if="currentQuestion?.type === 'radio' && currentQuestion.choices">
-          <DsfrRadioButtonSet
-            :options="currentQuestion.choices.map(choice => ({
-              label: choice.title,
-              value: choice.id,
-            }))"
-            :name="currentQuestion.id"
+
+        <!-- Question component based on type -->
+        <template v-if="currentQuestion">
+          <RadioButtonQuestion
+            v-if="currentQuestion.type === 'radio'"
+            :question="currentQuestion"
             :model-value="answers[currentQuestion.id]"
-            @update:model-value="handleRadioChange"
+            @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
           />
-        </template>
 
-        <!-- Add other question types as needed -->
-        <template v-else-if="currentQuestion?.type === 'checkbox'">
-          <!-- Checkbox implementation -->
-        </template>
-
-        <template v-else-if="currentQuestion?.type === 'number'">
-          <DsfrInputGroup
+          <MultiSelectQuestion
+            v-else-if="currentQuestion.type === 'checkbox'"
+            :question="currentQuestion"
             :model-value="answers[currentQuestion.id]"
-            type="number"
-            :name="currentQuestion.id"
-            :label="currentQuestion.title"
-            label-visible
-            @update:model-value="value => handleInputChange(currentQuestion.id, value)"
+            @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
           />
-        </template>
 
-        <template v-else-if="currentQuestion?.type === 'date'">
-          <DsfrInputGroup
+          <NumberQuestion
+            v-else-if="currentQuestion.type === 'number'"
+            :question="currentQuestion"
             :model-value="answers[currentQuestion.id]"
-            type="date"
-            :name="currentQuestion.id"
-            :label="currentQuestion.title"
-            label-visible
-            @update:model-value="value => handleInputChange(currentQuestion.id, value)"
+            @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
+          />
+
+          <DateQuestion
+            v-else-if="currentQuestion.type === 'date'"
+            :question="currentQuestion"
+            :model-value="answers[currentQuestion.id]"
+            @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
           />
         </template>
       </div>

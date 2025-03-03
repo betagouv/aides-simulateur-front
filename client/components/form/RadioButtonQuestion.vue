@@ -1,25 +1,33 @@
-<script setup lang="ts">
+<script lang="ts" setup>
+import { type SurveyQuestion } from '@/stores/survey'
+
 const props = defineProps<{
-  question: any
+  question: SurveyQuestion
+  modelValue: string | number | boolean | undefined
 }>()
 
-const formStore = useFormStore()
-const { answers, setAnswer } = formStore
+const emit = defineEmits<{
+  'update:modelValue': [value: string | number | boolean]
+}>()
 
-const modelValue = computed({
-  get: () => answers[props.question.id],
-  set: (value) => setAnswer(props.question.id, value)
-})
+function handleChange(value: string | number | boolean) {
+  emit('update:modelValue', value)
+}
+
+console.log("--- RadioButton: modelValue = ", props.modelValue);
+
 </script>
 
 <template>
   <div class="question-container">
     <DsfrRadioButtonSet
-      v-model="modelValue"
+      :options="question.choices?.map(choice => ({
+        label: choice.title,
+        value: choice.id,
+      })) || []"
       :name="question.id"
-      :legend="question.title"
-      :hint="question.hint"
-      :options="question.options"
+      :model-value="modelValue"
+      @update:model-value="handleChange"
     />
   </div>
 </template>

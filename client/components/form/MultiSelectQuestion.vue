@@ -1,39 +1,53 @@
-<script setup lang="ts">
+<script lang="ts" setup>
+import { type SurveyQuestion } from '@/stores/survey'
+
 const props = defineProps<{
-  question: any
+  question: SurveyQuestion
+  modelValue: string[] | undefined
 }>()
 
-const formStore = useFormStore()
-const { answers, setAnswer } = formStore
+const emit = defineEmits<{
+  'update:modelValue': [value: string[]]
+}>()
 
-const selectedOptions = ref<string[]>(answers[props.question.id] || [])
+// Implement a checkbox group with DsfrCheckbox
+const selectedValues = ref<string[]>(props.modelValue || [])
 
-watch(selectedOptions, (newVal) => {
-  setAnswer(props.question.id, newVal)
+// Watch for external changes
+watch(() => props.modelValue, (newValue) => {
+  selectedValues.value = newValue || []
 })
+
+// Update parent when selection changes
+function toggleOption(choiceId: string) {
+  const values = [...selectedValues.value]
+  const index = values.indexOf(choiceId)
+
+  if (index === -1) {
+    values.push(choiceId)
+  } else {
+    values.splice(index, 1)
+  }
+
+  selectedValues.value = values
+  emit('update:modelValue', values)
+}
 </script>
 
 <template>
-  <div class="question-container">
-    <fieldset class="fr-fieldset">
-      <legend class="fr-fieldset__legend">{{ question.title }}</legend>
-      <p v-if="question.hint" class="fr-hint-text">{{ question.hint }}</p>
-
-      <div class="fr-fieldset__content">
-        <div v-for="option in question.options" :key="option.value" class="fr-checkbox-group">
-          <input
-            :id="`${question.id}-${option.value}`"
-            type="checkbox"
-            :name="question.id"
-            :value="option.value"
-            v-model="selectedOptions"
-            class="fr-checkbox"
-          >
-          <label :for="`${question.id}-${option.value}`" class="fr-label">
-            {{ option.label }}
-          </label>
-        </div>
-      </div>
-    </fieldset>
+  <div class="">
+    <div
+      v-for="choice in question.choices"
+      :key="choice.id"
+      class="fr-my-4v"
+    >
+      <DsfrCheckbox
+        :id="`${question.id}-${choice.id}`"
+        :name="`${question.id}-${choice.id}`"
+        :label="choice.title"
+        :model-value="selectedValues.includes(choice.id)"
+        @update:model-value="() => toggleOption(choice.id)"
+      />
+    </div>
   </div>
 </template>
