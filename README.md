@@ -4,7 +4,7 @@ Interface graphique du simulateur aides-simplifiées.
 
 ## Pré-requis
 
-L'application `aides-simulateur-front` nécessite en particulier cet environnement : 
+L'application `aides-simulateur-front` nécessite en particulier cet environnement :
 
 * [Node.js](https://nodejs.org/fr) : environnement d'exécution JavaScript (version 22)
 
@@ -55,7 +55,7 @@ pnpm run dev
 
 ## Générer le code de production
 
-Génère le code de production de l’application :
+Génère le code de production de l’application :
 
 ```bash
 # npm
@@ -65,7 +65,7 @@ npm run build
 pnpm run build
 ```
 
-Prévisualisation du code de prod (nécessite un build préalable) :
+Prévisualisation du code de prod (nécessite un build préalable) :
 
 ```bash
 # npm

@@ -1,7 +1,7 @@
 import type { Preferences, UseSchemeResult } from '@gouvminint/vue-dsfr'
 import { useScheme } from '@gouvminint/vue-dsfr'
 
-export const useSchemeStore = defineStore('gps-scheme', () => {
+export const useSchemeStore = defineStore('scheme', () => {
   const isModalOpen = ref(false)
 
   const openModal = () => {

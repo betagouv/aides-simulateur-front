@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { simulateurs, type Simulateur } from '@/data/simulateurs'
+import { type Simulateur, simulateurs } from '@/data/simulateurs'
 
 definePageMeta({
   layout: 'default',
@@ -12,17 +12,18 @@ definePageMeta({
 const route = useRoute()
 const simulateurId = ref(route.params.simulateur_id)
 
-const simulateur = computed<Simulateur | undefined>(() => {
-  return simulateurs.find(s => s.id === simulateurId.value)
+const simulateur = computed<Simulateur>(() => {
+  // We can safely cast here because we validated the route
+  return simulateurs.find(s => s.id === simulateurId.value) as Simulateur
 })
 
-// Handle simulator is not found
-if (!simulateur.value) {
-  throw createError({
-    statusCode: 404,
-    message: 'Simulateur non trouvé'
-  })
-}
+const crumbs = computed(() => {
+  return [
+    { text: 'Accueil', to: '/' },
+    { text: 'Simulateurs', to: '/simulateurs' },
+    { text: simulateur.value.title, to: `/simulateurs/${simulateur.value.id}` }
+  ]
+})
 
 // Load pictogram dynamically
 const pictogram = ref<string | undefined>()
@@ -30,21 +31,15 @@ simulateur.value.pictogram()
   .then((svg) => {
     pictogram.value = svg.default
   })
-
 </script>
 
 <template>
-  <section v-if="simulateur" class="fr-background-default--blue-france">
-    <div class="fr-container fr-py-3w fr-py-md-4w">
-      <div class="fr-grid-row fr-grid-row--gutters">
-        <div class="fr-col-12">
-          <DsfrBreadcrumb class="fr-m-0" breadcrumb-id="mon-fil-dariane" :links="[
-            { text: 'Accueil', to: '/' },
-            { text: 'Simulateurs', to: '/simulateurs' },
-            { text: simulateur.title, to: `/simulateurs/${simulateur.id}` },
-          ]" />
-        </div>
-      </div>
+  <BrandBackgroundContainer>
+    <BreadcrumbSectionContainer :crumbs="crumbs" />
+    <SectionContainer
+      v-if="simulateur"
+      type="page-header"
+    >
       <div class="fr-grid-row fr-grid-row--gutters">
         <div class="fr-col-3 fr-col-sm-2 fr-col-md-1">
           <DsfrPictogram
@@ -58,17 +53,20 @@ simulateur.value.pictogram()
           </h1>
         </div>
       </div>
-    </div>
-  </section>
-  <section class="fr-background-alt--blue-france fr-py-15w">
-    <div class="fr-container">
+    </SectionContainer>
+  </BrandBackgroundContainer>
+  <BrandBackgroundContainer
+    textured
+    blue
+  >
+    <SectionContainer type="page-footer">
       <div class="fr-grid-row fr-grid-row--gutters">
         <div class="fr-col-12 fr-col-offset-md-1 fr-col-md-10 fr-col-offset-lg-2 fr-col-lg-8">
           Simulation form for "{{ simulateur.title }}"
         </div>
       </div>
-    </div>
-  </section>
+    </SectionContainer>
+  </BrandBackgroundContainer>
 </template>
 
 <style scoped lang="scss">
