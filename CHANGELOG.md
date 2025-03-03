@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.1.0 [#21](https://github.com/betagouv/aides-simulateur-front/pull/21)
+
+* Ajout de fonctionnalité.
+* Détail :
+  * Applique un layout dédié aux pages exposées par `iframe` (sans header, footer ni padding)
+
 ### 0.0.2 [#13](https://github.com/betagouv/aides-simulateur-front/pull/13)
 
 * Évolution technique.
