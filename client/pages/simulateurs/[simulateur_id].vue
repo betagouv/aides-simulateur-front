@@ -3,6 +3,10 @@ import { simulateurs, type Simulateur } from '@/data/simulateurs'
 
 definePageMeta({
   layout: 'default',
+  middleware: 'check-iframe-layout',
+  validate ({ params }) {
+    return simulateurs.some(s => s.id === params.simulateur_id)
+  }
 })
 
 const route = useRoute()
