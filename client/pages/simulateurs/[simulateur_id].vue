@@ -43,19 +43,6 @@ simulateur.value.pictogram()
       type="page-header"
     >
       <div class="fr-grid-row fr-grid-row--gutters">
-        <div class="fr-col-12">
-          <DsfrBreadcrumb
-            class="fr-m-0"
-            breadcrumb-id="mon-fil-dariane"
-            :links="[
-              { text: 'Accueil', to: '/' },
-              { text: 'Simulateurs', to: '/simulateurs' },
-              { text: simulateur.title, to: `/simulateurs/${simulateur.id}` },
-            ]"
-          />
-        </div>
-      </div>
-      <div class="fr-grid-row fr-grid-row--gutters">
         <div class="fr-col-3 fr-col-sm-2 fr-col-md-1">
           <DsfrPictogram
             v-if="pictogram"
