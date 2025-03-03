@@ -1,4 +1,19 @@
 # CHANGELOG
+## 0.3.0 [#23](https://github.com/betagouv/aides-simulateur-front/pull/23)
+
+* Ajout de fonctionnalité.
+* Détail :
+  * Création de l'architecture d'un simulateur
+    * Chargement dynamique des questions du simulateur avec la librairie `form.ts`
+    * Logique de navigation conditionnelle des questions avec la librairie `form.ts` 
+  * Affichage front dynamique et modulaire des formulaires d'aides:
+    * Composant `Survey`
+    * Composant `DateQuestion`
+    * Composant `MultiSelectQuestion`
+    * Composant `RadioButtonQuestion`
+  * Persistence des données remplies par l'utilisateuravec `pinia-plugin-persistedstate`  
+  * Ajout d'un bouton de soumission du formulaire et d'une méthode `submitForm` pour gérer le traitement des réponses du formulaire dans le composant `Survey`
+
 ## 0.2.0 [#14](https://github.com/betagouv/aides-simulateur-front/pull/14)
 
 * Ajout de fonctionnalité.

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { type Simulateur, simulateurs } from '@/data/simulateurs'
+import { storeToRefs } from 'pinia'
 
 definePageMeta({
   layout: 'default',
@@ -10,7 +11,8 @@ definePageMeta({
 })
 
 const route = useRoute()
-const simulateurId = ref(route.params.simulateur_id)
+
+const simulateurId = ref(route.params.simulateur_id as string)
 
 const simulateur = computed<Simulateur>(() => {
   // We can safely cast here because we validated the route
@@ -61,9 +63,7 @@ simulateur.value.pictogram()
   >
     <SectionContainer type="page-footer">
       <div class="fr-grid-row fr-grid-row--gutters">
-        <div class="fr-col-12 fr-col-offset-md-1 fr-col-md-10 fr-col-offset-lg-2 fr-col-lg-8">
-          Simulation form for "{{ simulateur.title }}"
-        </div>
+        <Survey :simulateur-id="simulateurId" />
       </div>
     </SectionContainer>
   </BrandBackgroundContainer>
@@ -73,5 +73,12 @@ simulateur.value.pictogram()
 .title-container {
   display: flex;
   align-items: center;
+}
+
+.simulator-form-container {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 </style>
