@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { useIframeDisplay } from '@/composables/useIframeDisplay'
 import { type Simulateur, simulateurs } from '@/data/simulateurs'
-import { storeToRefs } from 'pinia'
 
 const { isIframe } = useIframeDisplay()
 
