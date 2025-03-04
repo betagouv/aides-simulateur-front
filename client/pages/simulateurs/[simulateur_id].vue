@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { type Simulateur, simulateurs } from '@/data/simulateurs'
 import { storeToRefs } from 'pinia'
+import { useIframeDisplay } from '@/composables/useIframeDisplay'
+const { isIframe } = useIframeDisplay()
 
 definePageMeta({
   layout: 'default',
@@ -33,11 +35,21 @@ simulateur.value.pictogram()
   .then((svg) => {
     pictogram.value = svg.default
   })
+
+// Load iframe-resizer script when in iframe mode
+onMounted(() => {
+  if (isIframe.value) {
+    const script = document.createElement('script')
+    script.src = 'https://cdn.jsdelivr.net/npm/iframe-resizer@4.3.2/js/iframeResizer.contentWindow.min.js'
+    script.async = true
+    document.head.appendChild(script)
+  }
+})
 </script>
 
 <template>
-  <BrandBackgroundContainer>
-    <BreadcrumbSectionContainer :crumbs="crumbs" />
+  <BrandBackgroundContainer v-if="!isIframe">
+    <BreadcrumbSectionContainer :crumbs="crumbs"  />
     <SectionContainer
       v-if="simulateur"
       type="page-header"
