@@ -1,4 +1,11 @@
 # CHANGELOG
+## 0.3.1 [#25](https://github.com/betagouv/aides-simulateur-front/pull/25)
+
+* Evolutions techniques
+* Détail :
+  * Ajout dans [simulateurs_id].vue du script `iframeResizer.contentWindow.min.js` afin de gérer le resizing dynamique de l'iframe
+  * Modification du script `iframe-integration.js` pour debuger le resizing dynamique de l'iframe
+  
 ## 0.3.0 [#23](https://github.com/betagouv/aides-simulateur-front/pull/23)
 
 * Ajout de fonctionnalité.

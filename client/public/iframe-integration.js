@@ -10,7 +10,7 @@
     return
   }
 
-  // Fonction pour charger iframe-resizer depuis CDN
+  // Fonction pour charger iframe-resizer depuis le CDN
   function loadIframeResizer (callback) {
     // Vérifier si iframeResizer est déjà chargé
     if (window.iFrameResize) {
@@ -45,7 +45,7 @@
 
   // Récupérer les options d'intégration depuis les attributs data-*
   const displayOption = currentScript.dataset.displayOption || 'no-header'
-  const selectedSimulator = currentScript.dataset.simulator || 'test-apl'
+  const selectedSimulator = currentScript.dataset.simulator || 'demenagement-logement'
 
   // Construire l'URL du simulateur
   let baseUrl
@@ -59,7 +59,7 @@
     baseUrl = scriptUrl.origin
   }
 
-  const src = new URL(`${baseUrl}/${selectedSimulator}`)
+  const src = new URL(`${baseUrl}/simulateurs/${selectedSimulator}`)
 
   // Configurer les paramètres
   src.searchParams.set('iframe', 'true')
@@ -73,10 +73,11 @@
     id: 'simulateur-aides',
     src: src.toString(),
     title: 'Simulateur d\'aides simplifiées',
-    style: 'border: none; width: 100%; display: block; height: 700px',
+    style: 'border: none; width: 100%; display: block; height: 500px',
     allow: 'clipboard-write',
     allowfullscreen: true,
-    loading: 'lazy',
+    webkitallowfullscreen: true,
+    mozallowfullscreen: true,
   }
 
   // Appliquer les attributs à l'iframe
@@ -85,13 +86,19 @@
   }
 
   // Insérer l'iframe dans le document
-  if (currentScript.parentElement.tagName === 'HEAD') {
+  const container = document.getElementById('aides-simplifiees-iframe-container')
+  console.log('container', container)
+  if (container) {
+    // Priorité au conteneur dédié s'il existe
+    container.appendChild(iframe)
+  } else if (currentScript.parentElement.tagName === 'HEAD') {
+    // Si le script est dans le HEAD et qu'il n'y a pas de conteneur dédié
     const body = document.body || document.querySelector('body')
     if (body) {
       body.appendChild(iframe)
     }
-  }
-  else {
+  } else {
+    // Sinon, insérer après le script courant
     currentScript.insertAdjacentElement('afterend', iframe)
   }
 
@@ -99,10 +106,7 @@
   loadIframeResizer((iframeResize) => {
     iframeResize(
       {
-        log: false,
-        checkOrigin: false,
-        heightCalculationMethod: 'lowestElement',
-        sizeWidth: false
+        license: "GPLv3",
       },
       iframe
     )

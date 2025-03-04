@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 
-// Choix des options d'affichage
+// Choix des options d'affichage (inutilisé pour le moment)
 const displayOptions = ref([
   { label: 'En tête seulement', value: 'header-only' },
   { label: 'Sans tête', value: 'no-header' },
@@ -9,53 +9,45 @@ const displayOptions = ref([
 ])
 const selectedDisplayOption = ref('no-header')
 
-// Choix du simulateur
+// Choix du simulateur (inutilisé pour le moment)
 const simulators = ref([
-  { label: 'Simulateur APL', value: 'test-apl' },
-  { label: 'Simulateur Etudiant', value: 'test-etudiant' }
+  { label: 'Simulateur APL', value: 'demenagement-logement' },
+  { label: 'Simulateur Etudiant', value: 'simulation-globale' }
 ])
-const selectedSimulator = ref('test-apl')
+const selectedSimulator = ref('demenagement-logement')
 
 // Inclusion du script
 const scriptPath = '/iframe-integration.js'
 const fullScript = computed(() => {
-  return `<script src="${window?.location.origin}${scriptPath}" data-display-option="${selectedDisplayOption.value}"><\/script>`
+  return `<script src="${window?.location.origin}${scriptPath}" defer><\/script>`
 })
+
+// Récupérer la référence de la div
+const divReference = computed(() => {
+  return `<div id='aides-simplifiees-iframe-container'></div>`
+})
+
 // Fonction pour mettre à jour l'aperçu de l'iframe
 function setIframeContainer (_selectedDisplayOption: string, _selectedSimulator: string): void {
-  const dest = document.getElementById('iframe-preview-container')
+  const dest = document.getElementById('aides-simplifiees-iframe-container')
   if (!dest) { return }
 
   // Nettoyer le conteneur
   dest.innerHTML = ''
 
-  // Créer l'iframe avec les options sélectionnées
-  const iframe = document.createElement('iframe')
+  // Créer et ajouter le script d'intégration plutôt que l'iframe directement
+  const script = document.createElement('script')
+  script.src = `${window?.location.origin}/iframe-integration.js`
 
-  const src = new URL(`${window?.location.origin}/${_selectedSimulator}?data-display-option=${_selectedDisplayOption}`)
+  // Inutilisé pour le moment
+  // script.dataset.displayOption = _selectedDisplayOption
+  // script.dataset.simulator = _selectedSimulator
 
-  src.searchParams.set('iframe', 'true')
-  src.searchParams.set('utm_source', `iframe@${window?.location.hostname}`)
-  src.searchParams.set('utm_term', window?.location.pathname)
-
-  // Configurer les attributs de l'iframe
-  const iframeAttributes = {
-    id: 'iframe-simulateur',
-    src: src.toString(),
-    title: 'Simulateur d\'aides',
-    style: 'border: none; width: 100%; display: block; height: 700px',
-    allow: 'clipboard-write',
-    allowfullscreen: true,
-  }
-
-  Object.entries(iframeAttributes).forEach(([key, value]) => {
-    iframe.setAttribute(key, value.toString())
-  })
-
-  dest.appendChild(iframe)
+  // Ajouter le script au conteneur
+  dest.appendChild(script)
 }
 
-// Surveiller les changements d'options et de thème
+// Inutilisé pour le moment : surveiller les changements d'options et de thème
 watch([selectedDisplayOption, selectedSimulator], () => {
   setIframeContainer(selectedDisplayOption.value, selectedSimulator.value)
 })
@@ -69,7 +61,6 @@ onMounted(() => {
   <div class="fr-container fr-pt-12v">
     <article class="fr-article ">
       <h1>Intégrez le simulateur sur votre site</h1>
-
       <p>Notre simulateur d'aides est intégrable de manière transparente en ajoutant une simple ligne de code à votre page web.</p>
       <p>
         Le script de son intégration est accessible
@@ -80,12 +71,19 @@ onMounted(() => {
       </p>
 
       <h2>Code d'intégration</h2>
-      <p>Voici le code à copier-coller sur votre site :</p>
+      <p>Voici le script à intégrer sur votre site :</p>
       <DsfrCallout>
         <code class="fr-text--sm">{{ fullScript }}</code>
       </DsfrCallout>
+      <p>Ce script créera l'iframe adéquate dans la div que vous aurez préalablement créé et sur votre site.</p>
+      <DsfrCallout>
+        <code> {{ divReference }} </code>
+      </DsfrCallout>
 
-      <div class="fr-form-group fr-mt-4w">
+      <div
+        v-if="false"
+        class="fr-form-group fr-mt-4w"
+      >
         <div class="fr-grid-row">
           <div>
             <DsfrFieldset
@@ -125,16 +123,18 @@ onMounted(() => {
 
       <h2>Prévisualisation</h2>
       <div
-        id="iframe-preview-container"
+        id="aides-simplifiees-iframe-container"
         class="fr-mt-4w"
       />
 
-      <h2>Personnalisation</h2>
-      <p>
-        Si vous souhaitez une intégration personnalisée du simulateur, vous pouvez
-        contacter notre équipe à l'adresse
-        <a href="mailto:contact@aides-simplifiees.fr">contact@aides-simplifiees.fr</a>.
-      </p>
+      <div class="fr-my-8w">
+        <h2>Personnalisation</h2>
+        <p>
+          Si vous souhaitez une intégration personnalisée du simulateur, vous pouvez
+          contacter notre équipe à l'adresse
+          <a href="mailto:contact@aides-simplifiees.fr">contact@aides-simplifiees.fr</a>.
+        </p>
+      </div>
     </article>
   </div>
 </template>
