@@ -102,7 +102,7 @@ export const useFormStore = defineStore('form', () => {
   const currentQuestion = computed(() => {
     // First check if it's a triggered question
     const triggeredQuestion = currentQuestionId.value ? findTriggeredQuestion(currentQuestionId.value) : null
-    if (triggeredQuestion) return triggeredQuestion
+    if (triggeredQuestion) { return triggeredQuestion }
 
     // If not, look in the current step
     if (!currentStep.value || !currentQuestionId.value) { return null }
@@ -114,13 +114,13 @@ export const useFormStore = defineStore('form', () => {
 
   // Check if current question is a triggered question
   const isTriggeredQuestion = computed(() => {
-    if (!currentQuestionId.value) return false
+    if (!currentQuestionId.value) { return false }
     return !!findTriggeredQuestion(currentQuestionId.value)
   })
 
   // Find a question by ID across all questions (steps and triggered)
-  function findQuestionById(questionId: string): { question: SurveyQuestion | null, stepId: string | null } {
-    if (!surveySchema.value) return { question: null, stepId: null }
+  function findQuestionById (questionId: string): { question: SurveyQuestion | null, stepId: string | null } {
+    if (!surveySchema.value) { return { question: null, stepId: null } }
 
     // First, search in the normal steps
     for (const step of surveySchema.value.steps) {
@@ -142,8 +142,8 @@ export const useFormStore = defineStore('form', () => {
   }
 
   // Find a triggered question by ID
-  function findTriggeredQuestion(questionId: string): SurveyQuestion | null {
-    if (!surveySchema.value || !surveySchema.value.triggeredQuestions) return null
+  function findTriggeredQuestion (questionId: string): SurveyQuestion | null {
+    if (!surveySchema.value || !surveySchema.value.triggeredQuestions) { return null }
 
     return surveySchema.value.triggeredQuestions.find(q => q.id === questionId) || null
   }
@@ -184,7 +184,7 @@ export const useFormStore = defineStore('form', () => {
           const selectedValues = getAnswerValue(questionId)
 
           // If no selection made yet, return false
-          if (!selectedValues) return false
+          if (!selectedValues) { return false }
 
           // For a single value (radio buttons), check if it's in the values to check
           if (typeof selectedValues === 'string') {
@@ -208,7 +208,7 @@ export const useFormStore = defineStore('form', () => {
           const leftValue = getAnswerValue(leftSide)
 
           // If the question hasn't been answered yet, return false
-          if (leftValue === undefined) return false
+          if (leftValue === undefined) { return false }
 
           // Parse right side value
           let rightValue: any = rightSide
@@ -219,10 +219,10 @@ export const useFormStore = defineStore('form', () => {
           }
 
           // Handle date comparison
-          const isLeftDate = typeof leftValue === 'string' &&
-            /^\d{4}-\d{2}-\d{2}$/.test(leftValue)
-          const isRightDate = typeof rightValue === 'string' &&
-            /^\d{4}-\d{2}-\d{2}$/.test(rightValue)
+          const isLeftDate = typeof leftValue === 'string'
+            && /^\d{4}-\d{2}-\d{2}$/.test(leftValue)
+          const isRightDate = typeof rightValue === 'string'
+            && /^\d{4}-\d{2}-\d{2}$/.test(rightValue)
 
           if (isLeftDate && isRightDate) {
             const leftDate = new Date(leftValue)
@@ -330,7 +330,8 @@ export const useFormStore = defineStore('form', () => {
       // Update step ID if we're moving to a different step
       if (result.nextStepId && result.nextStepId !== currentStepId.value) {
         currentStepId.value = result.nextStepId
-      } else if (!result.nextStepId) {
+      }
+      else if (!result.nextStepId) {
         // We're moving to a triggered question
         // Keep the current step as context, but make the UI show the triggered question
       }
@@ -352,7 +353,7 @@ export const useFormStore = defineStore('form', () => {
       return false
     }
 
-    if (!currentStep.value) return false
+    if (!currentStep.value) { return false }
 
     const currentQuestionIndex = currentStep.value.questions.findIndex(
       (q: any) => q.id === currentQuestionId.value
@@ -364,7 +365,7 @@ export const useFormStore = defineStore('form', () => {
     }
 
     // If we're at the first question of a step, go to the previous step
-    if (!surveySchema.value) return false
+    if (!surveySchema.value) { return false }
 
     const currentStepIndex = surveySchema.value.steps.findIndex(
       (cat: any) => cat.id === currentStepId.value

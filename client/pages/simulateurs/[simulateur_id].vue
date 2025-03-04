@@ -21,21 +21,6 @@ const simulateur = computed<Simulateur>(() => {
   return simulateurs.find(s => s.id === simulateurId.value) as Simulateur
 })
 
-const crumbs = computed(() => {
-  return [
-    { text: 'Accueil', to: '/' },
-    { text: 'Simulateurs', to: '/simulateurs' },
-    { text: simulateur.value.title, to: `/simulateurs/${simulateur.value.id}` }
-  ]
-})
-
-// Load pictogram dynamically
-const pictogram = ref<string | undefined>()
-simulateur.value.pictogram()
-  .then((svg) => {
-    pictogram.value = svg.default
-  })
-
 // Load iframe-resizer script when in iframe mode
 onMounted(() => {
   if (isIframe.value) {
@@ -48,27 +33,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <BrandBackgroundContainer v-if="!isIframe">
-    <BreadcrumbSectionContainer :crumbs="crumbs" />
-    <SectionContainer
-      v-if="simulateur"
-      type="page-header"
-    >
-      <div class="fr-grid-row fr-grid-row--gutters">
-        <div class="fr-col-3 fr-col-sm-2 fr-col-md-1">
-          <DsfrPictogram
-            v-if="pictogram"
-            :svg-path="pictogram"
-          />
-        </div>
-        <div class="title-container fr-col-9 fr-col-sm-10 fr-col-md-11">
-          <h1 class="fr-h5 fr-m-0">
-            {{ simulateur.title }}
-          </h1>
-        </div>
-      </div>
-    </SectionContainer>
-  </BrandBackgroundContainer>
+  <SimulationHeaderSection :simulateur="simulateur" />
   <BrandBackgroundContainer
     textured
     blue
