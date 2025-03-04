@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import RadioButtonQuestion from './RadioButtonQuestion.vue'
+import type { SurveyQuestion } from '@/stores/survey'
+import DateQuestion from './DateQuestion.vue'
 import MultiSelectQuestion from './MultiSelectQuestion.vue'
 import NumberQuestion from './NumberQuestion.vue'
-import DateQuestion from './DateQuestion.vue'
-import { type SurveyQuestion } from '@/stores/survey'
+import RadioButtonQuestion from './RadioButtonQuestion.vue'
 
 const props = defineProps<{
   simulateurId: string
@@ -46,13 +46,13 @@ onMounted(async () => {
 })
 
 // Handle updates from question components
-function handleQuestionUpdate(questionId: string, value: any) {
+function handleQuestionUpdate (questionId: string, value: any) {
   console.log('----- setAnswer', questionId, value)
   setAnswer(questionId, value)
 }
 
 // Navigation functions
-function handleNext() {
+function handleNext () {
   if (isLastQuestion.value) {
     // Handle form completion, maybe redirect to results
     submitForm()
@@ -62,11 +62,11 @@ function handleNext() {
   }
 }
 
-function handlePrevious() {
+function handlePrevious () {
   goToPreviousQuestion()
 }
 
-function submitForm() {
+function submitForm () {
   // Process the final form data from the answers store
   console.log('Form submitted with answers:', answers.value)
   // You might want to send this data to an API, or calculate results
