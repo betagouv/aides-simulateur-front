@@ -34,29 +34,7 @@ onMounted(() => {
 
 <template>
   <SimulationHeaderSection :simulateur="simulateur" />
-  <BrandBackgroundContainer
-    textured
-    blue
-    subtle
-  >
-    <SectionContainer type="page-footer">
-      <div class="fr-grid-row fr-grid-row--gutters">
-        <Survey :simulateur-id="simulateurId" />
-      </div>
-    </SectionContainer>
-  </BrandBackgroundContainer>
+  <UserActionSectionRow>
+    <Survey :simulateur-id="simulateurId" />
+  </UserActionSectionRow>
 </template>
-
-<style scoped lang="scss">
-.title-container {
-  display: flex;
-  align-items: center;
-}
-
-.simulator-form-container {
-  background-color: white;
-  padding: 2rem;
-  border-radius: 4px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-</style>
