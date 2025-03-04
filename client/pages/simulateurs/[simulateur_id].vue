@@ -1,7 +1,8 @@
 <script lang="ts" setup>
+import { useIframeDisplay } from '@/composables/useIframeDisplay'
 import { type Simulateur, simulateurs } from '@/data/simulateurs'
 import { storeToRefs } from 'pinia'
-import { useIframeDisplay } from '@/composables/useIframeDisplay'
+
 const { isIframe } = useIframeDisplay()
 
 definePageMeta({
@@ -49,7 +50,7 @@ onMounted(() => {
 
 <template>
   <BrandBackgroundContainer v-if="!isIframe">
-    <BreadcrumbSectionContainer :crumbs="crumbs"  />
+    <BreadcrumbSectionContainer :crumbs="crumbs" />
     <SectionContainer
       v-if="simulateur"
       type="page-header"

@@ -28,7 +28,7 @@ const divReference = computed(() => {
 })
 
 // Fonction pour mettre à jour l'aperçu de l'iframe
-function setIframeContainer(_selectedDisplayOption: string, _selectedSimulator: string): void {
+function setIframeContainer (_selectedDisplayOption: string, _selectedSimulator: string): void {
   const dest = document.getElementById('aides-simplifiees-iframe-container')
   if (!dest) { return }
 
@@ -39,9 +39,9 @@ function setIframeContainer(_selectedDisplayOption: string, _selectedSimulator: 
   const script = document.createElement('script')
   script.src = `${window?.location.origin}/iframe-integration.js`
 
-  //Inutilisé pour le moment
-  //script.dataset.displayOption = _selectedDisplayOption
-  //script.dataset.simulator = _selectedSimulator
+  // Inutilisé pour le moment
+  // script.dataset.displayOption = _selectedDisplayOption
+  // script.dataset.simulator = _selectedSimulator
 
   // Ajouter le script au conteneur
   dest.appendChild(script)
@@ -77,10 +77,13 @@ onMounted(() => {
       </DsfrCallout>
       <p>Ce script créera l'iframe adéquate dans la div que vous aurez préalablement créé et sur votre site.</p>
       <DsfrCallout>
-        <code> {{ divReference }}</code>
+        <code> {{ divReference }} </code>
       </DsfrCallout>
 
-      <div class="fr-form-group fr-mt-4w" v-if="false">
+      <div
+        v-if="false"
+        class="fr-form-group fr-mt-4w"
+      >
         <div class="fr-grid-row">
           <div>
             <DsfrFieldset
@@ -132,7 +135,6 @@ onMounted(() => {
           <a href="mailto:contact@aides-simplifiees.fr">contact@aides-simplifiees.fr</a>.
         </p>
       </div>
-
     </article>
   </div>
 </template>
