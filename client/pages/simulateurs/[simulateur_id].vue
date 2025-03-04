@@ -37,6 +37,7 @@ onMounted(() => {
   <BrandBackgroundContainer
     textured
     blue
+    subtle
   >
     <SectionContainer type="page-footer">
       <div class="fr-grid-row fr-grid-row--gutters">
