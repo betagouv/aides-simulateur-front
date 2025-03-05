@@ -6,6 +6,8 @@ import MultiSelectQuestion from './MultiSelectQuestion.vue'
 import NumberQuestion from './NumberQuestion.vue'
 import RadioButtonQuestion from './RadioButtonQuestion.vue'
 import TextQuestion from './TextQuestion.vue'
+import { type OpenFiscaFranceCalculation, buildRequest, fetchOpenFiscaFranceCalculation } from "@/utils/calculate-aides"
+
 
 const props = defineProps<{
   simulateurId: string
@@ -130,10 +132,20 @@ function handlePrevious () {
   goToPreviousQuestion()
 }
 
-function submitForm () {
+async function submitForm() {
   // Process the final form data from the answers store
-  // Form is submitted with answers: answers.value
-  // You might want to send this data to an API, or calculate results
+  console.log('Form submitted with answers:', answers.value)
+  
+  // Sending this data to a web API to calculate a set of 'aides'
+  let request: OpenFiscaFranceCalculation = buildRequest(answers)
+
+  try {
+    const results = await fetchOpenFiscaFranceCalculation(request)
+    console.debug(results)
+  } catch (error){
+    // TODO Handle the error more professionnally and display a message to the user :)
+    console.error("Erreur lors de la soumission du formulaire et de l'appel au calcul.")
+  }
 }
 
 // Fonctions pour le choix de l'utilisateur
