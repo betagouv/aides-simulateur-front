@@ -1,65 +1,73 @@
 {
   "id": "simulation-globale",
-  "title": "Aides financières au logement",
-  "description": "Répondez à ces questions pour découvrir les aides au logement auxquelles vous avez droit",
+  "title": "Aides financières au déménagement et au logement",
+  "description": "Répondez à ces questions pour découvrir les aides au logement et déménagement auxquelles vous pourriez être éligible",
   "steps": [
+    {
+      "id": "revenus",
+      "title": "Revenus",
+      "questions": [
+        {
+          "id": "type-revenus",
+          "title": "Quels sont les types de revenus qui s'appliquent à votre situation ?",
+          "type": "checkbox",
+          "choices": [
+            { "id": "revenus-activite", "title": "Revenus d’activité" },
+            { "id": "revenus-remplacement", "title": "Revenus de remplacement" },
+            { "id": "revenus-allocations", "title": "Revenus des allocations and co" },
+            { "id": "revenus-entreprise", "title": "Revenus d'entreprise" },
+            { "id": "ressources-parents", "title": "Ressources des parents" },
+            { "id": "ressources-conjoint", "title": "Ressources du conjoint" },
+            { "id": "autres-revenus", "title": "Autres revenus" }
+          ],
+          "bypassToQuestion": [
+            { "condition": "type-revenus.includes('revenus-activite')", "question": "salaire-imposable" },
+            { "condition": "type-revenus.includes('revenus-remplacement')", "question": "revenus-chomage" },
+            { "condition": "type-revenus.includes('revenus-allocations')", "question": "abattement-indemnite-chomage" },
+            { "condition": "type-revenus.includes('revenus-entreprise')", "question": "moins-values" },
+            { "condition": "type-revenus.includes('ressources-parents')", "question": "ressources-parents" },
+            { "condition": "type-revenus.includes('ressources-conjoint')", "question": "ressources-conjoint" },
+            { "condition": "type-revenus.includes('autres-revenus')", "question": "pensions-alimentaires" }
+          ]
+        },
+        {
+          "id": "confirmation-end",
+          "title": "Voulez-vous confirmer ces informations ?",
+          "description": "En poursuivant, vous affirmez être conscients que les informations d'eligibilité sont données à titre indicatif et ne sont pas contractuelles.",
+          "type": "radio",
+          "choices": [
+            { "id": "confirmation-end-oui", "title": "Oui" },
+            { "id": "confirmation-end-non", "title": "Non" }
+          ]
+        }
+      ]
+    },
     {
       "id": "profil",
       "title": "Profil",
       "questions": [
         {
-          "id": "situation-familiale",
-          "title": "Quelle est votre situation familiale ?",
+          "id": "statut-professionnel",
+          "title": "Quel est votre statut professionnel ?",
           "description": "Sélectionnez votre situation actuelle",
           "type": "radio",
           "choices": [
             {
-              "id": "celibataire",
-              "title": "Célibataire"
+              "id": "eleve",
+              "title": "Élève/Étudiant·e"
             },
-            {
-              "id": "en-couple",
-              "title": "En couple"
-            },
-            {
-              "id": "separe",
-              "title": "Séparé ou divorcé"
-            },
-            {
-              "id": "veuf",
-              "title": "Veuf"
-            }
-          ]
-        },
-        {
-          "id": "statut-professionnel",
-          "title": "Quel est votre statut professionnel ?",
-          "description": "Sélectionnez votre situation professionnelle actuelle",
-          "type": "radio",
-          "choices": [
             {
               "id": "salarie",
-              "title": "Salarié"
+              "title": "Salarié·e"
             },
             {
               "id": "independant",
-              "title": "Indépendant"
+              "title": "Indépendant·e"
             },
             {
-              "id": "etudiant",
-              "title": "Étudiant ou en formation"
-            },
-            {
-              "id": "retraite",
-              "title": "Retraité"
-            },
-            {
-              "id": "chomeur",
-              "title": "Demandeur d'emploi"
+              "id": "demandeur-emploi",
+              "title": "Inscrit·e comme demandeur d’emploi"
             }
-          ],
-          "bypassToQuestion": [
-            { "condition": "statut-professionnel=etudiant", "question": "boursier" }
           ]
         },
         {
@@ -69,332 +77,368 @@
           "type": "date"
         },
         {
-          "id": "parent-isole",
-          "title": "Êtes-vous un parent isolé ?",
-          "description": "Un parent isolé élève seul son/ses enfant(s)",
+          "id": "handicap",
+          "title": "Êtes-vous en situation de handicap ?",
+          "description": "Indiquez si vous êtes handicapé·e",
           "type": "radio",
           "choices": [
-            {
-              "id": "oui",
-              "title": "Oui"
-            },
-            {
-              "id": "non",
-              "title": "Non"
-            }
+            { "id": "handicap", "title": "Oui" },
+            { "id": "non-handicap", "title": "Non" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "foyer",
+      "title": "Foyer",
+      "questions": [
+        {
+          "id": "situation-familiale",
+          "title": "Situation familiale",
+          "type": "radio",
+          "choices": [
+            { "id": "celibataire", "title": "Célibataire" },
+            { "id": "union-libre", "title": "En union libre" },
+            { "id": "marie-ou-pacse", "title": "Marié ou pascé" },
+            { "id": "separe-ou-divorce", "title": "Séparé ou divorcé" },
+            { "id": "veuf", "title": "Veuf·ve" }
           ]
         },
         {
-          "id": "nombre-enfants",
-          "title": "Combien avez-vous d'enfants à charge ?",
-          "description": "Indiquez le nombre d'enfants à votre charge",
-          "type": "number"
+          "id": "habitation-avec-autre-personnes",
+          "title": "Habiterez-vous avec d’autres personnes ?",
+          "description": "Sélectionnez le type de votre logement",
+          "type": "radio",
+          "choices": [
+            {
+              "id": "habitation-avec-autre-personnes-oui",
+              "title": "Oui"
+            },
+            {
+              "id": "habitation-avec-autre-personnes-non",
+              "title": "Non"
+            }
+          ],
+          "bypassToQuestion": [
+            { "condition": "habitation-avec-autre-personnes=habitation-avec-autre-personnes-oui", "question": "habiter-avec-conjoint" }
+
+          ]
         }
       ]
     },
     {
       "id": "logement",
-      "title": "Logement",
+      "title": "Décrivez-nous votre logement",
       "questions": [
         {
-          "id": "code-postal",
-          "title": "Code postal",
-          "description": "Indiquez le code postal de votre logement",
-          "type": "number"
+          "id": "code-postal-nouvelle-ville",
+          "title": "Veuillez saisir le code postal de la ville dans laquelle vous allez résider",
+          "type": "number",
+          "answerTransformer": "getInseeNumber"
         },
         {
-          "id": "type-logement",
-          "title": "Type de logement",
-          "description": "Sélectionnez le type de votre logement",
+          "id": "situation-logement",
+          "title": "Êtes-vous :",
           "type": "radio",
           "choices": [
             {
-              "id": "appartement",
-              "title": "Appartement"
-            },
-            {
-              "id": "maison",
-              "title": "Maison individuelle"
-            },
-            {
-              "id": "chambre",
-              "title": "Chambre"
-            },
-            {
-              "id": "residence",
-              "title": "Résidence (étudiante, sociale...)"
-            }
-          ]
-        },
-        {
-          "id": "superficie",
-          "title": "Superficie du logement en m²",
-          "description": "Indiquez la superficie de votre logement en mètres carrés",
-          "type": "number"
-        }
-      ]
-    },
-    {
-      "id": "conditions-location",
-      "title": "Conditions de location",
-      "questions": [
-        {
-          "id": "statut-occupation",
-          "title": "Quel est votre statut d'occupation ?",
-          "description": "Précisez votre relation avec le logement",
-          "type": "radio",
-          "choices": [
-            {
-              "id": "locataire-vide",
-              "title": "Locataire d'un logement vide"
-            },
-            {
-              "id": "locataire-meuble",
-              "title": "Locataire d'un logement meublé"
-            },
-            {
-              "id": "locataire-hlm",
-              "title": "Locataire HLM"
-            },
-            {
-              "id": "locataire-foyer",
-              "title": "Locataire en foyer ou résidence"
-            },
-            {
-              "id": "sous-locataire",
-              "title": "Sous-locataire"
+              "id": "locataire",
+              "title": "Locataire (figurant sur le bail, en foyer ou en résidence)"
             },
             {
               "id": "proprietaire",
-              "title": "Propriétaire ou accédant à la propriété"
-            }
-          ]
-        },
-        {
-          "id": "colocation",
-          "title": "Êtes-vous en colocation ?",
-          "description": "Indiquez si vous partagez le logement en colocation",
-          "type": "radio",
-          "choices": [
-            {
-              "id": "oui",
-              "title": "Oui"
+              "title": "Propriétaire ou location-accession"
             },
             {
-              "id": "non",
-              "title": "Non"
-            }
-          ]
-        },
-        {
-          "id": "montant-loyer",
-          "title": "Montant du loyer",
-          "description": "Indiquez le montant mensuel de votre loyer hors charges (en €)",
-          "type": "number"
-        },
-        {
-          "id": "date-entree-logement",
-          "title": "Date d'entrée dans le logement",
-          "description": "Indiquez la date à laquelle vous avez emménagé",
-          "type": "date"
-        },
-        {
-          "id": "logement-conventionne",
-          "title": "Le logement est-il conventionné ?",
-          "description": "Un logement conventionné fait l'objet d'une convention entre le propriétaire et l'État",
-          "type": "radio",
-          "choices": [
-            {
-              "id": "oui",
-              "title": "Oui"
+              "id": "heberge",
+              "title": "Hébergé chez vos parents, un particulier ou en logement de fonction"
             },
             {
-              "id": "non",
-              "title": "Non"
-            },
-            {
-              "id": "ne-sais-pas",
-              "title": "Je ne sais pas"
+              "id": "sans-domicile",
+              "title": "Sans domicile stable"
             }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "revenus",
-      "title": "Revenus",
-      "questions": [
-        {
-          "id": "revenus-annuels",
-          "title": "Quel est le montant de vos ressources imposables ?",
-          "description": "Indiquez le montant de vos ressources imposables de l'année N-2",
-          "type": "number"
-        },
-        {
-          "id": "revenus-foyer",
-          "title": "Revenus totaux du foyer",
-          "description": "Indiquez les revenus mensuels de l'ensemble des membres du foyer",
-          "type": "number"
-        },
-        {
-          "id": "aides-percues",
-          "title": "Percevez-vous déjà une aide au logement ?",
-          "description": "Indiquez si vous percevez déjà des aides au logement (APL, ALF, ALS)",
-          "type": "radio",
-          "choices": [
-            {
-              "id": "oui",
-              "title": "Oui"
-            },
-            {
-              "id": "non",
-              "title": "Non"
-            }
-          ]
-        },
-        {
-          "id": "beneficiaire-rsa",
-          "title": "Êtes-vous bénéficiaire du RSA ?",
-          "description": "Indiquez si vous percevez le Revenu de Solidarité Active",
-          "type": "radio",
-          "choices": [
-            {
-              "id": "oui",
-              "title": "Oui"
-            },
-            {
-              "id": "non",
-              "title": "Non"
-            }
-          ]
-        },
-        {
-          "id": "beneficiaire-aah",
-          "title": "Êtes-vous bénéficiaire de l'AAH ?",
-          "description": "Indiquez si vous percevez l'Allocation Adulte Handicapé",
-          "type": "radio",
-          "choices": [
-            {
-              "id": "oui",
-              "title": "Oui"
-            },
-            {
-              "id": "non",
-              "title": "Non"
-            }
+          ],
+          "bypassToQuestion": [
+            { "condition": "situation-logement=locataire", "question": "type-logement" },
+            { "condition": "situation-logement=proprietaire", "question": "primo-accedant" }
           ]
         }
       ]
     }
+
   ],
   "triggeredQuestions": [
     {
-      "id": "boursier",
-      "title": "Êtes-vous boursier ?",
-      "description": "Indiquez si vous bénéficiez d'une bourse d'études",
+      "id": "situation-professionnelle",
+      "title": "Quelle est votre situation professionnelle ?",
       "type": "radio",
       "choices": [
-        {
-          "id": "oui",
-          "title": "Oui"
-        },
-        {
-          "id": "non",
-          "title": "Non"
-        }
+        { "id": "stage", "title": "Stage" },
+        { "id": "alternance", "title": "Alternance" },
+        { "id": "salarie-hors-alternance", "title": "Salarié·e hors alternance" },
+        { "id": "sans-emploi", "title": "Je n’ai pas d’emploi" }
       ],
-      "nextQuestion": "nombre-enfants",
-      "bypassToQuestion": [
-        { "condition": "boursier=oui", "question": "echelon-bourse" }
-      ]
+      "nextQuestion": "date-naissance"
     },
     {
-      "id": "echelon-bourse",
-      "title": "Quel est l'échelon de votre bourse ?",
-      "description": "Indiquez l'échelon de votre bourse (de 0bis à 7)",
-      "type": "number",
-      "nextQuestion": "montant-bourse"
-    },
-    {
-      "id": "montant-bourse",
-      "title": "Quel est le montant mensuel de votre bourse ?",
-      "description": "Indiquez le montant mensuel de votre bourse en euros",
-      "type": "number",
-      "nextQuestion": "nombre-enfants"
-    },
-    {
-      "id": "cas-particuliers",
-      "title": "Êtes-vous dans l'un des cas suivants ?",
-      "description": "Sélectionnez les situations qui vous concernent",
+      "id": "etudiant-mobilité",
+      "title": "Êtes-vous dans l’un des cas suivants ?",
       "type": "checkbox",
       "choices": [
-        {
-          "id": "personne-agee",
-          "title": "Personne âgée de plus de 65 ans"
-        },
-        {
-          "id": "situation-handicap",
-          "title": "Personne en situation de handicap"
-        },
-        {
-          "id": "jeune-travailleur",
-          "title": "Jeune travailleur de moins de 25 ans"
-        },
-        {
-          "id": "mobilite-professionnelle",
-          "title": "En situation de mobilité professionnelle"
-        }
+        { "id": "parcoursup-nouvelle-region", "title": "Je commence des études après avoir été accepté(e) sur Parcoursup dans une autre Région" },
+        { "id": "master-nouvelle-zone", "title": "Je commence un Master 1 dans une autre ville ou université" },
+        { "id": "pas-de-mobilite", "title": "Aucun des deux" }
       ],
-      "nextQuestion": "revenus-annuels"
+      "bypassToQuestion": [
+        { "condition": "etudiant-mobilité=parcoursup-nouvelle-region", "question": "boursier" },
+        { "condition": "etudiant-mobilité=master-nouvelle-zone", "question": "boursier" }
+      ],
+      "nextQuestion": "handicap"
     },
     {
-      "id": "demenagement-recent",
-      "title": "Avez-vous déménagé récemment ?",
-      "description": "Indiquez si vous avez changé de logement au cours des 12 derniers mois",
+      "id": "boursier",
+      "title": "Etes vous boursier ?",
       "type": "radio",
       "choices": [
-        {
-          "id": "oui",
-          "title": "Oui"
-        },
-        {
-          "id": "non",
-          "title": "Non"
-        }
+        { "id": "boursier", "title": "Oui" },
+        { "id": "non-boursier", "title": "Non" }
       ],
-      "nextQuestion": "motif-demenagement",
+      "nextQuestion": "handicap"
+    },
+    {
+      "id": "habiter-avec-conjoint",
+      "title": "Habiterez-vous avec votre conjoint·e ?",
+      "type": "radio",
+      "choices": [
+        { "id": "habite-avec-conjoint-oui", "title": "Oui" },
+        { "id": "habite-avec-conjoint-non", "title": "Non" }
+      ],
+      "nextQuestion": "code-postal-nouvelle-ville",
       "bypassToQuestion": [
-        { "condition": "demenagement-recent=non", "question": "cas-particuliers" }
+        { "condition": "habiter-avec-conjoint=habite-avec-conjoint-oui", "question": "revenus-conjoint" }
       ]
     },
     {
-      "id": "motif-demenagement",
-      "title": "Quel est le motif de votre déménagement ?",
-      "description": "Précisez la raison principale de votre déménagement",
+      "id": "revenus-conjoint",
+      "title": "Revenus du conjoint·e",
+      "type": "number",
+      "nextQuestion": "code-postal-nouvelle-ville"
+    },
+    {
+      "id": "primo-accedant",
+      "title": "Êtes-vous un primo-accédant ?",
       "type": "radio",
       "choices": [
-        {
-          "id": "professionnel",
-          "title": "Raison professionnelle"
-        },
-        {
-          "id": "familial",
-          "title": "Changement de situation familiale"
-        },
-        {
-          "id": "logement-insalubre",
-          "title": "Quitter un logement insalubre ou indécent"
-        },
-        {
-          "id": "loyer-eleve",
-          "title": "Loyer trop élevé"
-        },
-        {
-          "id": "autre",
-          "title": "Autre raison"
-        }
+        { "id": "primo-accedant-oui", "title": "Oui" },
+        { "id": "primo-accedant-non", "title": "Non" }
       ],
-      "nextQuestion": "cas-particuliers"
+      "nextQuestion": "type-revenus"
+    },
+    {
+      "id": "type-logement",
+      "title": "Quel est le type de logement ?",
+      "type": "radio",
+      "choices": [
+        { "id": "logement-non-meuble", "title": "Logement non meublé" },
+        { "id": "logement-meuble", "title": "Logement meublé" },
+        { "id": "logement-foyer", "title": "Foyer (résidence CROUS, etc.) ou logement conventionné" }
+      ],
+      "nextQuestion": "colocation"
+    },
+    {
+      "id": "colocation",
+      "title": "Est-ce une colocation ?",
+      "type": "checkbox",
+      "choices": [
+        { "id": "colocation-oui", "title": "Oui" },
+        { "id": "colocation-non", "title": "Non" }
+      ],
+      "nextQuestion": "logement-chambre"
+    },
+    {
+      "id": "logement-chambre",
+      "title": "Est-ce une chambre dans un logement meublé ?",
+      "type": "radio",
+      "nextQuestion": "logement-parente-proprietaire",
+      "choices": [
+        { "id": "logement-chambre-oui", "title": "Oui" },
+        { "id": "logement-chambre-non", "title": "Non" }
+      ]
+    },
+    {
+      "id": "logement-parente-proprietaire",
+      "title": "Avez-vous un lien de parenté direct avec le propriétaire ?",
+      "type": "radio",
+      "choices": [
+        { "id": "logement-parente-proprietaire-oui", "title": "Oui" },
+        { "id": "logement-parente-proprietaire-non", "title": "Non" }
+      ],
+      "nextQuestion": "nombre-personnes-logement"
+    },
+    {
+      "id": "nombre-personnes-logement",
+      "title": "Combien de personnes habiteront dans le logement ?",
+      "type": "number",
+      "nextQuestion": "loyer-montant-mensuel"
+    },
+    {
+      "id": "loyer-montant-mensuel",
+      "title": "Quel est le montant du loyer mensuel ?",
+      "type": "number",
+      "nextQuestion": "loyer-montant-charges"
+    },
+    {
+      "id": "loyer-montant-charges",
+      "title": "Quel est le montant des charges locatives ?",
+      "type": "number",
+      "nextQuestion": "loyer-difficile-payer"
+    },
+    {
+      "id": "loyer-difficile-payer",
+      "title": "Rencontrez-vous des difficultés importantes pour accéder à un logement ou payer votre loyer ?",
+      "type": "radio",
+      "choices": [
+        { "id": "loyer-difficile-payer-oui", "title": "Oui" },
+        { "id": "loyer-difficile-payer-non", "title": "Non" }
+      ],
+      "nextQuestion": "loyer-besoin-garant"
+    },
+    {
+      "id": "loyer-besoin-garant",
+      "title": "Avez-vous besoin d’un garant ?",
+      "type": "radio",
+      "choices": [
+        { "id": "loyer-besoin-garant-oui", "title": "Oui" },
+        { "id": "loyer-besoin-garant-non", "title": "Non" }
+      ],
+      "nextQuestion": "loyer-besoin-cautions"
+    },
+    {
+      "id": "loyer-besoin-cautions",
+      "title": "Avez-vous besoin d’une caution ?",
+      "type": "radio",
+      "choices": [
+        { "id": "loyer-besoin-cautions-oui", "title": "Oui" },
+        { "id": "loyer-besoin-cautions-non", "title": "Non" }
+      ],
+      "nextQuestion": "type-revenus"
+    },
+    {
+      "id": "salaire-imposable",
+      "title": "Salaire imposable (revenu d’activité salariale) - année glissante",
+      "type": "number",
+      "nextQuestion": "confirmation-end",
+      "bypassToQuestion": [
+            { "condition": "type-revenus.includes('revenus-remplacement')", "question": "revenus-chomage" },
+            { "condition": "type-revenus.includes('revenus-allocations')", "question": "abattement-indemnite-chomage" },
+            { "condition": "type-revenus.includes('revenus-entreprise')", "question": "moins-values" },
+            { "condition": "type-revenus.includes('ressources-parents')", "question": "ressources-parents" },
+            { "condition": "type-revenus.includes('ressources-conjoint')", "question": "ressources-conjoint" },
+            { "condition": "type-revenus.includes('autres-revenus')", "question": "pensions-alimentaires" }
+      ]
+    },
+    {
+      "id": "revenus-chomage",
+      "title": "Revenus du chômage imposables",
+      "type": "number",
+      "nextQuestion": "retraites-imposables"
+    },
+    {
+      "id": "retraites-imposables",
+      "title": "Retraites imposables",
+      "type": "number",
+      "nextQuestion": "bourse-montant"
+    },
+    {
+      "id": "bourse-montant",
+      "title": "Montant de la bourse",
+      "type": "number",
+      "nextQuestion": "confirmation-end",
+      "bypassToQuestion": [
+            { "condition": "type-revenus.includes('revenus-allocations')", "question": "abattement-indemnite-chomage" },
+            { "condition": "type-revenus.includes('revenus-entreprise')", "question": "moins-values" },
+            { "condition": "type-revenus.includes('ressources-parents')", "question": "ressources-parents" },
+            { "condition": "type-revenus.includes('ressources-conjoint')", "question": "ressources-conjoint" },
+            { "condition": "type-revenus.includes('autres-revenus')", "question": "pensions-alimentaires" }
+      ]
+    },
+    {
+      "id": "abattement-indemnite-chomage",
+      "title": "Abattement pour indemnités chômage",
+      "type": "number",
+      "nextQuestion": "complement-allocation-divers"
+    },
+    {
+      "id": "complement-allocation-divers",
+      "title": "Compléments divers (ex. allocation logement, allocations familiales, complément familial, allocation d’éducation de l’enfant handicapé (AEEH), allocation de soutien familial, allocation journalière de présence parentale (AJPP)).",
+      "type": "number",
+      "nextQuestion": "pensions-alimentaires-recues"
+    },
+    {
+      "id": "pensions-alimentaires-recues",
+      "title": "Pensions alimentaires perçues",
+      "type": "number",
+      "nextQuestion": "confirmation-end",
+      "bypassToQuestion": [
+            { "condition": "type-revenus.includes('revenus-entreprise')", "question": "moins-values" },
+            { "condition": "type-revenus.includes('ressources-parents')", "question": "ressources-parents" },
+            { "condition": "type-revenus.includes('ressources-conjoint')", "question": "ressources-conjoint" },
+            { "condition": "type-revenus.includes('autres-revenus')", "question": "pensions-alimentaires" }
+      ]
+    },
+    {
+      "id": "moins-values",
+      "title": "Moins-values à court et long terme des non-salariés (RPNS MVCT et RPNS MVLT)",
+      "type": "number",
+      "nextQuestion": "revenus-independant"
+    },
+    {
+      "id": "revenus-independant",
+      "title": "Revenus d’indépendants (RPNS - Revenus professionnels non salariés)",
+      "type": "number",
+      "nextQuestion": "pensions-invalidite"
+    },
+    {
+      "id": "pensions-invalidite",
+      "title": "Pensions d'invalidité",
+      "type": "number",
+      "nextQuestion": "confirmation-end",
+      "bypassToQuestion": [
+            { "condition": "type-revenus.includes('ressources-parents')", "question": "ressources-parents" },
+            { "condition": "type-revenus.includes('ressources-conjoint')", "question": "ressources-conjoint" },
+            { "condition": "type-revenus.includes('autres-revenus')", "question": "pensions-alimentaires" }
+      ]
+    },
+    {
+      "id": "ressources-parents",
+      "title": "Ressources des parents (si le demandeur est rattaché fiscalement)",
+      "type": "number",
+      "nextQuestion": "confirmation-end",
+      "bypassToQuestion": [
+            { "condition": "type-revenus.includes('ressources-conjoint')", "question": "ressources-conjoint" },
+            { "condition": "type-revenus.includes('autres-revenus')", "question": "pensions-alimentaires" }
+      ]
+    },
+    {
+      "id": "ressources-conjoint",
+      "title": "Ressources du conjoint·e",
+      "type": "number",
+      "nextQuestion": "confirmation-end",
+      "bypassToQuestion": [
+            { "condition": "type-revenus.includes('autres-revenus')", "question": "pensions-alimentaires" }
+      ]
+    },
+    {
+      "id": "pensions-alimentaires",
+      "title": "Pensions alimentaires perçues",
+      "type": "number",
+      "nextQuestion": "revenus-patrimoine"
+    },
+    {
+      "id": "revenus-patrimoine",
+      "title": "Revenus issus du patrimoine (loyers perçus, revenus fonciers, intérêts, dividendes)",
+      "type": "number",
+      "nextQuestion": "confirmation-end"
     }
   ]
 }
