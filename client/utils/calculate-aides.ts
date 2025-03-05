@@ -4,8 +4,9 @@ const API_ENDPOINT_OPENFISCA_FRANCE_CALCULATE = new URL("/calculate", "https://a
 
 const INDIVIDU_ID = "usager"
 const MENAGE_ID = "menage_" + INDIVIDU_ID
-const FOYER_FISCAL_ID = "foyer_fiscal" + INDIVIDU_ID
+const FOYER_FISCAL_ID = "foyer_fiscal_" + INDIVIDU_ID
 const FAMILLE_ID = "famille_" + INDIVIDU_ID
+const UNDEFINED_ENTITY_ID = "INCONNU"
 
 enum Entites {
   Individus = "individus",
@@ -18,7 +19,7 @@ type VariableValueOnPeriode = {
     [date: string]: number | boolean | string
 }
 
-
+// On VariableValueOnPeriode items, string[] is added to guarantee typing happiness
 export type OpenFiscaFranceCalculation = {
   individus: {
     [name: string]: {
@@ -44,12 +45,13 @@ export type OpenFiscaFranceCalculation = {
     [name: string]: {
       parents: string[]
       enfants: string[]
-      [variable: string]: string[] | VariableValueOnPeriode   // should be VariablePeriod only
+      [variable: string]: string[] | VariableValueOnPeriode
     }
   }
 } | { error: string }
 
-function initRequest() : OpenFiscaFranceCalculation{
+function initRequest() : OpenFiscaFranceCalculation {
+  console.debug("initRequest...")
   let request: OpenFiscaFranceCalculation = {
     individus: {
       [INDIVIDU_ID]: {}
@@ -79,30 +81,64 @@ function initRequest() : OpenFiscaFranceCalculation{
 
 // TODO type 'request' as OpenFiscaFranceCalculation?
 function addEntityInputs(request: any, entity: Entites, entityId: string, inputs: SurveyAnswer[]): OpenFiscaFranceCalculation {
+  console.debug(`addEntityInputs for ${entity}...`)
+
   const YEAR = "2025"
   const MONTH = YEAR + "-01"
-  const ENTITY_STRING: string = entity.toString()
-  
 
   let requestWithInputs : OpenFiscaFranceCalculation = request
-  console.debug(requestWithInputs[ENTITY_STRING][entityId])
+  console.debug(requestWithInputs[entity])
+  console.debug(entityId)
+  console.debug(`Données des personnes de la simulation : ${requestWithInputs[entity][entityId]}`)
 
+  
   for (const inputKey in inputs){
-    if (!requestWithInputs[ENTITY_STRING][entityId][inputKey]) {
-      requestWithInputs[ENTITY_STRING][entityId][inputKey] = {};
+    if (!requestWithInputs[entity][entityId][inputKey]) {
+      requestWithInputs[entity][entityId][inputKey] = {};
     }
-    requestWithInputs[ENTITY_STRING][entityId][inputKey][MONTH] = inputs[inputKey];
+    requestWithInputs[entity][entityId][inputKey][MONTH] = inputs[inputKey];
   }
   
   console.debug(requestWithInputs)
   return requestWithInputs
 }
 
+function getEntityId(entity: Entites): string {
+  switch(entity){
+    case Entites.Individus:
+      return INDIVIDU_ID
+      
+    case Entites.Menages:
+      return MENAGE_ID
+      
+    case Entites.FoyerFiscaux:
+      return FOYER_FISCAL_ID
+      
+    case Entites.Familles:
+      return FAMILLE_ID
+      
+    default:
+      console.error(`Entité inconnue: ${entity}`)
+      return UNDEFINED_ENTITY_ID
+  }
+}
 
 //TODO function buildRequest(answers: SurveyAnswer[]): OpenFiscaFranceCalculation { ?
 export function buildRequest(answers: any): OpenFiscaFranceCalculation {
+  console.debug("buildRequest...")  
   let request: OpenFiscaFranceCalculation = initRequest()
-  request = addEntityInputs(request, Entites.Individus, INDIVIDU_ID, answers)
+  console.debug(request)
+
+  for (const entityKey in Entites) {
+    const entityValue = entityKey as keyof typeof Entites
+    const entity: Entites = Entites[entityValue]
+    
+    console.debug(`entity: ${entity}`)
+    console.debug(`entityValue: ${entityValue}`)
+
+    const entityId = getEntityId(entity)
+    request = addEntityInputs(request, entity, entityId, answers)
+  }
   return request
 }
 
@@ -110,8 +146,9 @@ export async function fetchOpenFiscaFranceCalculation(
     request: OpenFiscaFranceCalculation,
   ): Promise<OpenFiscaFranceCalculation> {
 
-    console.log("fetchOpenFiscaFranceCalculation...")
-    console.log(request)
+    console.debug("fetchOpenFiscaFranceCalculation...")
+    console.debug("request:")
+    console.debug(request)
   
     const requestSettings = {
       method: "POST",
