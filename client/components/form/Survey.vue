@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import type { SurveyQuestion } from '@/stores/survey'
 import DateQuestion from './DateQuestion.vue'
 import InfoBubble from './InfoBubble.vue'
 import MultiSelectQuestion from './MultiSelectQuestion.vue'
@@ -116,20 +115,81 @@ function submitForm () {
 
 <template>
   <!-- Progress indicator -->
-  <div class="fr-col-12 fr-col-offset-md-1 fr-col-md-10 fr-col-offset-lg-2 fr-col-lg-8">
-    <h1 class="fr-h3">
-      Votre simulation « {{ surveySchema?.title }} »
-    </h1>
-    <div class="fr-stepper">
-      <h2 class="fr-stepper__title">
-        {{ currentStep?.title }}
-        <span class="fr-stepper__state">
-          Étape {{ currentStepIndex }} sur {{ totalCategoriesNumber }}</span>
+  <h1 class="fr-h3">
+    Votre simulation « {{ surveySchema?.title }} »
+  </h1>
+  <div class="fr-stepper">
+    <h2 class="fr-stepper__title">
+      {{ currentStep?.title }}
+      <span class="fr-stepper__state">
+        Étape {{ currentStepIndex }} sur {{ totalCategoriesNumber }}</span>
+    </h2>
+    <div
+      class="fr-stepper__steps"
+      :data-fr-current-step="currentStepIndex"
+      :data-fr-steps="totalCategoriesNumber"
+    />
+    <p class="fr-stepper__details">
+      <span class="fr-text--bold">Étape suivante :</span>
+      {{ nextCategory?.title }}
+    </p>
+  </div>
+
+  <div
+    v-if="!isLoading && surveySchema && currentQuestion"
+    class="simulator-form-container"
+  >
+    <!-- Current Question -->
+    <div class="fr-form-group">
+      <h2 class="fr-h5">
+        {{ currentQuestion?.title }}
       </h2>
-      <div
-        class="fr-stepper__steps"
-        :data-fr-current-step="currentStepIndex"
-        :data-fr-steps="totalCategoriesNumber"
+      <p>{{ currentQuestion?.description }}</p>
+
+      <!-- Question component based on type -->
+      <template v-if="currentQuestion">
+        <RadioButtonQuestion
+          v-if="currentQuestion.type === 'radio'"
+          :question="currentQuestion"
+          :model-value="answers[currentQuestion.id]"
+          @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
+        />
+
+        <MultiSelectQuestion
+          v-else-if="currentQuestion.type === 'checkbox'"
+          :question="currentQuestion"
+          :model-value="answers[currentQuestion.id]"
+          @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
+        />
+
+        <NumberQuestion
+          v-else-if="currentQuestion.type === 'number'"
+          :question="currentQuestion"
+          :model-value="answers[currentQuestion.id]"
+          @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
+        />
+
+        <DateQuestion
+          v-else-if="currentQuestion.type === 'date'"
+          :question="currentQuestion"
+          :model-value="answers[currentQuestion.id]"
+          @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
+        />
+      </template>
+    </div>
+
+    <!-- Navigation buttons -->
+    <div class="fr-btns-group fr-btns-group--inline-reverse fr-mt-5w">
+      <DsfrButton
+        :label="isLastQuestion ? 'Terminer' : 'Suivant'"
+        icon="ri-arrow-right-line"
+        icon-right
+        @click="handleNext"
+      />
+      <DsfrButton
+        label="Précédent"
+        secondary
+        @click="handlePrevious"
       />
       <p class="fr-stepper__details">
         <span class="fr-text--bold">Étape suivante :</span>
@@ -207,5 +267,11 @@ function submitForm () {
     >
       <p>{{ isLoading ? 'Chargement du formulaire...' : 'Erreur lors du chargement du formulaire' }}</p>
     </div>
+  </div>
+  <div
+    v-else
+    class="fr-py-5w fr-text--center"
+  >
+    <p>{{ isLoading ? 'Chargement du formulaire...' : 'Erreur lors du chargement du formulaire' }}</p>
   </div>
 </template>

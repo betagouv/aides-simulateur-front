@@ -3,19 +3,19 @@ definePageMeta({
   layout: 'default',
 })
 
-const { data: simulateurs } = useAsyncData('simulateurs', () => {
-  return queryCollectionNavigation('simulateurs', ['titre'])
+const { data: notions } = useAsyncData('notions', () => {
+  return queryCollectionNavigation('notions', ['titre'])
 }, {
   transform: (data) => {
-    const simulateurs = data?.[0]?.children || []
-    return simulateurs.map((simulateur) => {
+    const notions = data?.[0]?.children || []
+    return notions.map((notion) => {
       return {
-        id: simulateur.path.split('/').pop(),
+        id: notion.path.split('/').pop(),
         /**
          * /!\ le champ 'titre' est défini par le rédacteur dans le fichier
          * !== du champ 'title' (qui correspond au nom dans le filesystem)
          */
-        title: simulateur.titre,
+        title: notion.titre,
       }
     })
   }
@@ -24,7 +24,7 @@ const { data: simulateurs } = useAsyncData('simulateurs', () => {
 const crumbs = computed(() => {
   return [
     { text: 'Accueil', to: '/' },
-    { text: 'Simulateurs', to: '/simulateurs' },
+    { text: 'Notions', to: '/notions' },
   ]
 })
 </script>
@@ -35,17 +35,16 @@ const crumbs = computed(() => {
     <SectionContainer type="page-header">
       <div class="fr-grid-row fr-grid-row--gutters">
         <h1 class="fr-col-12">
-          Simulateurs
+          Notions
         </h1>
         <template
-          v-for="simulateur in simulateurs"
-          :key="simulateur.id"
+          v-for="notion in notions"
+          :key="notion.id"
         >
-          <div class="fr-col-12 fr-col-sm-6 fr-col-md-4">
+          <div class="fr-col-4">
             <DsfrCard
-              :title="simulateur.title"
-              description=""
-              :link="`/simulateurs/${simulateur.id}`"
+              :title="notion.title"
+              :link="`/notions/${notion.id}`"
             />
           </div>
         </template>
