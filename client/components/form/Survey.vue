@@ -1,12 +1,14 @@
 <script lang="ts" setup>
+import type { SurveyQuestion } from '@/stores/survey'
 import DateQuestion from './DateQuestion.vue'
-import InfoBubble from './InfoBubble.vue'
 import MultiSelectQuestion from './MultiSelectQuestion.vue'
 import NumberQuestion from './NumberQuestion.vue'
 import RadioButtonQuestion from './RadioButtonQuestion.vue'
+import TextQuestion from './TextQuestion.vue'
 
 const props = defineProps<{
   simulateurId: string
+  autocompleteFunctions?: Record<string, (query: string) => Promise<any[]>>
 }>()
 
 const formStore = useFormStore()
@@ -33,6 +35,14 @@ const {
   setAnswer
 } = formStore
 
+// Récupère la fonction d'autocomplétion pour la question courante
+const getAutocompleteFn = computed(() => {
+  if (currentQuestion.value?.autocompleteFunction && props.autocompleteFunctions) {
+    return props.autocompleteFunctions[currentQuestion.value.autocompleteFunction]
+  }
+  return undefined
+})
+
 // Check if the current question has been answered
 const hasAnswer = computed(() => {
   if (!currentQuestion.value) { return false }
@@ -50,7 +60,8 @@ const hasAnswer = computed(() => {
       // For checkbox, the answer should be an array with at least one item
       return Array.isArray(answer) && answer.length > 0
     case 'number':
-      // For number, the value should be a number or a non-empty string that can be converted to number
+    case 'text':
+      // For number and text, the value should not be empty
       return answer !== undefined && answer !== null && answer !== ''
     default:
       return false
@@ -242,6 +253,14 @@ function submitForm () {
             v-else-if="currentQuestion.type === 'date'"
             :question="currentQuestion"
             :model-value="answers[currentQuestion.id]"
+            @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
+          />
+
+          <TextQuestion
+            v-else-if="currentQuestion.type === 'text'"
+            :question="currentQuestion"
+            :model-value="answers[currentQuestion.id]"
+            :autocomplete-fn="getAutocompleteFn"
             @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
           />
         </template>

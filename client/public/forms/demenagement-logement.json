@@ -7,7 +7,7 @@
       "id": "profil",
       "title": "Profil",
       "questions": [
-        {
+         {
           "id": "statut-professionnel",
           "title": "Quel est votre statut professionnel ?",
           "description": "Sélectionnez votre situation actuelle",
@@ -97,9 +97,9 @@
       "questions": [
         {
           "id": "code-postal-nouvelle-ville",
-          "title": "Veuillez saisir le code postal de la ville dans laquelle vous allez résider",
-          "type": "number",
-          "answerTransformer": "getInseeNumber"
+          "title": "Veuillez saisir le code postal ou le nom de la commune de la ville dans laquelle vous allez résider. Nous saisirons alors automatiquement le code insee pour vous.",
+          "type": "text",
+          "autocompleteFunction": "getInseeNumber"
         },
         {
           "id": "situation-logement",

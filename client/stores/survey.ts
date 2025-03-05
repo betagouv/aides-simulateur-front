@@ -8,11 +8,12 @@ export interface SurveyQuestion {
   id: string
   title: string
   description?: string
-  type: 'radio' | 'checkbox' | 'number' | 'date'
+  type: 'radio' | 'checkbox' | 'number' | 'date' | 'text'
   notion: {
     id: string
     linkLabel: string
   }
+  autocompleteFunction?: string
   choices?: SurveyChoice[]
   nextQuestion?: string
   bypassToQuestion?: Array<{
