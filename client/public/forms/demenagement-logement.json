@@ -12,6 +12,7 @@
           "title": "Quel est votre statut professionnel ?",
           "description": "Sélectionnez votre situation actuelle",
           "type": "radio",
+          "informationLink": "/informations/situation-familiale",
           "choices": [
             {
               "id": "eleve",
@@ -332,12 +333,12 @@
       "type": "number",
       "nextQuestion": "confirmation-end",
       "bypassToQuestion": [
-            { "condition": "type-revenus.includes('revenus-remplacement')", "question": "revenus-chomage" },
-            { "condition": "type-revenus.includes('revenus-allocations')", "question": "abattement-indemnite-chomage" },
-            { "condition": "type-revenus.includes('revenus-entreprise')", "question": "moins-values" },
-            { "condition": "type-revenus.includes('ressources-parents')", "question": "ressources-parents" },
-            { "condition": "type-revenus.includes('ressources-conjoint')", "question": "ressources-conjoint" },
-            { "condition": "type-revenus.includes('autres-revenus')", "question": "pensions-alimentaires" }
+        { "condition": "type-revenus.includes('revenus-remplacement')", "question": "revenus-chomage" },
+        { "condition": "type-revenus.includes('revenus-allocations')", "question": "abattement-indemnite-chomage" },
+        { "condition": "type-revenus.includes('revenus-entreprise')", "question": "moins-values" },
+        { "condition": "type-revenus.includes('ressources-parents')", "question": "ressources-parents" },
+        { "condition": "type-revenus.includes('ressources-conjoint')", "question": "ressources-conjoint" },
+        { "condition": "type-revenus.includes('autres-revenus')", "question": "pensions-alimentaires" }
       ]
     },
     {
@@ -358,11 +359,11 @@
       "type": "number",
       "nextQuestion": "confirmation-end",
       "bypassToQuestion": [
-            { "condition": "type-revenus.includes('revenus-allocations')", "question": "abattement-indemnite-chomage" },
-            { "condition": "type-revenus.includes('revenus-entreprise')", "question": "moins-values" },
-            { "condition": "type-revenus.includes('ressources-parents')", "question": "ressources-parents" },
-            { "condition": "type-revenus.includes('ressources-conjoint')", "question": "ressources-conjoint" },
-            { "condition": "type-revenus.includes('autres-revenus')", "question": "pensions-alimentaires" }
+        { "condition": "type-revenus.includes('revenus-allocations')", "question": "abattement-indemnite-chomage" },
+        { "condition": "type-revenus.includes('revenus-entreprise')", "question": "moins-values" },
+        { "condition": "type-revenus.includes('ressources-parents')", "question": "ressources-parents" },
+        { "condition": "type-revenus.includes('ressources-conjoint')", "question": "ressources-conjoint" },
+        { "condition": "type-revenus.includes('autres-revenus')", "question": "pensions-alimentaires" }
       ]
     },
     {
@@ -383,10 +384,10 @@
       "type": "number",
       "nextQuestion": "confirmation-end",
       "bypassToQuestion": [
-            { "condition": "type-revenus.includes('revenus-entreprise')", "question": "moins-values" },
-            { "condition": "type-revenus.includes('ressources-parents')", "question": "ressources-parents" },
-            { "condition": "type-revenus.includes('ressources-conjoint')", "question": "ressources-conjoint" },
-            { "condition": "type-revenus.includes('autres-revenus')", "question": "pensions-alimentaires" }
+        { "condition": "type-revenus.includes('revenus-entreprise')", "question": "moins-values" },
+        { "condition": "type-revenus.includes('ressources-parents')", "question": "ressources-parents" },
+        { "condition": "type-revenus.includes('ressources-conjoint')", "question": "ressources-conjoint" },
+        { "condition": "type-revenus.includes('autres-revenus')", "question": "pensions-alimentaires" }
       ]
     },
     {
@@ -407,9 +408,9 @@
       "type": "number",
       "nextQuestion": "confirmation-end",
       "bypassToQuestion": [
-            { "condition": "type-revenus.includes('ressources-parents')", "question": "ressources-parents" },
-            { "condition": "type-revenus.includes('ressources-conjoint')", "question": "ressources-conjoint" },
-            { "condition": "type-revenus.includes('autres-revenus')", "question": "pensions-alimentaires" }
+        { "condition": "type-revenus.includes('ressources-parents')", "question": "ressources-parents" },
+        { "condition": "type-revenus.includes('ressources-conjoint')", "question": "ressources-conjoint" },
+        { "condition": "type-revenus.includes('autres-revenus')", "question": "pensions-alimentaires" }
       ]
     },
     {
@@ -418,8 +419,8 @@
       "type": "number",
       "nextQuestion": "confirmation-end",
       "bypassToQuestion": [
-            { "condition": "type-revenus.includes('ressources-conjoint')", "question": "ressources-conjoint" },
-            { "condition": "type-revenus.includes('autres-revenus')", "question": "pensions-alimentaires" }
+        { "condition": "type-revenus.includes('ressources-conjoint')", "question": "ressources-conjoint" },
+        { "condition": "type-revenus.includes('autres-revenus')", "question": "pensions-alimentaires" }
       ]
     },
     {
@@ -428,7 +429,7 @@
       "type": "number",
       "nextQuestion": "confirmation-end",
       "bypassToQuestion": [
-            { "condition": "type-revenus.includes('autres-revenus')", "question": "pensions-alimentaires" }
+        { "condition": "type-revenus.includes('autres-revenus')", "question": "pensions-alimentaires" }
       ]
     },
     {

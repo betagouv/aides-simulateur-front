@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-import RadioButtonQuestion from './RadioButtonQuestion.vue'
+import type { SurveyQuestion } from '@/stores/survey'
+import DateQuestion from './DateQuestion.vue'
+import InfoBubble from './InfoBubble.vue'
 import MultiSelectQuestion from './MultiSelectQuestion.vue'
 import NumberQuestion from './NumberQuestion.vue'
-import DateQuestion from './DateQuestion.vue'
-import { type SurveyQuestion } from '@/stores/survey'
+import RadioButtonQuestion from './RadioButtonQuestion.vue'
 
 const props = defineProps<{
   simulateurId: string
@@ -33,11 +34,38 @@ const {
   setAnswer
 } = formStore
 
+// Check if the current question has been answered
+const hasAnswer = computed(() => {
+  if (!currentQuestion.value) { return false }
+
+  const questionId = currentQuestion.value.id
+  const answer = answers.value[questionId]
+
+  // Different validation based on question type
+  switch (currentQuestion.value.type) {
+    case 'radio':
+    case 'date':
+      // For radio and date, any non-empty value is valid
+      return !!answer
+    case 'checkbox':
+      // For checkbox, the answer should be an array with at least one item
+      return Array.isArray(answer) && answer.length > 0
+    case 'number':
+      // For number, the value should be a number or a non-empty string that can be converted to number
+      return answer !== undefined && answer !== null && answer !== ''
+    default:
+      return false
+  }
+})
+
 onMounted(async () => {
   console.log('Loading form definition for:', simulateurId)
   try {
     await loadSurveySchema(simulateurId)
     isLoading.value = false
+
+    // Add event listener for Enter key
+    window.addEventListener('keydown', handleKeyDown)
   }
   catch (error) {
     console.error('Error loading form:', error)
@@ -45,14 +73,27 @@ onMounted(async () => {
   }
 })
 
+onUnmounted(() => {
+  // Remove event listener when component is unmounted
+  window.removeEventListener('keydown', handleKeyDown)
+})
+
+// Handle Enter key press
+function handleKeyDown (event: KeyboardEvent) {
+  if (event.key === 'Enter' && hasAnswer.value) {
+    // If Enter is pressed and there's an answer, go to next question
+    handleNext()
+  }
+}
+
 // Handle updates from question components
-function handleQuestionUpdate(questionId: string, value: any) {
+function handleQuestionUpdate (questionId: string, value: any) {
   console.log('----- setAnswer', questionId, value)
   setAnswer(questionId, value)
 }
 
 // Navigation functions
-function handleNext() {
+function handleNext () {
   if (isLastQuestion.value) {
     // Handle form completion, maybe redirect to results
     submitForm()
@@ -62,11 +103,11 @@ function handleNext() {
   }
 }
 
-function handlePrevious() {
+function handlePrevious () {
   goToPreviousQuestion()
 }
 
-function submitForm() {
+function submitForm () {
   // Process the final form data from the answers store
   console.log('Form submitted with answers:', answers.value)
   // You might want to send this data to an API, or calculate results
@@ -104,6 +145,11 @@ function submitForm() {
       <div class="fr-form-group">
         <h2 class="fr-h5">
           {{ currentQuestion?.title }}
+          <InfoBubble
+            v-if="currentQuestion?.informationLink"
+            :information-link="currentQuestion.informationLink"
+            :question-id="currentQuestion.id"
+          />
         </h2>
         <p>{{ currentQuestion?.description }}</p>
 
@@ -145,6 +191,7 @@ function submitForm() {
           :label="isLastQuestion ? 'Terminer' : 'Suivant'"
           icon="ri-arrow-right-line"
           icon-right
+          :disabled="!hasAnswer"
           @click="handleNext"
         />
         <DsfrButton

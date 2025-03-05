@@ -87,17 +87,18 @@
 
   // Insérer l'iframe dans le document
   const container = document.getElementById('aides-simplifiees-iframe-container')
-  console.log('container', container)
   if (container) {
     // Priorité au conteneur dédié s'il existe
     container.appendChild(iframe)
-  } else if (currentScript.parentElement.tagName === 'HEAD') {
+  }
+  else if (currentScript.parentElement.tagName === 'HEAD') {
     // Si le script est dans le HEAD et qu'il n'y a pas de conteneur dédié
     const body = document.body || document.querySelector('body')
     if (body) {
       body.appendChild(iframe)
     }
-  } else {
+  }
+  else {
     // Sinon, insérer après le script courant
     currentScript.insertAdjacentElement('afterend', iframe)
   }
@@ -106,7 +107,7 @@
   loadIframeResizer((iframeResize) => {
     iframeResize(
       {
-        license: "GPLv3",
+        license: 'GPLv3',
       },
       iframe
     )
