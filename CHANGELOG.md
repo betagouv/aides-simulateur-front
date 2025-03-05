@@ -1,4 +1,11 @@
 # CHANGELOG
+
+## 0.3.2 [#26](https://github.com/betagouv/aides-simulateur-front/pull/26)
+
+* Ajout de fonctionnalité
+* Détail :
+  * Ajout d'un bandeau d'information dans le layout principal pour informer l'utilisateur de l'état de développement du projet
+
 ## 0.3.1 [#25](https://github.com/betagouv/aides-simulateur-front/pull/25)
 
 * Evolutions techniques
