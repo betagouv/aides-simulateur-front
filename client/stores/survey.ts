@@ -22,6 +22,10 @@ export interface SurveyQuestion {
   }>
 }
 
+export interface SurveyAnswer {
+  [key: string]: string | number | boolean | undefined
+}
+
 // TODO: refacto : SurveyStep
 export interface SurveyStep {
   id: string
