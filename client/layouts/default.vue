@@ -40,6 +40,8 @@ const navItems = [
     target: '_blank',
   },
 ]
+
+const noticeMessage = 'Ce site est en cours de développement. Certaines fonctionnalités peuvent ne pas être disponibles ou ne pas fonctionner correctement.'
 </script>
 
 <template>
@@ -55,6 +57,10 @@ const navItems = [
       />
     </template>
   </DsfrHeader>
+  <DsfrNotice
+    v-if="noticeMessage"
+    :title="noticeMessage"
+  />
   <main
     id="content"
     role="main"
