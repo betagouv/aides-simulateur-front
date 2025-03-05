@@ -9,7 +9,10 @@ export interface SurveyQuestion {
   title: string
   description?: string
   type: 'radio' | 'checkbox' | 'number' | 'date'
-  informationLink?: string
+  notion: {
+    id: string
+    linkLabel: string
+  }
   choices?: SurveyChoice[]
   nextQuestion?: string
   bypassToQuestion?: Array<{

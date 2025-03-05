@@ -205,14 +205,16 @@ function submitForm () {
       <div class="fr-form-group">
         <h2 class="fr-h5">
           {{ currentQuestion?.title }}
-          <InfoBubble
-            v-if="currentQuestion?.informationLink"
-            :information-link="currentQuestion.informationLink"
-            :question-id="currentQuestion.id"
-          />
         </h2>
         <p>{{ currentQuestion?.description }}</p>
-
+        <DsfrButton
+          v-if="currentQuestion?.notion"
+          :label="currentQuestion?.notion.buttonLabel"
+          icon="ri-information-line"
+          secondary
+          icon-right
+          @click="() => navigateTo(`/simulateurs/${simulateurId}/${currentQuestion?.notion.id}`)"
+        />
         <!-- Question component based on type -->
         <template v-if="currentQuestion">
           <RadioButtonQuestion

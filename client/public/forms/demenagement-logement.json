@@ -12,7 +12,6 @@
           "title": "Quel est votre statut professionnel ?",
           "description": "Sélectionnez votre situation actuelle",
           "type": "radio",
-          "informationLink": "/informations/situation-familiale",
           "choices": [
             {
               "id": "eleve",
