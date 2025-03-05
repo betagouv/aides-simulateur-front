@@ -11,11 +11,5 @@ export const simulateurs: Simulateur[] = [
     shortTitle: 'Déménagement & logement',
     pictogram: () => import('@/assets/custom-pictograms/demenagement.svg'),
     title: 'Aides financières au déménagement et au logement',
-  },
-  {
-    id: 'simulation-globale',
-    shortTitle: 'Simulation globale',
-    pictogram: () => import('@/assets/custom-pictograms/demenagement.svg'),
-    title: 'Simulation globale',
-  },
+  }
 ]
