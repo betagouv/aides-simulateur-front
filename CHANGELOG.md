@@ -1,4 +1,8 @@
 # CHANGELOG
+## 0.4.0 [#29](https://github.com/betagouv/aides-simulateur-front/pull/29)
+* Ajout de fonctionnalité
+* Détail :
+  * Ajout de la première version du simulateur de simulation globale
 
 ## 0.3.2 [#26](https://github.com/betagouv/aides-simulateur-front/pull/26)
 
