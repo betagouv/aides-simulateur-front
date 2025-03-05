@@ -4,45 +4,6 @@
   "description": "Répondez à ces questions pour découvrir les aides au logement et déménagement auxquelles vous pourriez être éligible",
   "steps": [
     {
-      "id": "revenus",
-      "title": "Revenus",
-      "questions": [
-        {
-          "id": "type-revenus",
-          "title": "Quels sont les types de revenus qui s'appliquent à votre situation ?",
-          "type": "checkbox",
-          "choices": [
-            { "id": "revenus-activite", "title": "Revenus d’activité" },
-            { "id": "revenus-remplacement", "title": "Revenus de remplacement" },
-            { "id": "revenus-allocations", "title": "Revenus des allocations and co" },
-            { "id": "revenus-entreprise", "title": "Revenus d'entreprise" },
-            { "id": "ressources-parents", "title": "Ressources des parents" },
-            { "id": "ressources-conjoint", "title": "Ressources du conjoint" },
-            { "id": "autres-revenus", "title": "Autres revenus" }
-          ],
-          "bypassToQuestion": [
-            { "condition": "type-revenus.includes('revenus-activite')", "question": "salaire-imposable" },
-            { "condition": "type-revenus.includes('revenus-remplacement')", "question": "revenus-chomage" },
-            { "condition": "type-revenus.includes('revenus-allocations')", "question": "abattement-indemnite-chomage" },
-            { "condition": "type-revenus.includes('revenus-entreprise')", "question": "moins-values" },
-            { "condition": "type-revenus.includes('ressources-parents')", "question": "ressources-parents" },
-            { "condition": "type-revenus.includes('ressources-conjoint')", "question": "ressources-conjoint" },
-            { "condition": "type-revenus.includes('autres-revenus')", "question": "pensions-alimentaires" }
-          ]
-        },
-        {
-          "id": "confirmation-end",
-          "title": "Voulez-vous confirmer ces informations ?",
-          "description": "En poursuivant, vous affirmez être conscients que les informations d'eligibilité sont données à titre indicatif et ne sont pas contractuelles.",
-          "type": "radio",
-          "choices": [
-            { "id": "confirmation-end-oui", "title": "Oui" },
-            { "id": "confirmation-end-non", "title": "Non" }
-          ]
-        }
-      ]
-    },
-    {
       "id": "profil",
       "title": "Profil",
       "questions": [
@@ -164,8 +125,46 @@
           ]
         }
       ]
+    },
+    {
+      "id": "revenus",
+      "title": "Revenus",
+      "questions": [
+        {
+          "id": "type-revenus",
+          "title": "Quels sont les types de revenus qui s'appliquent à votre situation ?",
+          "type": "checkbox",
+          "choices": [
+            { "id": "revenus-activite", "title": "Revenus d’activité" },
+            { "id": "revenus-remplacement", "title": "Revenus de remplacement" },
+            { "id": "revenus-allocations", "title": "Revenus des allocations and co" },
+            { "id": "revenus-entreprise", "title": "Revenus d'entreprise" },
+            { "id": "ressources-parents", "title": "Ressources des parents" },
+            { "id": "ressources-conjoint", "title": "Ressources du conjoint" },
+            { "id": "autres-revenus", "title": "Autres revenus" }
+          ],
+          "bypassToQuestion": [
+            { "condition": "type-revenus.includes('revenus-activite')", "question": "salaire-imposable" },
+            { "condition": "type-revenus.includes('revenus-remplacement')", "question": "revenus-chomage" },
+            { "condition": "type-revenus.includes('revenus-allocations')", "question": "abattement-indemnite-chomage" },
+            { "condition": "type-revenus.includes('revenus-entreprise')", "question": "moins-values" },
+            { "condition": "type-revenus.includes('ressources-parents')", "question": "ressources-parents" },
+            { "condition": "type-revenus.includes('ressources-conjoint')", "question": "ressources-conjoint" },
+            { "condition": "type-revenus.includes('autres-revenus')", "question": "pensions-alimentaires" }
+          ]
+        },
+        {
+          "id": "confirmation-end",
+          "title": "Voulez-vous confirmer ces informations ?",
+          "description": "En poursuivant, vous affirmez être conscients que les informations d'eligibilité sont données à titre indicatif et ne sont pas contractuelles.",
+          "type": "radio",
+          "choices": [
+            { "id": "confirmation-end-oui", "title": "Oui" },
+            { "id": "confirmation-end-non", "title": "Non" }
+          ]
+        }
+      ]
     }
-
   ],
   "triggeredQuestions": [
     {
