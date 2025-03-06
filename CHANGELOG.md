@@ -1,4 +1,22 @@
 # CHANGELOG
+## 0.5.0 [#28](https://github.com/betagouv/aides-simulateur-front/pull/28)
+* Ajout de fonctionnalité
+* Détail :
+  * Ajoute la gestion de pages de contenus `simulateurs` avec nuxt-content
+  * Ajoute la gestion de pages de contenus `aides` avec nuxt-content
+  * Ajoute la gestion de pages de contenus `notions` avec nuxt-content
+  * Création d'une arborescence plate pour les pages de contenus décorrélées d'une simulation :
+  - `aides/index.vue` pour la liste des aides
+  - `aides/[aide_id].vue` pour une aide particulière
+  - `notions/index.vue` pour la liste des notions
+  - `notions/[notion_id].vue` pour une notion particulière
+  * Création d'une arborescence profonde pour les pages relevant d'une simulation utilisateur :
+    - `simulateurs/index.vue` pour la liste des simulateurs
+    - `simulateurs/[simulateur_id]/index.vue` pour un simulateur particulier
+    - `simulateurs/[simulateur_id]/[notion_id].vue` pour une notion consultable dans le cadre d'une simulation
+    - `simulateurs/[simulateur_id]/resultats/index.vue` pour la page de résultats d'une simulation
+    - `simulateurs/[simulateur_id]/resultats/[aide_id].vue` pour la page de détail d'une aide suite à une simulation
+
 ## 0.4.0 [#29](https://github.com/betagouv/aides-simulateur-front/pull/29)
 * Ajout de fonctionnalité
 * Détail :

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 const { headerProps, footerProps } = useAppConfig()
-const { showHeader, showFooter } = useIframeDisplay()
 
 const skipLinks = [
   {
@@ -47,7 +46,7 @@ const noticeMessage = 'Ce site est en cours de développement. Certaines fonctio
 <template>
   <DsfrSkipLinks :links="skipLinks" />
   <DsfrHeader
-    v-if="headerProps && showHeader"
+    v-if="headerProps"
     v-bind="headerProps"
   >
     <template #mainnav>
@@ -69,7 +68,7 @@ const noticeMessage = 'Ce site est en cours de développement. Certaines fonctio
     <slot />
   </main>
   <DsfrFooter
-    v-if="footerProps && showFooter"
+    v-if="footerProps"
     id="footer"
     v-bind="footerProps"
     tabindex="0"

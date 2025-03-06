@@ -2,33 +2,31 @@
 definePageMeta({
   layout: 'default',
   validate ({ params }) {
-    /** @todo find a better way to validate aide_id */
-    const aides = [
-      'fsl',
-      'garantie-visale',
+    /** @todo find a better way to validate notion_id */
+    const notions = [
+      'revenus-apl',
     ]
-    return (
-      aides.includes(params.aide_id)
-    )
+    return notions.includes(params.notion_id)
   }
 })
 
 const route = useRoute()
+const notionId = route.params.notion_id
 
-const aideId = route.params.aide_id
-const { data: aide } = useAsyncData(`aide-${aideId}`, () => {
-  return queryCollection('aides')
-    .where('stem', '=', `aides/${aideId}`)
+const { data: notion } = useAsyncData(`notion-${notionId}`, () => {
+  return queryCollection('notions')
+    .where('stem', '=', `notions/${notionId}`)
     .first()
 })
+
 const crumbs = computed(() => {
-  if (!aide.value) {
+  if (!notion.value) {
     return []
   }
   return [
     { text: 'Accueil', to: '/' },
-    { text: 'Aides', to: '/aides' },
-    { text: aide.value.title, to: `/aides/${aide.value.id}` }
+    { text: 'Notions', to: '/notions' },
+    { text: notion.value.title, to: `/notions/${notion.value.id}` }
   ]
 })
 </script>
@@ -37,17 +35,17 @@ const crumbs = computed(() => {
   <BrandBackgroundContainer>
     <BreadcrumbSectionContainer :crumbs="crumbs" />
     <SectionContainer
-      v-if="aide"
+      v-if="notion"
       type="page-header"
     >
       <div class="fr-grid-row fr-grid-row--gutters">
         <div class="fr-col-9 fr-col-sm-10 fr-col-md-11">
           <h1>
-            {{ aide.titre }}
+            {{ notion.title }}
           </h1>
-        </div>
-        <div class="fr-col-9 fr-col-sm-10 fr-col-md-11">
-          <ContentRenderer :value="aide" />
+          <p class="fr-text--lg">
+            {{ notion.description }}
+          </p>
         </div>
       </div>
     </SectionContainer>

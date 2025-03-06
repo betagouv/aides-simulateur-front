@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-const { showHeader } = useIframeDisplay()
-
 function handleSubmit (formData: Record<string, unknown>) {
   console.log(formData)
 }
@@ -9,7 +7,6 @@ function handleSubmit (formData: Record<string, unknown>) {
 <template>
   <div>
     <h1
-      v-if="showHeader"
       class="fr-title"
     >
       Éligibilité aux APL
