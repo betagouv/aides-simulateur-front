@@ -16,25 +16,29 @@
           "type": "radio",
           "choices": [
             {
-              "id": "eleve",
-              "title": "Élève/Étudiant·e"
+              "id": "actif",
+              "title": "Actif occupé"
             },
             {
-              "id": "salarie",
-              "title": "Salarié·e"
+              "id": "chomeur",
+              "title": "Chômeur"
             },
             {
-              "id": "independant",
-              "title": "Indépendant·e"
+              "id": "etudiant",
+              "title": "Étudiant, élève"
             },
             {
-              "id": "demandeur-emploi",
-              "title": "Inscrit·e comme demandeur d’emploi"
+              "id": "inactif",
+              "title": "Autre, inactif"
+            },
+            {
+              "id": "retraite",
+              "title": "Retraité"
             }
           ],
           "bypassToQuestion": [
-            { "condition": "statut-professionnel=eleve", "question": "etudiant-mobilite" },
-            { "condition": "statut-professionnel=salarie", "question": "situation-professionnelle" }
+            { "condition": "statut-professionnel=etudiant", "question": "etudiant-mobilite" },
+            { "condition": "statut-professionnel=actif", "question": "situation-professionnelle" }
           ]
         },
         {
@@ -46,12 +50,8 @@
         {
           "id": "handicap",
           "title": "Êtes-vous en situation de handicap ?",
-          "description": "Indiquez si vous êtes handicapé·e",
-          "type": "radio",
-          "choices": [
-            { "id": "handicap", "title": "Oui" },
-            { "id": "non-handicap", "title": "Non" }
-          ]
+          "description": "Indiquez si vous êtes en situation de handicap",
+          "type": "boolean"
         }
       ]
     },
@@ -60,35 +60,27 @@
       "title": "Foyer",
       "questions": [
         {
-          "id": "situation-familiale",
+          "id": "statut-marital",
           "title": "Situation familiale",
           "type": "radio",
           "choices": [
             { "id": "celibataire", "title": "Célibataire" },
-            { "id": "union-libre", "title": "En union libre" },
-            { "id": "marie-ou-pacse", "title": "Marié ou pascé" },
-            { "id": "separe-ou-divorce", "title": "Séparé ou divorcé" },
-            { "id": "veuf", "title": "Veuf·ve" }
+            { "id": "divorce", "title": "Divorcé" },
+            { "id": "jeune_veuf", "title": "Veuf d’un conjoint décédé dans l’année" },
+            { "id": "marie", "title": "Marié" },
+            { "id": "non_renseigne", "title": "Non renseigné" },
+            { "id": "pacse", "title": "Pacsé" },
+            { "id": "pacse", "title": "Pacsé" },
+            { "id": "veuf", "title": "Veuf" }
           ]
         },
         {
           "id": "habitation-avec-autre-personnes",
-          "title": "Habiterez-vous avec d’autres personnes ?",
+          "title": "Habiterez-vous avec d'autres personnes ?",
           "description": "Sélectionnez le type de votre logement",
-          "type": "radio",
-          "choices": [
-            {
-              "id": "habitation-avec-autre-personnes-oui",
-              "title": "Oui"
-            },
-            {
-              "id": "habitation-avec-autre-personnes-non",
-              "title": "Non"
-            }
-          ],
+          "type": "boolean",
           "bypassToQuestion": [
-            { "condition": "habitation-avec-autre-personnes=habitation-avec-autre-personnes-oui", "question": "habiter-avec-conjoint" }
-
+            { "condition": "habitation-avec-autre-personnes=true", "question": "habiter-avec-conjoint" }
           ]
         }
       ]
@@ -141,7 +133,7 @@
           "title": "Quels sont les types de revenus qui s'appliquent à votre situation ?",
           "type": "checkbox",
           "choices": [
-            { "id": "revenus-activite", "title": "Revenus d’activité" },
+            { "id": "revenus-activite", "title": "Revenus d'activité" },
             { "id": "revenus-remplacement", "title": "Revenus de remplacement" },
             { "id": "revenus-allocations", "title": "Revenus des allocations and co" },
             { "id": "revenus-entreprise", "title": "Revenus d'entreprise" },
@@ -180,13 +172,13 @@
         { "id": "stage", "title": "Stage" },
         { "id": "alternance", "title": "Alternance" },
         { "id": "salarie-hors-alternance", "title": "Salarié·e hors alternance" },
-        { "id": "sans-emploi", "title": "Je n’ai pas d’emploi" }
+        { "id": "sans-emploi", "title": "Je n'ai pas d'emploi" }
       ],
       "nextQuestion": "date-naissance"
     },
     {
       "id": "etudiant-mobilite",
-      "title": "Êtes-vous dans l’un des cas suivants ?",
+      "title": "Êtes-vous dans l'un des cas suivants ?",
       "type": "radio",
       "choices": [
         { "id": "parcoursup-nouvelle-region", "title": "Je commence des études après avoir été accepté(e) sur Parcoursup dans une autre Région" },
@@ -202,24 +194,16 @@
     {
       "id": "boursier",
       "title": "Etes vous boursier ?",
-      "type": "radio",
-      "choices": [
-        { "id": "boursier", "title": "Oui" },
-        { "id": "non-boursier", "title": "Non" }
-      ],
+      "type": "boolean",
       "nextQuestion": "date-naissance"
     },
     {
       "id": "habiter-avec-conjoint",
       "title": "Habiterez-vous avec votre conjoint·e ?",
-      "type": "radio",
-      "choices": [
-        { "id": "habite-avec-conjoint-oui", "title": "Oui" },
-        { "id": "habite-avec-conjoint-non", "title": "Non" }
-      ],
+      "type": "boolean",
       "nextQuestion": "code-postal-nouvelle-ville",
       "bypassToQuestion": [
-        { "condition": "habiter-avec-conjoint=habite-avec-conjoint-oui", "question": "revenus-conjoint" }
+        { "condition": "habiter-avec-conjoint=true", "question": "revenus-conjoint" }
       ]
     },
     {
@@ -231,11 +215,7 @@
     {
       "id": "primo-accedant",
       "title": "Êtes-vous un primo-accédant ?",
-      "type": "radio",
-      "choices": [
-        { "id": "primo-accedant-oui", "title": "Oui" },
-        { "id": "primo-accedant-non", "title": "Non" }
-      ],
+      "type": "boolean",
       "nextQuestion": "type-revenus"
     },
     {
@@ -252,31 +232,19 @@
     {
       "id": "colocation",
       "title": "Est-ce une colocation ?",
-      "type": "radio",
-      "choices": [
-        { "id": "colocation-oui", "title": "Oui" },
-        { "id": "colocation-non", "title": "Non" }
-      ],
+      "type": "boolean",
       "nextQuestion": "logement-chambre"
     },
     {
       "id": "logement-chambre",
       "title": "Est-ce une chambre dans un logement meublé ?",
-      "type": "radio",
-      "nextQuestion": "logement-parente-proprietaire",
-      "choices": [
-        { "id": "logement-chambre-oui", "title": "Oui" },
-        { "id": "logement-chambre-non", "title": "Non" }
-      ]
+      "type": "boolean",
+      "nextQuestion": "logement-parente-proprietaire"
     },
     {
       "id": "logement-parente-proprietaire",
       "title": "Avez-vous un lien de parenté direct avec le propriétaire ?",
-      "type": "radio",
-      "choices": [
-        { "id": "logement-parente-proprietaire-oui", "title": "Oui" },
-        { "id": "logement-parente-proprietaire-non", "title": "Non" }
-      ],
+      "type": "boolean",
       "nextQuestion": "nombre-personnes-logement"
     },
     {
@@ -300,36 +268,24 @@
     {
       "id": "loyer-difficile-payer",
       "title": "Rencontrez-vous des difficultés importantes pour accéder à un logement ou payer votre loyer ?",
-      "type": "radio",
-      "choices": [
-        { "id": "loyer-difficile-payer-oui", "title": "Oui" },
-        { "id": "loyer-difficile-payer-non", "title": "Non" }
-      ],
+      "type": "boolean",
       "nextQuestion": "loyer-besoin-garant"
     },
     {
       "id": "loyer-besoin-garant",
-      "title": "Avez-vous besoin d’un garant ?",
-      "type": "radio",
-      "choices": [
-        { "id": "loyer-besoin-garant-oui", "title": "Oui" },
-        { "id": "loyer-besoin-garant-non", "title": "Non" }
-      ],
+      "title": "Avez-vous besoin d'un garant ?",
+      "type": "boolean",
       "nextQuestion": "loyer-besoin-cautions"
     },
     {
       "id": "loyer-besoin-cautions",
-      "title": "Avez-vous besoin d’une caution ?",
-      "type": "radio",
-      "choices": [
-        { "id": "loyer-besoin-cautions-oui", "title": "Oui" },
-        { "id": "loyer-besoin-cautions-non", "title": "Non" }
-      ],
+      "title": "Avez-vous besoin d'une caution ?",
+      "type": "boolean",
       "nextQuestion": "type-revenus"
     },
     {
       "id": "salaire-imposable",
-      "title": "Salaire imposable (revenu d’activité salariale) - année glissante",
+      "title": "Salaire imposable (revenu d'activité salariale) - année glissante",
       "type": "number",
       "nextQuestion": "confirmation-end",
       "bypassToQuestion": [
@@ -374,7 +330,7 @@
     },
     {
       "id": "complement-allocation-divers",
-      "title": "Compléments divers (ex. allocation logement, allocations familiales, complément familial, allocation d’éducation de l’enfant handicapé (AEEH), allocation de soutien familial, allocation journalière de présence parentale (AJPP)).",
+      "title": "Compléments divers (ex. allocation logement, allocations familiales, complément familial, allocation d'éducation de l'enfant handicapé (AEEH), allocation de soutien familial, allocation journalière de présence parentale (AJPP)).",
       "type": "number",
       "nextQuestion": "pensions-alimentaires-recues"
     },
@@ -398,7 +354,7 @@
     },
     {
       "id": "revenus-independant",
-      "title": "Revenus d’indépendants (RPNS - Revenus professionnels non salariés)",
+      "title": "Revenus d'indépendants (RPNS - Revenus professionnels non salariés)",
       "type": "number",
       "nextQuestion": "pensions-invalidite"
     },

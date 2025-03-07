@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { SurveyQuestion } from '@/stores/survey'
+import BooleanQuestion from './BooleanQuestion.vue'
 import DateQuestion from './DateQuestion.vue'
 import MultiSelectQuestion from './MultiSelectQuestion.vue'
 import NumberQuestion from './NumberQuestion.vue'
@@ -62,12 +63,17 @@ const hasAnswer = computed(() => {
     case 'date':
       // For radio and date, any non-empty value is valid
       return !!answer
+    case 'boolean':
+      // For boolean, both true and false are valid answers
+      return answer === true || answer === false
     case 'checkbox':
       // For checkbox, the answer should be an array with at least one item
       return Array.isArray(answer) && answer.length > 0
     case 'number':
+      // For number, we need to check if it's a number including 0
+      return answer === 0 || !!answer
     case 'text':
-      // For number and text, the value should not be empty
+      // For text, the value should not be empty
       return answer !== undefined && answer !== null && answer !== ''
     default:
       return false
@@ -234,6 +240,13 @@ function restartForm () {
           <template v-if="currentQuestion">
             <RadioButtonQuestion
               v-if="currentQuestion.type === 'radio'"
+              :question="currentQuestion"
+              :model-value="answers[currentQuestion.id]"
+              @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
+            />
+
+            <BooleanQuestion
+              v-else-if="currentQuestion.type === 'boolean'"
               :question="currentQuestion"
               :model-value="answers[currentQuestion.id]"
               @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"

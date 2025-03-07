@@ -8,7 +8,7 @@ export interface SurveyQuestion {
   id: string
   title: string
   description?: string
-  type: 'radio' | 'checkbox' | 'number' | 'date' | 'text'
+  type: 'radio' | 'checkbox' | 'number' | 'date' | 'text' | 'boolean'
   notion: {
     id: string
     linkLabel: string
@@ -290,8 +290,13 @@ export const useFormStore = defineStore('form', () => {
           // Parse right side value
           let rightValue: any = rightSide
 
+          // Convert string 'true'/'false' to boolean if comparing with a boolean value
+          if (typeof leftValue === 'boolean' && (rightValue === 'true' || rightValue === 'false')) {
+            rightValue = rightValue === 'true'
+          }
+
           // Try to convert to number if applicable
-          if (!Number.isNaN(Number(rightValue))) {
+          else if (!Number.isNaN(Number(rightValue))) {
             rightValue = Number(rightValue)
           }
 
