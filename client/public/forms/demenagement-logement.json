@@ -1,4 +1,6 @@
 {
+  "version": "1.0.0",
+  "forceRefresh": true,
   "id": "demenagement-logement",
   "title": "Aides financières au déménagement et au logement",
   "description": "Répondez à ces questions pour découvrir les aides au logement et déménagement auxquelles vous pourriez être éligible",
@@ -7,7 +9,7 @@
       "id": "profil",
       "title": "Profil",
       "questions": [
-         {
+        {
           "id": "statut-professionnel",
           "title": "Quel est votre statut professionnel ?",
           "description": "Sélectionnez votre situation actuelle",
@@ -161,10 +163,9 @@
           "id": "confirmation-end",
           "title": "Voulez-vous confirmer ces informations ?",
           "description": "En poursuivant, vous affirmez être conscients que les informations d'eligibilité sont données à titre indicatif et ne sont pas contractuelles.",
-          "type": "radio",
+          "type": "checkbox",
           "choices": [
-            { "id": "confirmation-end-oui", "title": "Oui" },
-            { "id": "confirmation-end-non", "title": "Non" }
+            { "id": "confirmation-end-oui", "title": "Oui" }
           ]
         }
       ]
