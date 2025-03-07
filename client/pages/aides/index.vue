@@ -6,7 +6,7 @@ definePageMeta({
 const { data: aides } = useAsyncData('aides', () => {
   return queryCollectionNavigation('aides', ['titre', 'type', 'montant', 'resume'])
 }, {
-  transform: (data) => {
+  transform: (data): RichAide => {
     const aides = data?.[0]?.children || []
     return aides.map((aide) => {
       return {
