@@ -182,7 +182,7 @@ function submitForm () {
     <div class="fr-btns-group fr-btns-group--inline-reverse fr-mt-5w">
       <DsfrButton
         :label="isLastQuestion ? 'Terminer' : 'Suivant'"
-        icon="ri-arrow-right-line"
+        icon="ri:arrow-right-line"
         icon-right
         @click="handleNext"
       />
@@ -210,7 +210,7 @@ function submitForm () {
         <DsfrButton
           v-if="currentQuestion?.notion"
           :label="currentQuestion?.notion.buttonLabel"
-          icon="ri-information-line"
+          icon="ri:information-line"
           secondary
           icon-right
           @click="() => navigateTo(`/simulateurs/${simulateurId}/${currentQuestion?.notion.id}`)"
@@ -251,7 +251,7 @@ function submitForm () {
       <div class="fr-btns-group fr-btns-group--inline-reverse fr-mt-5w">
         <DsfrButton
           :label="isLastQuestion ? 'Terminer' : 'Suivant'"
-          icon="ri-arrow-right-line"
+          icon="ri:arrow-right-line"
           icon-right
           :disabled="!hasAnswer"
           @click="handleNext"
