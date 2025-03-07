@@ -1,4 +1,13 @@
 # CHANGELOG
+## 0.6.0 [#45](https://github.com/betagouv/aides-simulateur-front/pull/45)
+* Ajout de fonctionnalité
+* Détail : 
+  * Nouveaux types de questions possible dans le questionnaire : Number , Boolean
+  * Possibilité d'autocompléter un code insee à partir d'un code postal (autocompleteFunctions)
+  * Stockage de l'historique de navigation du formulaire et possibilité de retour en arrière
+  * Possibilité de versionner les questionnaires 
+  * Intégration de la version 1.0.0 du questionnaire "demenagement-logement"
+  * Ecran permettant à l'utilisateur soit de reprendre le formulaire, soit de repartir à 0
 
 ## 0.5.1 [#44](https://github.com/betagouv/aides-simulateur-front/pull/44)
 * Ajout de fonctionnalité
