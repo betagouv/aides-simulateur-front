@@ -1,5 +1,18 @@
+<script lang="ts" setup>
+withDefaults(defineProps<{
+  fluid: boolean
+}>(), {
+  fluid: false
+})
+</script>
+
 <template>
-  <div class="fr-container">
+  <div
+    :class="[
+      { 'fr-container': !fluid },
+      { 'fr-container--fluid': fluid },
+    ]"
+  >
     <hr class="section-separator">
   </div>
 </template>
