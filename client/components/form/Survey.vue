@@ -132,7 +132,7 @@ function handlePrevious () {
 
 function submitForm () {
   // Process the final form data from the answers store
-  console.log('Form submitted with answers:', answers.value)
+  // Form is submitted with answers: answers.value
   // You might want to send this data to an API, or calculate results
 }
 
@@ -298,7 +298,15 @@ function restartForm () {
 
 <style scoped lang="scss">
 .simulator-form-container {
-  background-color: white;
+  /* Apply white background only in light mode */
+  @media (prefers-color-scheme: light) {
+    background-color: white;
+  }
+  /* Remove background color in dark mode */
+  @media (prefers-color-scheme: dark) {
+    background-color: var(--background-raised-grey);;
+  }
+
   padding: 2rem;
   border-radius: 4px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);

@@ -1,4 +1,8 @@
 # CHANGELOG
+## 0.6.1 [#46](https://github.com/betagouv/aides-simulateur-front/pull/46)
+* Ajout de fonctionnalité
+* Détail : 
+  * Fix du background du formulaire en dark mode
 ## 0.6.0 [#45](https://github.com/betagouv/aides-simulateur-front/pull/45)
 * Ajout de fonctionnalité
 * Détail : 
