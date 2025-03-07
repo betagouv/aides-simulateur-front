@@ -1,14 +1,13 @@
 <script lang="ts" setup>
 import type { SurveyQuestion } from '@/stores/survey'
+import type { OpenFiscaCalculationRequest } from '@/types/openfisca'
+import { buildRequest, fetchOpenFiscaFranceCalculation } from '@/utils/calculate-aides'
 import BooleanQuestion from './BooleanQuestion.vue'
 import DateQuestion from './DateQuestion.vue'
 import MultiSelectQuestion from './MultiSelectQuestion.vue'
 import NumberQuestion from './NumberQuestion.vue'
 import RadioButtonQuestion from './RadioButtonQuestion.vue'
 import TextQuestion from './TextQuestion.vue'
-import { buildRequest, fetchOpenFiscaFranceCalculation } from "@/utils/calculate-aides"
-import { type OpenFiscaCalculationRequest } from '@/types/openfisca'
-
 
 const props = defineProps<{
   simulateurId: string
@@ -133,18 +132,19 @@ function handlePrevious () {
   goToPreviousQuestion()
 }
 
-async function submitForm() {
+async function submitForm () {
   // Process the final form data from the answers store
   console.log('Form submitted with answers:', answers.value)
-  
+
   // Sending this data to a web API to calculate a set of 'aides'
   try {
     let request: OpenFiscaCalculationRequest = buildRequest(answers.value)
     let results = await fetchOpenFiscaFranceCalculation(request)
     console.debug(results)
-  } catch (error){
+  }
+  catch (error) {
     // TODO Handle the error more professionnally and display a message to the user :)
-    console.error("Erreur inattendue lors de la soumission du formulaire et de l'appel au calcul.")
+    console.error('Erreur inattendue lors de la soumission du formulaire et de l\'appel au calcul.')
   }
 }
 
