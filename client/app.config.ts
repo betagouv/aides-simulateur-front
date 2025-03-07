@@ -7,9 +7,9 @@ export default defineAppConfig({
       {
         label: 'Affichage',
         icon: { name: 'ri-sun-line', ssr: true },
-        iconAttrs: {
-          class: 'fr-icon-theme-fill',
-        },
+        // iconAttrs: {
+        //   class: 'fr-icon-theme-fill',
+        // },
         button: true,
         onClick: () => {
           useSchemeStore().openModal()
