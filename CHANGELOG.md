@@ -1,4 +1,10 @@
 # CHANGELOG
+
+## 0.5.1 [#44](https://github.com/betagouv/aides-simulateur-front/pull/44)
+* Ajout de fonctionnalité
+* Détail :
+  * Répare les problèmes lié au chargement des pictogrammes via nuxt et la libraire @gouvfr/dsfr en plaçant tous les pictogrammes dans le dossier `/public`
+
 ## 0.5.0 [#28](https://github.com/betagouv/aides-simulateur-front/pull/28)
 * Ajout de fonctionnalité
 * Détail :
