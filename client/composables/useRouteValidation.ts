@@ -1,0 +1,24 @@
+import type { RouteLocationNormalizedGeneric } from 'vue-router'
+
+export const VALID_ROUTES = {
+  simulateur_id: ['demenagement-logement'],
+  notion_id: ['revenus-apl'],
+  aide_id: ['fsl', 'garantie-visale'],
+}
+
+export type RouteCategory = keyof typeof VALID_ROUTES
+
+function validateRouteParam (category: RouteCategory, paramValue: string | string[]): boolean {
+  const validValues = VALID_ROUTES[category]
+  const value = Array.isArray(paramValue) ? paramValue[0] : paramValue
+  return validValues.includes(value)
+}
+
+export function getContentRouteValidator (key: RouteCategory | RouteCategory[]) {
+  const paramNames = Array.isArray(key) ? key : [key]
+  return (route: RouteLocationNormalizedGeneric) => {
+    return paramNames.every((paramName) => {
+      return validateRouteParam(paramName, route.params[paramName])
+    })
+  }
+}

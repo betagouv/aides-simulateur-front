@@ -2,13 +2,7 @@
 definePageMeta({
   layout: 'default',
   middleware: 'check-iframe-layout',
-  validate ({ params }) {
-    /** @todo find a better way to validate simulateur_id */
-    const simulateurs = [
-      'demenagement-logement',
-    ]
-    return simulateurs.includes(params.simulateur_id)
-  }
+  validate: getContentRouteValidator('simulateur_id')
 })
 
 const route = useRoute()
