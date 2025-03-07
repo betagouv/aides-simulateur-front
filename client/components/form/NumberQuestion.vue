@@ -1,20 +1,33 @@
 <script lang="ts" setup>
-import { type SurveyQuestion } from '@/stores/survey'
+import type { SurveyQuestion } from '@/stores/survey'
 
-const props = defineProps<{
+const _props = defineProps<{
   question: SurveyQuestion
-  modelValue: number | string | undefined
+  modelValue: number | undefined
 }>()
 
 const emit = defineEmits<{
-  'update:modelValue': [value: number | string]
+  'update:modelValue': [value: number | undefined]
 }>()
 
-function handleChange(value: number | string) {
-  emit('update:modelValue', value)
-}
+function handleChange (value: number | string) {
+  // Handle empty input
+  if (value === '' || value === null || value === undefined) {
+    emit('update:modelValue', undefined)
+    return
+  }
 
-console.log("--- NumberQuestion: modelValue = ", props.modelValue);
+  // Convert string value to number
+  if (typeof value === 'string') {
+    const numValue = Number.parseFloat(value)
+    if (!Number.isNaN(numValue)) {
+      emit('update:modelValue', numValue)
+    }
+  }
+  else if (typeof value === 'number') {
+    emit('update:modelValue', value)
+  }
+}
 </script>
 
 <template>

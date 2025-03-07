@@ -8,11 +8,12 @@ export interface SurveyQuestion {
   id: string
   title: string
   description?: string
-  type: 'radio' | 'checkbox' | 'number' | 'date'
+  type: 'radio' | 'checkbox' | 'number' | 'date' | 'text' | 'boolean'
   notion: {
     id: string
-    linkLabel: string
+    buttonLabel: string
   }
+  autocompleteFunction?: string
   choices?: SurveyChoice[]
   nextQuestion?: string
   bypassToQuestion?: Array<{
@@ -32,6 +33,8 @@ export interface SurveySchema {
   id: string
   title: string
   description: string
+  version: string
+  forceRefresh?: boolean
   steps: SurveyStep[]
   triggeredQuestions?: SurveyQuestion[]
 }
@@ -46,15 +49,37 @@ export const useFormStore = defineStore('form', () => {
   // Current category being displayed
   const currentStepId = ref<string | null>(null)
 
+  // Track last answered question
+  const lastAnsweredQuestionId = ref<string | null>(null)
+  const lastAnsweredStepId = ref<string | null>(null)
+
+  // History of visited questions (for navigation)
+  // Each item in history represents a question the user has visited/viewed
+  const questionHistory = ref<Array<{ questionId: string, stepId: string }>>([])
+
   // Form definition loaded from JSON
   const surveySchema = ref<SurveySchema | null>(null)
 
   // Pour gérer la navigation vers les pages d'information et le retour
   const savedQuestionId = ref<string | null>(null)
 
+  // Store form versions
+  const formVersions = ref<Record<string, string>>({})
+
+  // Track if there's an in-progress form
+  const hasInProgressForm = computed(() => {
+    return Object.keys(answers.value).length > 0
+  })
+
   // Function to set an answer
   function setAnswer (questionId: string, value: any) {
     answers.value[questionId] = value
+
+    // Update last answered question
+    lastAnsweredQuestionId.value = questionId
+    lastAnsweredStepId.value = currentStepId.value
+
+    // We no longer update history here - that happens in navigation methods
   }
 
   // Load form definition from a JSON file
@@ -63,6 +88,26 @@ export const useFormStore = defineStore('form', () => {
       // You might need to adjust the path based on your project structure
       const response = await fetch(`/forms/${formId}.json`)
       const data = await response.json()
+
+      // Check if we need to reset the form based on version and forceRefresh
+      const storedVersion = formVersions.value[formId]
+      const newVersion = data.version
+
+      // If forceRefresh is true and the version is higher than stored version, reset the form
+      if (
+        data.forceRefresh === true
+        && storedVersion
+        && newVersion
+        && compareVersions(newVersion, storedVersion) > 0
+      ) {
+        // Log version change and reset form
+        console.error(`Form version changed from ${storedVersion} to ${newVersion} with forceRefresh. Resetting form.`)
+        resetForm()
+      }
+
+      // Store the new version
+      formVersions.value[formId] = newVersion
+
       surveySchema.value = data
 
       // Initialize with the first category and question if available
@@ -71,12 +116,37 @@ export const useFormStore = defineStore('form', () => {
 
         if (data.steps[0].questions && data.steps[0].questions.length > 0) {
           currentQuestionId.value = data.steps[0].questions[0].id
+
+          // Initialize question history with the first question
+          // Only do this if we don't already have history (starting fresh)
+          if (questionHistory.value.length === 0 && currentQuestionId.value && currentStepId.value) {
+            questionHistory.value = [{
+              questionId: currentQuestionId.value,
+              stepId: currentStepId.value
+            }]
+          }
         }
       }
     }
     catch (error) {
       console.error('Error loading form definition:', error)
     }
+  }
+
+  // Utility to compare versions
+  function compareVersions (v1: string, v2: string): number {
+    const parts1 = v1.split('.').map(Number)
+    const parts2 = v2.split('.').map(Number)
+
+    for (let i = 0; i < Math.max(parts1.length, parts2.length); i++) {
+      const part1 = i < parts1.length ? parts1[i] : 0
+      const part2 = i < parts2.length ? parts2[i] : 0
+
+      if (part1 > part2) { return 1 }
+      if (part1 < part2) { return -1 }
+    }
+
+    return 0
   }
 
   // Get the current category
@@ -220,8 +290,13 @@ export const useFormStore = defineStore('form', () => {
           // Parse right side value
           let rightValue: any = rightSide
 
+          // Convert string 'true'/'false' to boolean if comparing with a boolean value
+          if (typeof leftValue === 'boolean' && (rightValue === 'true' || rightValue === 'false')) {
+            rightValue = rightValue === 'true'
+          }
+
           // Try to convert to number if applicable
-          if (!isNaN(Number(rightValue))) {
+          else if (!Number.isNaN(Number(rightValue))) {
             rightValue = Number(rightValue)
           }
 
@@ -251,8 +326,8 @@ export const useFormStore = defineStore('form', () => {
             case '>=': return leftValue >= rightValue
             case '<': return leftValue < rightValue
             case '<=': return leftValue <= rightValue
-            case '=': return leftValue == rightValue
-            case '!=': return leftValue != rightValue
+            case '=': return leftValue === rightValue
+            case '!=': return leftValue !== rightValue
           }
         }
       }
@@ -343,47 +418,70 @@ export const useFormStore = defineStore('form', () => {
         // Keep the current step as context, but make the UI show the triggered question
       }
 
+      // Update the current question
       currentQuestionId.value = result.nextQuestionId
+
+      // Add the NEW question to history (not the one we're leaving)
+      if (currentQuestionId.value && currentStepId.value) {
+        const newHistoryItem = {
+          questionId: currentQuestionId.value,
+          stepId: currentStepId.value
+        }
+
+        // Only add if not already the last item in history
+        if (questionHistory.value.length === 0
+          || questionHistory.value[questionHistory.value.length - 1].questionId !== currentQuestionId.value) {
+          questionHistory.value.push(newHistoryItem)
+        }
+      }
+
       return true
     }
     return false
   }
 
-  // Go to the previous question (simplified navigation)
+  // Go to the previous question using history
   function goToPreviousQuestion () {
-    // This is more complex with triggered questions, as we need to track question history
-    // For now, we'll implement a simplified version that only works within regular steps
-
-    // If we're in a triggered question, we can't reliably go back
-    if (currentQuestionId.value && findTriggeredQuestion(currentQuestionId.value)) {
-      console.warn('Cannot navigate back from a triggered question')
+    // Can't go back if we have no history or are at the beginning
+    if (questionHistory.value.length <= 1) {
       return false
     }
 
-    if (!currentStep.value) { return false }
+    // Remove the current question from history
+    questionHistory.value.pop()
 
-    const currentQuestionIndex = currentStep.value.questions.findIndex(
-      (q: any) => q.id === currentQuestionId.value
-    )
+    // Get the previous question from history
+    const previousItem = questionHistory.value[questionHistory.value.length - 1]
 
-    if (currentQuestionIndex > 0) {
-      currentQuestionId.value = currentStep.value.questions[currentQuestionIndex - 1].id
+    // Navigate to it
+    currentQuestionId.value = previousItem.questionId
+    currentStepId.value = previousItem.stepId
+
+    return true
+  }
+
+  // Function to go to the last answered question
+  function goToLastAnsweredQuestion () {
+    // If we have history, use that (most reliable)
+    if (questionHistory.value.length > 0) {
+      const lastHistoryItem = questionHistory.value[questionHistory.value.length - 1]
+      currentQuestionId.value = lastHistoryItem.questionId
+      currentStepId.value = lastHistoryItem.stepId
       return true
     }
 
-    // If we're at the first question of a step, go to the previous step
-    if (!surveySchema.value) { return false }
+    // Fallback to using lastAnsweredQuestionId
+    if (lastAnsweredQuestionId.value && lastAnsweredStepId.value) {
+      currentQuestionId.value = lastAnsweredQuestionId.value
+      currentStepId.value = lastAnsweredStepId.value
+      return true
+    }
 
-    const currentStepIndex = surveySchema.value.steps.findIndex(
-      (cat: any) => cat.id === currentStepId.value
-    )
-
-    if (currentStepIndex > 0) {
-      const prevStep = surveySchema.value.steps[currentStepIndex - 1]
-      currentStepId.value = prevStep.id
-
-      if (prevStep.questions && prevStep.questions.length > 0) {
-        currentQuestionId.value = prevStep.questions[prevStep.questions.length - 1].id
+    // If no last answered question, go to first question
+    if (surveySchema.value && surveySchema.value.steps.length > 0) {
+      currentStepId.value = surveySchema.value.steps[0].id
+      if (surveySchema.value.steps[0].questions.length > 0) {
+        currentQuestionId.value = surveySchema.value.steps[0].questions[0].id
         return true
       }
     }
@@ -394,6 +492,9 @@ export const useFormStore = defineStore('form', () => {
   // Reset the form
   function resetForm () {
     answers.value = {}
+    lastAnsweredQuestionId.value = null
+    lastAnsweredStepId.value = null
+    questionHistory.value = []
 
     // Reset to first category/question
     if (surveySchema.value && surveySchema.value.steps.length > 0) {
@@ -401,6 +502,14 @@ export const useFormStore = defineStore('form', () => {
 
       if (surveySchema.value.steps[0].questions.length > 0) {
         currentQuestionId.value = surveySchema.value.steps[0].questions[0].id
+
+        // Add initial question to history
+        if (currentQuestionId.value && currentStepId.value) {
+          questionHistory.value.push({
+            questionId: currentQuestionId.value,
+            stepId: currentStepId.value
+          })
+        }
       }
     }
   }
@@ -477,6 +586,9 @@ export const useFormStore = defineStore('form', () => {
     answers,
     currentQuestionId,
     currentStepId,
+    lastAnsweredQuestionId,
+    lastAnsweredStepId,
+    questionHistory,
     surveySchema,
     currentStep,
     nextCategory,
@@ -484,6 +596,8 @@ export const useFormStore = defineStore('form', () => {
     progress,
     isLastQuestion,
     isTriggeredQuestion,
+    hasInProgressForm,
+    formVersions,
     // For Interface display
     currentStepIndex,
     totalCategoriesNumber,
@@ -494,10 +608,19 @@ export const useFormStore = defineStore('form', () => {
     resetForm,
     savedQuestionId: readonly(savedQuestionId),
     saveCurrentQuestionForNavigation,
-    navigateToQuestion
+    navigateToQuestion,
+    goToLastAnsweredQuestion
   }
 }, {
   persist: {
-    pick: ['answers', 'currentQuestionId', 'currentStepId']
+    pick: [
+      'answers',
+      'currentQuestionId',
+      'currentStepId',
+      'formVersions',
+      'lastAnsweredQuestionId',
+      'lastAnsweredStepId',
+      'questionHistory'
+    ]
   }
 })

@@ -41,10 +41,10 @@ const crumbs = computed(() => {
       <div class="fr-grid-row fr-grid-row--gutters">
         <div class="fr-col-9 fr-col-sm-10 fr-col-md-11">
           <h1>
-            {{ notion.title }}
+            {{ notion?.title }}
           </h1>
           <p class="fr-text--lg">
-            {{ notion.description }}
+            {{ notion?.description }}
           </p>
         </div>
       </div>

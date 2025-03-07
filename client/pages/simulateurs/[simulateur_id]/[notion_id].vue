@@ -65,7 +65,7 @@ const crumbs = computed(() => {
       <UserActionSectionRow>
         <div>
           <h1>
-            {{ notion.title }}
+            {{ notion?.title }}
           </h1>
           <DsfrLink
             icon-before
@@ -76,7 +76,7 @@ const crumbs = computed(() => {
             :icon="{ name: 'ri:arrow-left-line', ssr: true }"
           />
           <p class="fr-text--lg">
-            {{ notion.description }}
+            {{ notion?.description }}
           </p>
         </div>
       </UserActionSectionRow>
