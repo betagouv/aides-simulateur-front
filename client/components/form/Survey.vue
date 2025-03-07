@@ -81,7 +81,6 @@ const hasAnswer = computed(() => {
 })
 
 onMounted(async () => {
-  console.error('Loading form definition for:', simulateurId)
   try {
     await loadSurveySchema(simulateurId)
     isLoading.value = false
@@ -113,7 +112,6 @@ function handleKeyDown (event: KeyboardEvent) {
 
 // Handle updates from question components
 function handleQuestionUpdate (questionId: string, value: any) {
-  console.error('----- setAnswer', questionId, value)
   setAnswer(questionId, value)
 }
 
@@ -134,7 +132,7 @@ function handlePrevious () {
 
 function submitForm () {
   // Process the final form data from the answers store
-  console.error('Form submitted with answers:', answers.value)
+  console.log('Form submitted with answers:', answers.value)
   // You might want to send this data to an API, or calculate results
 }
 
@@ -152,44 +150,32 @@ function restartForm () {
 
 <template>
   <div class="fr-col-12 fr-col-offset-md-1 fr-col-md-10 fr-col-offset-lg-2 fr-col-lg-8">
-    <!-- Écran de chargement -->
-    <div
-      v-if="isLoading"
-      class="fr-py-5w fr-text--center"
-    >
-      <p>Chargement du formulaire...</p>
-    </div>
-
     <!-- Écran de choix (reprendre ou recommencer) -->
     <div
-      v-else-if="showChoiceScreen"
-      class="fr-container fr-py-4w"
+      v-if="showChoiceScreen"
+      class="fr-py-4w"
     >
-      <div class="fr-grid-row fr-grid-row--center">
-        <div class="fr-col-12 fr-col-md-10 fr-col-lg-8">
-          <div class="fr-card fr-card--shadow fr-p-3w">
-            <h2 class="fr-h4">
-              Vous avez un formulaire en cours
-            </h2>
-            <p class="fr-text--bold">
-              Progression : {{ progress }}%
-            </p>
-            <p>Souhaitez-vous reprendre votre formulaire là où vous vous êtes arrêté ou recommencer à zéro ?</p>
+      <div class="fr-card fr-card--shadow fr-p-3w">
+        <h2 class="fr-h4">
+          Vous avez un formulaire en cours
+        </h2>
+        <p class="fr-text--bold">
+          Progression : {{ progress }}%
+        </p>
+        <p>Souhaitez-vous reprendre votre formulaire là où vous vous êtes arrêté ou recommencer à zéro ?</p>
 
-            <div class="fr-btns-group fr-btns-group--inline-lg fr-mt-2w">
-              <DsfrButton
-                label="Reprendre"
-                icon="ri-play-line"
-                @click="resumeForm"
-              />
-              <DsfrButton
-                label="Recommencer"
-                secondary
-                icon="ri-restart-line"
-                @click="restartForm"
-              />
-            </div>
-          </div>
+        <div class="fr-btns-group fr-btns-group--inline-lg fr-mt-2w">
+          <DsfrButton
+            label="Reprendre"
+            icon="ri-play-line"
+            @click="resumeForm"
+          />
+          <DsfrButton
+            label="Recommencer"
+            secondary
+            icon="ri-restart-line"
+            @click="restartForm"
+          />
         </div>
       </div>
     </div>
@@ -226,13 +212,14 @@ function restartForm () {
           <h2 class="fr-h5">
             {{ currentQuestion?.title }}
           </h2>
-          <p>{{ currentQuestion?.description }}</p>
+          <p>{{ currentQuestion?.description }} </p>
           <DsfrButton
             v-if="currentQuestion?.notion"
             :label="currentQuestion?.notion.buttonLabel"
             icon="ri-information-line"
             secondary
             icon-right
+            class="fr-mb-8v"
             @click="() => navigateTo(`/simulateurs/${simulateurId}/${currentQuestion?.notion.id}`)"
           />
 
@@ -306,12 +293,6 @@ function restartForm () {
         <p>Erreur lors du chargement du formulaire</p>
       </div>
     </template>
-  </div>
-  <div
-    v-else
-    class="fr-py-5w fr-text--center"
-  >
-    <p>{{ isLoading ? 'Chargement du formulaire...' : 'Erreur lors du chargement du formulaire' }}</p>
   </div>
 </template>
 

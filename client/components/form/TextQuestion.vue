@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { type SurveyQuestion } from '@/stores/survey'
-import { ref, watch, onMounted, onUnmounted } from 'vue'
+import type { SurveyQuestion } from '@/stores/survey'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 
 const props = defineProps<{
   question: SurveyQuestion
@@ -28,7 +28,7 @@ watch(() => props.modelValue, (newValue) => {
 })
 
 // Fonction pour gérer l'entrée de l'utilisateur
-async function handleInput(event: Event) {
+async function handleInput (event: Event) {
   const value = (event.target as HTMLInputElement).value
   inputValue.value = value
 
@@ -54,9 +54,11 @@ async function handleInput(event: Event) {
         const result = await props.autocompleteFn(value)
         suggestions.value = result
         showSuggestions.value = result.length > 0
-      } catch (error) {
+      }
+      catch (error) {
         console.error('Erreur lors de l\'autocomplétion:', error)
-      } finally {
+      }
+      finally {
         loading.value = false
       }
     }
@@ -64,15 +66,15 @@ async function handleInput(event: Event) {
 }
 
 // Fonction pour sélectionner une suggestion
-function selectSuggestion(suggestion: { code: string, autocompletion: string }) {
+function selectSuggestion (suggestion: { code: string, autocompletion: string }) {
   inputValue.value = suggestion.autocompletion
   emit('update:modelValue', suggestion.code) // On émet le code comme valeur
   showSuggestions.value = false
 }
 
 // Gestion des touches clavier pour naviguer dans les suggestions
-function handleKeyDown(event: KeyboardEvent) {
-  if (!showSuggestions.value) return
+function handleKeyDown (event: KeyboardEvent) {
+  if (!showSuggestions.value) { return }
 
   switch (event.key) {
     case 'ArrowDown':
@@ -98,7 +100,7 @@ function handleKeyDown(event: KeyboardEvent) {
 }
 
 // Faire défiler pour voir l'élément sélectionné
-function scrollToSelectedItem() {
+function scrollToSelectedItem () {
   if (selectedIndex.value >= 0 && suggestionListRef.value) {
     const selectedItem = suggestionListRef.value.children[selectedIndex.value] as HTMLElement
     if (selectedItem) {
@@ -108,7 +110,7 @@ function scrollToSelectedItem() {
 }
 
 // Fermer les suggestions si on clique ailleurs
-function handleClickOutside(event: MouseEvent) {
+function handleClickOutside (event: MouseEvent) {
   const target = event.target as HTMLElement
   // Vérifier si le clic est en dehors de la liste de suggestions
   if (showSuggestions.value && !target.closest('.autocomplete-container')) {
@@ -146,7 +148,10 @@ onUnmounted(() => {
         v-if="loading"
         class="loading-indicator"
       >
-        <span class="fr-icon-refresh-line fr-icon--sm" aria-hidden="true"></span>
+        <span
+          class="fr-icon-refresh-line fr-icon--sm"
+          aria-hidden="true"
+        />
         Chargement...
       </div>
 
@@ -162,7 +167,8 @@ onUnmounted(() => {
           <li
             v-for="(suggestion, index) in suggestions"
             :key="suggestion.code"
-            :class="{ 'suggestion-item': true, 'selected': index === selectedIndex }"
+            class="suggestion-item"
+            :class="{ selected: index === selectedIndex }"
             @click="selectSuggestion(suggestion)"
             @mouseover="selectedIndex = index"
           >
@@ -211,7 +217,7 @@ onUnmounted(() => {
 .loading-indicator {
   position: absolute;
   right: 10px;
-  top: 50%;
+  bottom: 0px;
   transform: translateY(-50%);
   font-size: 0.8rem;
   color: var(--text-mention-grey);

@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { autocompleteFunctions } from '@/utils/autocompleteFunctions'
+
 definePageMeta({
   layout: 'default',
   middleware: 'check-iframe-layout',
@@ -57,7 +59,10 @@ const crumbs = computed(() => {
       <BreadcrumbSectionContainer :crumbs="crumbs" />
       <SimulationHeaderSection v-bind="simulateur" />
       <UserActionSectionRow>
-        <Survey :simulateur-id="simulateurId" />
+        <Survey
+          :simulateur-id="simulateurId"
+          :autocomplete-functions="autocompleteFunctions"
+        />
       </UserActionSectionRow>
     </BrandBackgroundContainer>
   </template>

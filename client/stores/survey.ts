@@ -11,7 +11,7 @@ export interface SurveyQuestion {
   type: 'radio' | 'checkbox' | 'number' | 'date' | 'text' | 'boolean'
   notion: {
     id: string
-    linkLabel: string
+    buttonLabel: string
   }
   autocompleteFunction?: string
   choices?: SurveyChoice[]
