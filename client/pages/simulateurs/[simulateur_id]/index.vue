@@ -55,15 +55,25 @@ const crumbs = computed(() => {
 
 <template>
   <template v-if="simulateur">
-    <BrandBackgroundContainer>
-      <BreadcrumbSectionContainer :crumbs="crumbs" />
-      <SimulationHeaderSection v-bind="simulateur" />
-      <UserActionSectionRow>
-        <Survey
-          :simulateur-id="simulateurId"
-          :autocomplete-functions="autocompleteFunctions"
-        />
-      </UserActionSectionRow>
-    </BrandBackgroundContainer>
+    <div
+      v-if="isIframe"
+    >
+      <Survey
+        :simulateur-id="simulateurId"
+        :autocomplete-functions="autocompleteFunctions"
+      />
+    </div>
+    <div v-else>
+      <BrandBackgroundContainer>
+        <BreadcrumbSectionContainer :crumbs="crumbs" />
+        <SimulationHeaderSection v-bind="simulateur" />
+        <UserActionSectionRow>
+          <Survey
+            :simulateur-id="simulateurId"
+            :autocomplete-functions="autocompleteFunctions"
+          />
+        </UserActionSectionRow>
+      </BrandBackgroundContainer>
+    </div>
   </template>
 </template>
