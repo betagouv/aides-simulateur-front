@@ -1,34 +1,73 @@
-// checked with openfisca-france v169.16.16 
+// checked with openfisca-france v169.16.16
 
-let individus_variables_eternity = {
-    "date_naissance": "date_naissance" // '2000-01-01'
+export interface OpenFiscaMapping {
+  openfiscaVariableName: string
+  period: 'ETERNITY' | 'YEAR' | 'MONTH'
 }
 
-let individus_variables_month = {
-    "handicap": "handicap", // 'non-handicap' TODO: move to boolean value
-    "salaire-imposable": "salaire_imposable", // '20000' TODO: move to month value or multiple month values?
-    "situation-familiale": "statut_marital", // 'celibataire' 
+export const individusVariables: { [aidesSimplifieesKey: string]: OpenFiscaMapping } = {
+  'date_naissance': { // '2000-01-01'
+    openfiscaVariableName: 'date_naissance',
+    period: 'ETERNITY'
+  },
+  'handicap': { // 'non-handicap' TODO: move to boolean value
+    openfiscaVariableName: 'handicap',
+    period: 'MONTH'
+  },
+  'salaire-imposable': { // '20000' TODO: move to month value or multiple month values?
+    openfiscaVariableName: 'salaire_imposable',
+    period: 'MONTH'
+  },
+  'situation-familiale': { // 'celibataire'
     // TODO: update aides-simplifiee variable to "marital" instead of "familiale"
     // possible values: https://legislation.fr.openfisca.org/statut_marital
-    "statut-professionnel": "activite" // 'salarie'
+    openfiscaVariableName: 'statut_marital',
+    period: 'MONTH'
+  },
+  'statut-professionnel': { // 'salarie'
     // possible values: https://legislation.fr.openfisca.org/activite
+    openfiscaVariableName: 'activite',
+    period: 'MONTH'
+  }
 }
 
-
-
-let menages_variables_month = {
-    "code-postal-nouvelle-ville": "depcom", // '75015'
-    "colocation": "coloc", // 'colocation-non' TODO: move to boolean value
-    "logement-chambre": "logement_chambre", // 'logement-chambre-non' TODO: move to boolean value
-    "loyer-montant-charges": "charges_locatives", // for Garantie visale (not APL)
-    "loyer-montant-mensuel": "loyer", // '700' TODO: move to number value
-    "situation-logement": "statut_occupation_logement", // 'locataire'
+export const menagesVariables: { [aidesSimplifieesKey: string]: OpenFiscaMapping } = {
+  'code-postal-nouvelle-ville': { // '75015'
+    openfiscaVariableName: 'depcom',
+    period: 'MONTH'
+  },
+  'colocation': { // 'colocation-non' TODO: move to boolean value
+    openfiscaVariableName: 'coloc',
+    period: 'MONTH'
+  },
+  'logement-chambre': { // 'logement-chambre-non' TODO: move to boolean value
+    openfiscaVariableName: 'logement_chambre',
+    period: 'MONTH'
+  },
+  'loyer-montant-charges': { // for Garantie visale (not APL)
+    openfiscaVariableName: 'charges_locatives',
+    period: 'MONTH'
+  },
+  'loyer-montant-mensuel': { // '700' TODO: move to number value
+    openfiscaVariableName: 'loyer',
+    period: 'MONTH'
+  },
+  'situation-logement': { // 'locataire'
     // possible values: https://legislation.fr.openfisca.org/statut_occupation_logement
-    "type-logement": "logement_conventionne" // 'logement-foyer' TODO: check what we mean by "type-logement" (foyer, chambre... or conventionne / not conventionne)
+    openfiscaVariableName: 'statut_occupation_logement',
+    period: 'MONTH'
+  },
+  'type-logement': { // 'logement-foyer' TODO: check what we mean by "type-logement" (foyer, chambre... or conventionne / not conventionne)
+    openfiscaVariableName: 'logement_conventionne',
+    period: 'MONTH'
+  }
 }
 
-let familles_variables_month = {
-    "logement-parente-proprietaire": "proprietaire_proche_famille" // 'logement-parente-proprietaire-non' TODO: move to boolean value
+export const famillesVariables: { [aidesSimplifieesKey: string]: OpenFiscaMapping } = {
+  'logement-parente-proprietaire': { // 'logement-parente-proprietaire-non' TODO: move to boolean value
+    openfiscaVariableName: 'proprietaire_proche_famille',
+    period: 'MONTH'
+  }
 }
 
 // TODO check what these variables mean:
@@ -40,9 +79,8 @@ let familles_variables_month = {
 // is 'stage' the only possible value here?
 // check overlap with statut-professionnel and https://legislation.fr.openfisca.org/activite
 
-
 // No need to map these variables:
-// habitation-avec-autre-personnes 
+// habitation-avec-autre-personnes
 // {2025-01: 'habitation-avec-autre-personnes-non'}
 //
 // loyer-besoin-cautions
@@ -51,7 +89,7 @@ let familles_variables_month = {
 // loyer-besoin-garant
 // {2025-01: 'loyer-besoin-garant-oui'}
 //
-// loyer-difficile-payer 
+// loyer-difficile-payer
 // {2025-01: 'loyer-difficile-payer-oui'}
 //
 // nombre-personnes-logement
