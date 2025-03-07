@@ -139,6 +139,7 @@ onUnmounted(() => {
         :name="question.id"
         :label="question.title"
         label-visible
+        autocomplete="off"
         @input="handleInput"
         @keydown="handleKeyDown"
       />

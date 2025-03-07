@@ -72,10 +72,9 @@
             { "id": "divorce", "title": "Divorcé" },
             { "id": "jeune_veuf", "title": "Veuf d’un conjoint décédé dans l’année" },
             { "id": "marie", "title": "Marié" },
-            { "id": "non_renseigne", "title": "Non renseigné" },
             { "id": "pacse", "title": "Pacsé" },
-            { "id": "pacse", "title": "Pacsé" },
-            { "id": "veuf", "title": "Veuf" }
+            { "id": "veuf", "title": "Veuf" },
+            { "id": "non_renseigne", "title": "Non renseigné" }
           ]
         },
         {
