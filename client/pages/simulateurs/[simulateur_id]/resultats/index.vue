@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import type { DsfrSegmentedSetProps } from '@gouvminint/vue-dsfr'
+
 definePageMeta({
   layout: 'default',
   middleware: 'check-iframe-layout',
@@ -37,6 +39,63 @@ const crumbs = computed(() => {
 const visibleTabName = ref<'montants' | 'echeances' | 'informations'>('montants')
 
 const activeAccordion = ref<number>()
+
+/**
+ * @todo Replace this with real data returned by the API
+ */
+const rawAides: RawAide[] = [
+  {
+    id: 'aide-1',
+    eligibilite: true,
+    montant: 1000,
+  },
+  {
+    id: 'aide-2',
+    eligibilite: true,
+    montant: 1000,
+  },
+  {
+    id: 'aide-3',
+    eligibilite: true,
+    montant: 1000,
+  },
+  {
+    id: 'aide-4',
+    eligibilite: false,
+    montant: 1000,
+  },
+]
+
+const richResults = transformSimulationResults(rawAides, simulateurId)
+
+const hasAides = richResults.aides.length > 0
+const hasEcheances = richResults.echeances.length > 0
+const hasMontants = richResults.montants.length > 0
+const hasAidesNonEligibles = richResults.aidesNonEligibles.length > 0
+const hasTextesDeLoi = richResults.textesDeLoi.length > 0
+
+const segmentedSetOptions: DsfrSegmentedSetProps['options'] = [
+  { label: 'Vos informations', value: 'informations', icon: 'ri:edit-box-line' }
+]
+if (hasEcheances) {
+  segmentedSetOptions.unshift({ label: 'Échéances estimées', value: 'echeances', icon: 'ri:calendar-2-line' })
+}
+if (hasMontants) {
+  segmentedSetOptions.unshift({ label: 'Montants estimés', value: 'montants', icon: 'ri:money-euro-circle-line' })
+}
+
+const simulationDateTime = formatDateTime(
+  /**
+   * @todo Replace this with the actual time the simulation was completed
+   */
+  new Date()
+)
+function formatDateTime (date: Date) {
+  return {
+    date: date.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
+    time: date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+  }
+}
 </script>
 
 <template>
@@ -45,16 +104,24 @@ const activeAccordion = ref<number>()
       <BreadcrumbSectionContainer :crumbs="crumbs" />
       <SimulationHeaderSection v-bind="simulateur" />
       <UserActionSectionRow>
-        <article class="results fr-container--fluid">
+        <article class="results">
           <header class="results__header fr-grid-row fr-grid-row--gutters">
             <div class="fr-col-9">
-              <h2 class="results__title">
-                Vos résultats de la simulation «&nbsp;{{ simulateur.title }}&nbsp;»
-              </h2>
+              <hgroup>
+                <h2 class="results__title">
+                  Vos résultats de la simulation «&nbsp;{{ simulateur.title }}&nbsp;»
+                </h2>
+                <p
+                  class="results__datetime"
+                  :style="{ color: 'var(--text-mention-grey)' }"
+                >
+                  Simulation terminée le {{ simulationDateTime.date }} à {{ simulationDateTime.time }}
+                </p>
+              </hgroup>
               <DsfrLink
                 class="results__backlink"
                 icon-before
-                label="Reprendre mes résultats"
+                label="Reprendre ma simulation"
                 :link="{
                   to: `/simulateurs/${simulateurId}`,
                 }"
@@ -80,26 +147,33 @@ const activeAccordion = ref<number>()
               />
             </div>
           </header>
+          <SectionSeparator
+            fluid
+            class="fr-mt-6w"
+          />
           <div class="results__content fr-mt-8w">
             <div class="results__content-resume">
-              <h3>En résumé</h3>
+              <h3>1. En résumé</h3>
               <DsfrSegmentedSet
                 v-model="visibleTabName"
                 name="resume"
                 label="En résumé"
-                :options="[
-                  { label: 'Montants estimés', value: 'montants', icon: 'ri:money-euro-circle-line' },
-                  { label: 'Échéances estimées', value: 'echeances', icon: 'ri:calendar-2-line' },
-                  { label: 'Vos informations', value: 'informations', icon: 'ri:edit-box-line' },
-                ]"
+                :options="segmentedSetOptions"
               />
               <div class="fr-mt-4w">
-                <div v-if="visibleTabName === 'montants'">
-                  <p>
-                    Vous pourriez bénéficier d'une aide de <strong>1 000 €</strong> pour votre déménagement.
-                  </p>
+                <div
+                  v-if="hasMontants && visibleTabName === 'montants'"
+                  class="fr-grid-row fr-grid-row--gutters"
+                >
+                  <div
+                    v-for="montant in richResults.montants"
+                    :key="montant.type"
+                    class="fr-col-12 fr-col-sm-6 fr-col-xl-4"
+                  >
+                    <AideMontantCard v-bind="montant" />
+                  </div>
                 </div>
-                <div v-else-if="visibleTabName === 'echeances'">
+                <div v-else-if="hasEcheances && visibleTabName === 'echeances'">
                   <p>
                     Le montant de votre aide pourrait être versé en <strong>2 fois</strong> sur une période de <strong>6 mois</strong>.
                   </p>
@@ -111,35 +185,91 @@ const activeAccordion = ref<number>()
                 </div>
               </div>
             </div>
+            <SectionSeparator
+              fluid
+              class="fr-mt-8w"
+            />
             <div class="results__liste-aides fr-mt-8w">
-              <h3>Les aides que nous avons identifiées</h3>
-              <p>
-                Selon les informations que vous avez fournies, vous pourriez être éligible à ces aides.
-                Ces résultats sont basés uniquement sur les données communiquées et ne constituent pas un engagement officiel de la part des organismes mentionnés.
+              <template v-if="hasAides">
+                <h3>2. Les aides que nous avons identifiées</h3>
+                <p>
+                  Selon les informations que vous avez fournies, vous pourriez être éligible à ces aides.
+                  Ces résultats sont basés uniquement sur les données communiquées et ne constituent pas un engagement officiel de la part des organismes mentionnés.
+                </p>
+                <AidesList
+                  :aides="richResults.aides"
+                />
+              </template>
+              <p v-else>
+                Nous n'avons pas trouvé d'aides correspondant à votre situation.
               </p>
             </div>
+            <SectionSeparator
+              fluid
+              class="fr-mt-8w"
+            />
             <div class="results__liste-annexes fr-mt-8w">
-              <h3>Pour aller plus loin</h3>
-              <DsfrAccordionsGroup v-model="activeAccordion">
-                <DsfrAccordion
-                  id="accordion-1"
-                  title="Comment avons nous estimé ces aides ?"
-                >
-                  Contenu à venir
-                </DsfrAccordion>
-                <DsfrAccordion
-                  id="accordion-2"
-                  title="Les aides auxquelles vous n’avez pas été estimé·e éligible"
-                >
-                  Contenu à venir
-                </DsfrAccordion>
-                <DsfrAccordion
-                  id="accordion-3"
-                  title="Textes de référence"
-                >
-                  Contenu à venir
-                </DsfrAccordion>
-              </DsfrAccordionsGroup>
+              <h3>3. Pour aller plus loin</h3>
+              <div class="fr-card">
+                <div class="fr-card__body">
+                  <div class="fr-card__content">
+                    <DsfrAccordionsGroup v-model="activeAccordion">
+                      <DsfrAccordion
+                        id="methodologie"
+                      >
+                        <template #title>
+                          <VIcon
+                            name="ri:question-line"
+                            ssr
+                          />
+                          <span class="fr-ml-1w">
+                            Comment avons nous estimé ces aides ?
+                          </span>
+                        </template>
+                        <template #default>
+                          Contenu à venir
+                        </template>
+                      </DsfrAccordion>
+                      <DsfrAccordion
+                        v-if="hasAidesNonEligibles"
+                        id="aides-non-eligibles"
+                        title=""
+                      >
+                        <template #title>
+                          <VIcon
+                            name="ri:chat-delete-line"
+                            ssr
+                          />
+                          <span class="fr-ml-1w">
+                            Les aides auxquelles vous n’avez pas été estimé·e éligible
+                          </span>
+                        </template>
+                        <template #default>
+                          Contenu à venir
+                        </template>
+                      </DsfrAccordion>
+                      <DsfrAccordion
+                        v-if="hasTextesDeLoi"
+                        id="textes-reference"
+                        title="Textes de référence"
+                      >
+                        <template #title>
+                          <VIcon
+                            name="ri:scales-3-line"
+                            ssr
+                          />
+                          <span class="fr-ml-1w">
+                            Textes de référence
+                          </span>
+                        </template>
+                        <template #default>
+                          Contenu à venir
+                        </template>
+                      </DsfrAccordion>
+                    </DsfrAccordionsGroup>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </article>
