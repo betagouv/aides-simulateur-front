@@ -1,16 +1,9 @@
 <script lang="ts" setup>
-const props = defineProps<{
+defineProps<{
   id: string
   title: string
   pictogram: string
 }>()
-const svgPath = ref<string | null>(null)
-
-//* * @todo find out why path alias @ does not work */
-import(props.pictogram.replace('@', '../..'))
-  .then((svg) => {
-    svgPath.value = svg.default
-  })
 </script>
 
 <template>
@@ -20,8 +13,8 @@ import(props.pictogram.replace('@', '../..'))
     <div class="fr-grid-row fr-grid-row--gutters">
       <div class="fr-col-3 fr-col-sm-2 fr-col-md-1">
         <DsfrPictogram
-          v-if="svgPath"
-          :svg-path="svgPath"
+          v-if="pictogram"
+          :svg-path="pictogram"
         />
       </div>
       <div class="simulation-title-container fr-col-9 fr-col-sm-10 fr-col-md-11">

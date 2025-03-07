@@ -1,16 +1,6 @@
 <script setup lang="ts">
 import type { DsfrTileProps } from '@gouvminint/vue-dsfr'
 
-import demenagementPictogram from '@/assets/custom-pictograms/demenagement.svg'
-/**
- * The one exported from @gouvfr/dsfr does not render (all its siblings do though), so we import it manually
- */
-// import housePictogram from '@gouvfr/dsfr/dist/artwork/pictograms/buildings/house.svg'
-import housePictogram from '@/assets/custom-pictograms/house.svg'
-
-import cityHallPictogram from '@gouvfr/dsfr/dist/artwork/pictograms/buildings/city-hall.svg'
-import internetPictogram from '@gouvfr/dsfr/dist/artwork/pictograms/digital/internet.svg'
-
 definePageMeta({
   layout: 'default',
 })
@@ -23,12 +13,12 @@ const simulationTiles: DsfrTileProps[] = [
   {
     title: 'Déménagement & logement',
     to: '/simulateurs/demenagement-logement',
-    svgPath: demenagementPictogram
+    svgPath: '/artworks/custom-pictograms/demenagement.svg'
   },
   {
     title: 'Rénovation du logement',
     to: '#',
-    svgPath: housePictogram
+    svgPath: '/artworks/pictograms/buildings/house.svg'
   }
 ]
 </script>
@@ -115,7 +105,7 @@ const simulationTiles: DsfrTileProps[] = [
             title-tag="h3"
             to="/partenaires"
             horizontal
-            :svg-path="cityHallPictogram"
+            svg-path="/artworks/pictograms/buildings/city-hall.svg"
           />
         </div>
         <div class="fr-col-12 fr-col-md-6">
@@ -125,7 +115,7 @@ const simulationTiles: DsfrTileProps[] = [
             title-tag="h3"
             to="/integrer-nos-simulateurs"
             horizontal
-            :svg-path="internetPictogram"
+            svg-path="/artworks/pictograms/digital/internet.svg"
           />
         </div>
       </div>
