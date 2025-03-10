@@ -22,6 +22,7 @@
     "@pinia/nuxt": "^0.10.1",
     "@vueuse/core": "^12.8.2",
     "iframe-resizer": "^5.3.3",
+    "install": "^0.13.0",
     "lockfile": "^1.0.4",
     "nuxt": "^3.15.4",
     "only": "^0.0.2",
@@ -30,6 +31,7 @@
     "sass-embedded": "^1.85.1",
     "vue": "^3.5.13",
     "vue-dsfr-nuxt-module": "^2.0.0",
+    "vue-matomo": "^4.2.0",
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
