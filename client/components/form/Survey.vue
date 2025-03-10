@@ -14,14 +14,11 @@ const showChoiceScreen = ref(false)
 // Use storeToRefs to maintain reactivity
 const {
   currentQuestion,
-  currentStep,
-  nextCategory,
   surveySchema,
   answers,
   progress,
   isLastQuestion,
   currentStepIndex,
-  totalCategoriesNumber,
   hasInProgressForm,
 } = storeToRefs(formStore)
 
@@ -152,10 +149,14 @@ function restartForm () {
   resetForm()
   showChoiceScreen.value = false
 }
+
+const { isIframe } = useIframeDisplay()
+const surveyTitleTag = computed(() => isIframe.value ? 'h1' : 'h2')
+const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
 </script>
 
 <template>
-  <div class="fr-col-12 fr-col-offset-md-1 fr-col-md-10 fr-col-offset-lg-2 fr-col-lg-8">
+  <div>
     <!-- Écran de choix (reprendre ou recommencer) -->
     <div
       v-if="showChoiceScreen"
@@ -169,63 +170,65 @@ function restartForm () {
           Progression : {{ progress }}%
         </p>
         <p>Souhaitez-vous reprendre votre formulaire là où vous vous êtes arrêté ou recommencer à zéro ?</p>
-
-        <div class="fr-btns-group fr-btns-group--inline-lg fr-mt-2w">
-          <DsfrButton
-            label="Reprendre"
-            icon="ri-play-line"
-            @click="resumeForm"
-          />
-          <DsfrButton
-            label="Recommencer"
-            secondary
-            icon="ri-restart-line"
-            @click="restartForm"
-          />
-        </div>
+        <DsfrButtonGroup
+          inline-layout-when="md"
+          :buttons="[
+            {
+              label: 'Reprendre',
+              icon: { name: 'ri:play-line', ssr: true },
+              onClick: resumeForm,
+            },
+            {
+              label: 'Recommencer',
+              secondary: true,
+              icon: { name: 'ri:restart-line', ssr: true },
+              onClick: restartForm,
+            },
+          ]"
+        />
       </div>
     </div>
 
     <!-- Formulaire -->
     <template v-else>
-      <h1 class="fr-h3">
+      <component
+        :is="surveyTitleTag"
+        class="fr-h3"
+      >
         Votre simulation « {{ surveySchema?.title }} »
-      </h1>
+      </component>
 
-      <div class="fr-stepper">
-        <h2 class="fr-stepper__title">
-          {{ currentStep?.title }}
-          <span class="fr-stepper__state">
-            Étape {{ currentStepIndex }} sur {{ totalCategoriesNumber }}</span>
-        </h2>
-        <div
-          class="fr-stepper__steps"
-          :data-fr-current-step="currentStepIndex"
-          :data-fr-steps="totalCategoriesNumber"
-        />
-        <p class="fr-stepper__details">
-          <span class="fr-text--bold">Étape suivante :</span>
-          {{ nextCategory?.title }}
-        </p>
-      </div>
+      <DsfrStepper
+        :steps="surveySchema?.steps.map(step => step.title).filter(Boolean) || []"
+        :current-step="currentStepIndex"
+      />
 
       <div
         v-if="surveySchema && currentQuestion"
-        class="simulator-form-container"
+        class="fr-card fr-card--shadow fr-p-3w"
       >
         <!-- Current Question -->
         <div class="fr-form-group">
-          <h2 class="fr-h5">
-            {{ currentQuestion?.title }}
-          </h2>
-          <p>{{ currentQuestion?.description }} </p>
+          <hgroup>
+            <component
+              :is="surveyQuestionTitleTag"
+              class="fr-h5"
+            >
+              {{ currentQuestion?.title }}
+            </component>
+            <p
+              v-if="currentQuestion?.description"
+            >
+              {{ currentQuestion?.description }}
+            </p>
+          </hgroup>
           <DsfrButton
             v-if="currentQuestion?.notion"
             :label="currentQuestion?.notion.buttonLabel"
             icon="ri-information-line"
             secondary
             icon-right
-            class="fr-mb-8v"
+            class="fr-mb-2w"
             @click="() => navigateTo(`/simulateurs/${simulateurId}/${currentQuestion?.notion.id}`)"
           />
 
@@ -276,21 +279,26 @@ function restartForm () {
           </template>
         </div>
 
-        <!-- Navigation buttons -->
-        <div class="fr-btns-group fr-btns-group--inline-reverse fr-mt-5w">
-          <DsfrButton
-            :label="isLastQuestion ? 'Terminer' : 'Suivant'"
-            icon="ri-arrow-right-line"
-            icon-right
-            :disabled="!hasAnswer"
-            @click="handleNext"
-          />
-          <DsfrButton
-            label="Précédent"
-            secondary
-            @click="handlePrevious"
-          />
-        </div>
+        <DsfrButtonGroup
+          class="fr-mt-3w"
+          align="right"
+          inline-layout-when="md"
+          :buttons="[
+            {
+              label: 'Précédent',
+              secondary: true,
+              icon: { name: 'ri-arrow-left-line', ssr: true },
+              onClick: handlePrevious,
+            },
+            {
+              label: isLastQuestion ? 'Terminer' : 'Suivant',
+              icon: { name: 'ri-arrow-right-line', ssr: true },
+              iconRight: true,
+              disabled: !hasAnswer,
+              onClick: handleNext,
+            },
+          ]"
+        />
       </div>
       <div
         v-else
@@ -301,24 +309,3 @@ function restartForm () {
     </template>
   </div>
 </template>
-
-<style scoped lang="scss">
-.simulator-form-container {
-  /* Base properties wrapped in parent selector */
-  & {
-    padding: 2rem;
-    border-radius: 4px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    margin-top: 1.5rem;
-  }
-
-  /* Theme-specific styling */
-  @media (prefers-color-scheme: light) {
-    background-color: white;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    background-color: var(--background-raised-grey);
-  }
-}
-</style>

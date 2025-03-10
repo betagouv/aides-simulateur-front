@@ -17,6 +17,8 @@ const riIconNames = [
   'shopping-bag-line',
   'bank-card-line',
   'external-link-line',
+  'play-line',
+  'restart-line',
 ]
 
 /**
