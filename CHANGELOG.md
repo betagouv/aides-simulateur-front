@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.8.2 [#49](https://github.com/betagouv/aides-simulateur-front/pull/49)
+* Détail : 
+  * Intégration de vue-matomo en tant que plugin
+
 ## 0.8.1 [#47](Refactor iframe integration page and add Matomo tracking #47)
 * Détail : 
   * Intégration de la page iframe dans la page 
