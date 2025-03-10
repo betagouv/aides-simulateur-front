@@ -2,10 +2,23 @@ import { defineNuxtConfig } from 'nuxt/config'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+
+  runtimeConfig: {
+    public: {
+      // apiEndpointOpenFiscaFranceCalculate: 'http://127.0.0.1:5000/calculate',
+      apiEndpointOpenFiscaFranceCalculate: 'https://aides-calculatrice-back.osc-fr1.scalingo.io/calculate',
+      matomo: {
+        host: 'https://stats.beta.gouv.fr/',
+        siteId: 199,
+      },
+    },
+  },
+
   sourcemap: {
     server: true,
     client: true
   },
+
   vite: {
     build: {
       sourcemap: true,

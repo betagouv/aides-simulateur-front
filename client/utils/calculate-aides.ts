@@ -1,6 +1,3 @@
-// const API_ENDPOINT_OPENFISCA_FRANCE_CALCULATE: URL = new URL("/calculate", "http://127.0.0.1:5000")
-const API_ENDPOINT_OPENFISCA_FRANCE_CALCULATE = new URL('/calculate', 'https://aides-calculatrice-back.osc-fr1.scalingo.io')
-
 const YEAR = '2025'
 const MONTH = `${YEAR}-01`
 const ETERNITY_PERIOD = 'ETERNITY'
@@ -164,8 +161,9 @@ export async function fetchOpenFiscaFranceCalculation (
     body: JSON.stringify(request),
   }
 
+  const config = useRuntimeConfig()
   const response = await fetch(
-    API_ENDPOINT_OPENFISCA_FRANCE_CALCULATE,
+    config.public.apiEndpointOpenFiscaFranceCalculate,
     requestSettings,
   )
 
