@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { type SurveyQuestion } from '@/stores/survey'
-
 const props = defineProps<{
   question: SurveyQuestion
   modelValue: string | number | boolean | undefined
@@ -10,12 +8,12 @@ const emit = defineEmits<{
   'update:modelValue': [value: string | number | boolean]
 }>()
 
-function handleChange(value: string | number | boolean) {
+function handleChange (value: string | number | boolean) {
   emit('update:modelValue', value)
 }
 
-console.log("--- RadioButton: modelValue = ", props.modelValue);
-
+// eslint-disable-next-line no-console
+console.log('--- RadioButton: modelValue = ', props.modelValue)
 </script>
 
 <template>

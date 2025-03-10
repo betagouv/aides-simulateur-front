@@ -1,19 +1,3 @@
-import type { OpenFiscaMapping } from '@/utils/aides-mapping-ids'
-import { famillesVariables, individusVariables, menagesVariables } from '@/utils/aides-mapping-ids'
-import { 
-  UnknownEntityError, 
-  UndefinedValueError, 
-  UnexpectedValueError, 
-  UnknownVariableError 
-} from '@/utils/errors'
-import Survey from '~/components/form/Survey.vue'
-import { 
-  Entites, 
-  type OpenFiscaCalculationRequest, 
-  type OpenFiscaCalculationResponse, 
-  type VariableValueOnPeriod 
-} from '@/types/openfisca'
-
 // const API_ENDPOINT_OPENFISCA_FRANCE_CALCULATE: URL = new URL("/calculate", "http://127.0.0.1:5000")
 const API_ENDPOINT_OPENFISCA_FRANCE_CALCULATE = new URL('/calculate', 'https://aides-calculatrice-back.osc-fr1.scalingo.io')
 
@@ -26,7 +10,6 @@ const MENAGE_ID = `menage_${INDIVIDU_ID}`
 const FOYER_FISCAL_ID = `foyer_fiscal_${INDIVIDU_ID}`
 const FAMILLE_ID = `famille_${INDIVIDU_ID}`
 const UNDEFINED_ENTITY_ID = 'INCONNU'
-
 
 function getEntityId (entity: Entites): string {
   switch (entity) {
@@ -50,8 +33,8 @@ function getEntityId (entity: Entites): string {
   }
 }
 
-
 function initRequest (): OpenFiscaCalculationRequest {
+  // eslint-disable-next-line no-console
   console.debug('initRequest...')
   const request: OpenFiscaCalculationRequest = {
     individus: {
@@ -80,16 +63,16 @@ function initRequest (): OpenFiscaCalculationRequest {
   return request
 }
 
-/** 
+/**
  * for a survey answer found in the mapping, format it for an openfisca web API request
- * with the openfisca variable period 
+ * with the openfisca variable period
  * and the answer value already validated for openfisca usage
  */
 function formatSurveyAnswerToRequest (
   variableMapping: OpenFiscaMapping,
-  value: boolean | number | string  // VariableValueOnPeriod allowed types
+  value: boolean | number | string // VariableValueOnPeriod allowed types
 ) {
-  let result: { [key: string]: VariableValueOnPeriod }  = {}
+  const result: { [key: string]: VariableValueOnPeriod } = {}
   const period = variableMapping.period === 'MONTH' ? MONTH : ETERNITY_PERIOD
   result[variableMapping.openfiscaVariableName] = {
     [period]: value
@@ -102,14 +85,13 @@ function formatSurveyAnswerToRequest (
  * for a survey answer found in the mapping, add the answer data to the given request
  * @thorows UnknownEntityError if the given entity is not referenced for the current simulation
  */
-function addSurveyAnswerToRequest(
+function addSurveyAnswerToRequest (
   answerKey: string,
   answerValue: boolean | number | string,
   mapping: OpenFiscaMapping,
   entity: Entites,
   request: OpenFiscaCalculationRequest
 ): OpenFiscaCalculationRequest {
-
   const openfiscaVariableName = mapping.openfiscaVariableName
   const formattedAnswer = formatSurveyAnswerToRequest(mapping, answerValue)
 
@@ -121,36 +103,41 @@ function addSurveyAnswerToRequest(
 
   request[entity][entityId][openfiscaVariableName] = { ...formattedAnswer[openfiscaVariableName] }
   return request
-
 }
 
 export function buildRequest (answers: SurveyAnswer[]): OpenFiscaCalculationRequest {
+  // eslint-disable-next-line no-console
   console.debug('buildRequest...')
   let request: OpenFiscaCalculationRequest = initRequest()
   // sets: request[some entity][the entity id]
+  // eslint-disable-next-line no-console
   console.debug(request)
 
-  for (const [answerKey, answerValue] of Object.entries(answers)){
+  for (const [answerKey, answerValue] of Object.entries(answers)) {
     try {
-      //answerValue: boolean | number | string | undefined
-      if (answerValue === undefined){
+      // answerValue: boolean | number | string | undefined
+      if (answerValue === undefined) {
         throw new UndefinedValueError(answerKey)
       }
-      if (typeof answerValue !== 'boolean' && typeof answerValue !== 'number' && typeof answerValue !== 'string'){
+      if (typeof answerValue !== 'boolean' && typeof answerValue !== 'number' && typeof answerValue !== 'string') {
         throw new UnexpectedValueError(answerKey)
       }
 
-      if (answerKey in individusVariables){
+      if (answerKey in individusVariables) {
         request = addSurveyAnswerToRequest(answerKey, answerValue, individusVariables[answerKey], Entites.Individus, request)
-      } else if (answerKey in menagesVariables){
+      }
+      else if (answerKey in menagesVariables) {
         request = addSurveyAnswerToRequest(answerKey, answerValue, menagesVariables[answerKey], Entites.Menages, request)
-      } else if (answerKey in famillesVariables){
+      }
+      else if (answerKey in famillesVariables) {
         request = addSurveyAnswerToRequest(answerKey, answerValue, famillesVariables[answerKey], Entites.Familles, request)
-      } else {
+      }
+      else {
         console.error(`Variable inconnue : ${answerKey}`)
         throw new UnknownVariableError(answerKey)
       }
-    } catch (anyError){
+    }
+    catch (anyError) {
       // UnknownVariableError, UnknownEntityError, UnexpectedValueError, UndefinedValueError
       console.error(`Donnée '${answerKey}' non transcrite dans la requête de calcul suite à l'erreur '${anyError}'.`)
     }
@@ -161,8 +148,11 @@ export function buildRequest (answers: SurveyAnswer[]): OpenFiscaCalculationRequ
 export async function fetchOpenFiscaFranceCalculation (
   request: OpenFiscaCalculationRequest,
 ): Promise<OpenFiscaCalculationResponse> {
+  // eslint-disable-next-line no-console
   console.debug('fetchOpenFiscaFranceCalculation...')
+  // eslint-disable-next-line no-console
   console.debug('request:')
+  // eslint-disable-next-line no-console
   console.debug(request)
 
   const requestSettings = {

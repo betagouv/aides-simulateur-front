@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import type { VIconProps } from '@gouvminint/vue-dsfr'
+import type { RouterLink } from 'vue-router'
+
 withDefaults(defineProps<{
   label: string
   iconBefore?: boolean
-  link: PropType<NuxtLink>
-  icon: PropType<VIcon>
+  link: PropType<typeof RouterLink>
+  icon: VIconProps
 }>(), {
   iconBefore: false
 })

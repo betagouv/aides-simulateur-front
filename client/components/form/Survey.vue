@@ -1,14 +1,4 @@
 <script lang="ts" setup>
-import type { SurveyQuestion } from '@/stores/survey'
-import type { OpenFiscaCalculationRequest } from '@/types/openfisca'
-import { buildRequest, fetchOpenFiscaFranceCalculation } from '@/utils/calculate-aides'
-import BooleanQuestion from './BooleanQuestion.vue'
-import DateQuestion from './DateQuestion.vue'
-import MultiSelectQuestion from './MultiSelectQuestion.vue'
-import NumberQuestion from './NumberQuestion.vue'
-import RadioButtonQuestion from './RadioButtonQuestion.vue'
-import TextQuestion from './TextQuestion.vue'
-
 const props = defineProps<{
   simulateurId: string
   autocompleteFunctions?: Record<string, (query: string) => Promise<any[]>>
@@ -54,7 +44,9 @@ const getAutocompleteFn = computed(() => {
 
 // Check if the current question has been answered
 const hasAnswer = computed(() => {
-  if (!currentQuestion.value) { return false }
+  if (!currentQuestion.value) {
+    return false
+  }
 
   const questionId = currentQuestion.value.id
   const answer = answers.value[questionId]
@@ -134,17 +126,19 @@ function handlePrevious () {
 
 async function submitForm () {
   // Process the final form data from the answers store
+  // eslint-disable-next-line no-console
   console.log('Form submitted with answers:', answers.value)
 
   // Sending this data to a web API to calculate a set of 'aides'
   try {
     const request: OpenFiscaCalculationRequest = buildRequest(answers.value)
     const results = await fetchOpenFiscaFranceCalculation(request)
+    // eslint-disable-next-line no-console
     console.debug(results)
   }
   catch (error) {
     // TODO Handle the error more professionnally and display a message to the user :)
-    console.error('Erreur inattendue lors de la soumission du formulaire et de l\'appel au calcul.')
+    console.error('Erreur inattendue lors de la soumission du formulaire et de l\'appel au calcul :', error)
   }
 }
 

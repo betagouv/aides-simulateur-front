@@ -2,7 +2,9 @@
 import type { DsfrTagProps } from '@gouvminint/vue-dsfr'
 
 const props = withDefaults(defineProps<
-  Omit<DsfrTagProps, 'icon'> & { type: TypeAide }
+  Omit<DsfrTagProps, 'icon'> & {
+    type?: TypeAide
+  }
 >(), {
   type: 'pret',
 })
