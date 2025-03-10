@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 0.8.0 [#31](https://github.com/betagouv/aides-simulateur-front/pull/31)
+* Mise à jour des dépendances, notamment critiques :
+  ```json
+    "@gouvfr/dsfr": "~1.13.0",
+    "@gouvminint/vue-dsfr": "^8.3.0",
+    "pinia": "^3.0.1",
+    "@antfu/eslint-config": "^4.6.0",
+  ```
+
+
 ## 0.7.0 [#30](https://github.com/betagouv/aides-simulateur-front/pull/30)
 
 * Ajout de fonctionnalité.
