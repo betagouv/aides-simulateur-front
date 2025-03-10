@@ -11,12 +11,12 @@ const riIconNames = [
   'sun-line',
   'arrow-left-right-line',
   'chat-check-line',
-  'chat-check-line',
   'calendar-event-line',
   'flashlight-line',
   'arrow-right-down-line',
   'shopping-bag-line',
   'bank-card-line',
+  'external-link-line',
 ]
 
 /**
