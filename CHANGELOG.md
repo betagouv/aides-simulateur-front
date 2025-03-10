@@ -1,9 +1,23 @@
 # CHANGELOG
+
+## 0.7.0 [#30](https://github.com/betagouv/aides-simulateur-front/pull/30)
+
+* Ajout de fonctionnalité.
+* Détail :
+  * Ajoute le calcul d'aide via requête à `aides-calculatrice-back` dans `client/utils/calculate-aides.ts`
+  * Appelle l'API web openfisca du back dans `client/components/form/Survey.vue`
+  * Configure la jonction entre le formulaire et la requête au back dans `client/utils/aides-mapping-ids.ts`
+  * Initialise des classes d'erreurs dans `client/utils/errors.ts`
+  * Définit les types propres à une requête openfisca dans `client/types/openfisca.ts`
+
 ## 0.6.1 [#46](https://github.com/betagouv/aides-simulateur-front/pull/46)
+
 * Ajout de fonctionnalité
 * Détail : 
   * Fix du background du formulaire en dark mode
+
 ## 0.6.0 [#45](https://github.com/betagouv/aides-simulateur-front/pull/45)
+
 * Ajout de fonctionnalité
 * Détail : 
   * Nouveaux types de questions possible dans le questionnaire : Number , Boolean
@@ -14,11 +28,13 @@
   * Ecran permettant à l'utilisateur soit de reprendre le formulaire, soit de repartir à 0
 
 ## 0.5.1 [#44](https://github.com/betagouv/aides-simulateur-front/pull/44)
+
 * Ajout de fonctionnalité
 * Détail :
   * Répare les problèmes lié au chargement des pictogrammes via nuxt et la libraire @gouvfr/dsfr en plaçant tous les pictogrammes dans le dossier `/public`
 
 ## 0.5.0 [#28](https://github.com/betagouv/aides-simulateur-front/pull/28)
+
 * Ajout de fonctionnalité
 * Détail :
   * Ajoute la gestion de pages de contenus `simulateurs` avec nuxt-content
@@ -37,6 +53,7 @@
     - `simulateurs/[simulateur_id]/resultats/[aide_id].vue` pour la page de détail d'une aide suite à une simulation
 
 ## 0.4.0 [#29](https://github.com/betagouv/aides-simulateur-front/pull/29)
+
 * Ajout de fonctionnalité
 * Détail :
   * Ajout de la première version du simulateur de simulation globale
