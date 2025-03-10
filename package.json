@@ -15,8 +15,8 @@
     "icons": "vue-dsfr-icons -s scripts/icons.js -t client/icon-collections.ts"
   },
   "dependencies": {
-    "@gouvfr/dsfr": "~1.12.1",
-    "@gouvminint/vue-dsfr": "^6.3.1",
+    "@gouvfr/dsfr": "~1.13.0",
+    "@gouvminint/vue-dsfr": "^8.3.0",
     "@iconify-json/ri": "^1.2.5",
     "@nuxt/content": "^3.3.0",
     "@pinia/nuxt": "^0.10.1",
