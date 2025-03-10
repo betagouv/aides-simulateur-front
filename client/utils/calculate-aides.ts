@@ -110,7 +110,36 @@ export function buildRequest (answers: SurveyAnswer[]): OpenFiscaCalculationRequ
   // eslint-disable-next-line no-console
   console.debug(request)
 
-  for (const [answerKey, answerValue] of Object.entries(answers)) {
+  const mockAnswers = {
+    'statut-professionnel': 'actif',
+    'situation-professionnelle': 'stage',
+    'date-naissance': '1996-12-13',
+    'code-postal-nouvelle-ville': '75101',
+    'colocation': false,
+    'confirmation-end': ['confirmation-end-oui'],
+    'date-naissance': '1996-12-13',
+    'habitation-avec-autre-personnes': true,
+    'habiter-avec-conjoint': false,
+    'handicap': false,
+    'logement-chambre': false,
+    'logement-parente-proprietaire': false,
+    'loyer-besoin-cautions': true,
+    'loyer-besoin-garant': true,
+    'loyer-difficile-payer': true,
+    'loyer-montant-charges': 100,
+    'loyer-montant-mensuel': 400,
+    'nombre-personnes-logement': 1,
+    'salaire-imposable': 200,
+    'situation-logement': 'locataire_meuble',
+    'situation-professionnelle': 'stage',
+    'statut-marital': 'celibataire',
+    'statut-professionnel': 'actif',
+    'type-logement': 'logement-non-meuble',
+    'type-revenus': ['revenus-activite']
+  }
+
+  for (const [answerKey, answerValue] of Object.entries(mockAnswers)) {
+  // for (const [answerKey, answerValue] of Object.entries(answers)) {
     try {
       // answerValue: boolean | number | string | undefined
       if (answerValue === undefined) {

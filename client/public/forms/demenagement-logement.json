@@ -104,7 +104,7 @@
           "type": "radio",
           "choices": [
             {
-              "id": "locataire",
+              "id": "locataire_meuble",
               "title": "Locataire (figurant sur le bail, en foyer ou en résidence)"
             },
             {
