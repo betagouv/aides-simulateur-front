@@ -1,48 +1,3 @@
-// client/stores/form.ts
-export interface SurveyChoice {
-  id: string
-  title: string
-}
-
-export interface SurveyQuestion {
-  id: string
-  title: string
-  description?: string
-  type: 'radio' | 'checkbox' | 'number' | 'date' | 'text' | 'boolean'
-  notion: {
-    id: string
-    buttonLabel: string
-  }
-  autocompleteFunction?: string
-  choices?: SurveyChoice[]
-  nextQuestion?: string
-  bypassToQuestion?: Array<{
-    condition: string
-    question: string
-  }>
-}
-
-export interface SurveyAnswer {
-  [key: string]: string | number | boolean | undefined
-}
-
-// TODO: refacto : SurveyStep
-export interface SurveyStep {
-  id: string
-  title: string
-  questions: SurveyQuestion[]
-}
-
-export interface SurveySchema {
-  id: string
-  title: string
-  description: string
-  version: string
-  forceRefresh?: boolean
-  steps: SurveyStep[]
-  triggeredQuestions?: SurveyQuestion[]
-}
-
 export const useFormStore = defineStore('form', () => {
   // Form answers storage
   const answers = ref<Record<string, any>>({})
@@ -192,17 +147,21 @@ export const useFormStore = defineStore('form', () => {
     // First check if it's a triggered question
     const triggeredQuestion = currentQuestionId.value ? findTriggeredQuestion(currentQuestionId.value) : null
     if (triggeredQuestion) {
+      console.log('Current question is a triggered question:', triggeredQuestion)
       return triggeredQuestion
     }
 
     // If not, look in the current step
     if (!currentStep.value || !currentQuestionId.value) {
+      console.warn('No current step or question ID')
       return null
     }
 
-    return currentStep.value.questions.find(
+    const found = currentStep.value.questions.find(
       question => question.id === currentQuestionId.value
     )
+    console.log('Found Current question ?', found)
+    return found
   })
 
   // Check if current question is a triggered question

@@ -1,26 +1,47 @@
 declare global {
 
-  interface ChoiceItem {
-    value: string
-    label: string
+  interface SurveyChoice {
+    id: string
+    title: string
   }
 
-  type FormSchemaItem = {
-    key: string
+  interface SurveyQuestion {
+    id: string
     title: string
-  } & ({
-    type: 'boolean'
-    default?: boolean
-  } | {
-    type: 'number'
-    default?: number
-  } | {
-    type: 'string'
-    default?: string
-    choices?: ChoiceItem[]
-  })
+    description?: string
+    type: 'radio' | 'checkbox' | 'number' | 'date' | 'text' | 'boolean'
+    notion: {
+      id: string
+      buttonLabel: string
+    }
+    autocompleteFunction?: string
+    choices?: SurveyChoice[]
+    nextQuestion?: string
+    bypassToQuestion?: Array<{
+      condition: string
+      question: string
+    }>
+  }
 
-  type FormSchema = FormSchemaItem[]
+  interface SurveyAnswer {
+    [key: string]: string | number | boolean | undefined
+  }
+
+  interface SurveyStep {
+    id: string
+    title: string
+    questions: SurveyQuestion[]
+  }
+
+  interface SurveySchema {
+    id: string
+    title: string
+    description: string
+    version: string
+    forceRefresh?: boolean
+    steps: SurveyStep[]
+    triggeredQuestions?: SurveyQuestion[]
+  }
 }
 
 export {}
