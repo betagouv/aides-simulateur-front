@@ -156,6 +156,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     'pinia-plugin-persistedstate/nuxt',
     '@nuxt/test-utils/module',
+    'nuxt-security'
   ],
 
   css: [
