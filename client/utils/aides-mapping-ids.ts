@@ -70,6 +70,8 @@ export const famillesVariables: { [aidesSimplifieesKey: string]: OpenFiscaMappin
   }
 }
 
+export const foyersFiscauxVariables: { [aidesSimplifieesKey: string]: OpenFiscaMapping } = {}
+
 // TODO check what these variables mean:
 // confirmation-end
 // {2025-01: 'confirmation-end-oui'}

@@ -1,25 +1,39 @@
 # CHANGELOG
 
-## 0.9.2 [#56](https://github.com/betagouv/aides-simulateur-front/pull/56)
+## 0.10.0 [#53](https://github.com/betagouv/aides-simulateur-front/pull/53)
+
+* Ajout d'une fonctionnalité.
+* Détails :
+  * Ajoute la notion de `question` posée par un simulateur
+    * La liste des questions est temporairement figée dans `client/components/form/Survey.vue` 
+  * Ajoute les questions à la requête à `aides-calculatrice-back`
+    * Introduit le mapping des questions dans `client/utils/aides-mapping-questions.ts`
+    * Met en forme le résultat pour le simulateur dans `client/utils/beautify-results.ts`
+
+### 0.9.2 [#56](https://github.com/betagouv/aides-simulateur-front/pull/56)
+
 * Corrections
 * Détail :
   * Corrige le style des vues intégrées dans l'iframe
   * Met à jour le contenu de la page 'Intégrer nos simulateurs'
 
-## 0.9.1 [#55](https://github.com/betagouv/aides-simulateur-front/pull/55)
+### 0.9.1 [#55](https://github.com/betagouv/aides-simulateur-front/pull/55)
+
 * Amélioration de la partie admin
 * Détail : 
   * Sécurité : requête POST au lieu de GET pour accéder à l'admin
   * Bouton de déconnexion et stockage dans la session du mdp
 
 ## 0.9.0 [#54](https://github.com/betagouv/aides-simulateur-front/pull/54)
+
 * Ajout d'une mini-interface admin et amélioration des stats
 * Détail : 
   * Amélioration des stats matomo : stockage des réponses aux questions des simulateurs
   * Stockage sous forme de json avec un timestamp dans le back-end lorsqu'un utilisateur complète un simulateur
   * Interface admin pour visualiser la liste de ces simulations
 
-## 0.8.3 [#50](https://github.com/betagouv/aides-simulateur-front/pull/50)
+### 0.8.3 [#50](https://github.com/betagouv/aides-simulateur-front/pull/50)
+
 * Refactorisations mineures
 * Détail : 
   * Nettoyage du code inutile et formatage
@@ -27,15 +41,18 @@
   * Gestion des types
 
 ## 0.8.2 [#49](https://github.com/betagouv/aides-simulateur-front/pull/49)
+
 * Détail : 
   * Intégration de vue-matomo en tant que plugin
 
-## 0.8.1 [#47](Refactor iframe integration page and add Matomo tracking #47)
+### 0.8.1 [#47](Refactor iframe integration page and add Matomo tracking #47)
+
 * Détail : 
   * Intégration de la page iframe dans la page 
   * Ajout de vue-matomo
   
 ## 0.8.0 [#31](https://github.com/betagouv/aides-simulateur-front/pull/31)
+
 * Mise à jour des dépendances, notamment critiques :
   ```json
     "@gouvfr/dsfr": "~1.13.0",
@@ -43,7 +60,6 @@
     "pinia": "^3.0.1",
     "@antfu/eslint-config": "^4.6.0",
   ```
-
 
 ## 0.7.0 [#30](https://github.com/betagouv/aides-simulateur-front/pull/30)
 
@@ -55,7 +71,7 @@
   * Initialise des classes d'erreurs dans `client/utils/errors.ts`
   * Définit les types propres à une requête openfisca dans `client/types/openfisca.ts`
 
-## 0.6.1 [#46](https://github.com/betagouv/aides-simulateur-front/pull/46)
+### 0.6.1 [#46](https://github.com/betagouv/aides-simulateur-front/pull/46)
 
 * Ajout de fonctionnalité
 * Détail : 
@@ -72,7 +88,7 @@
   * Intégration de la version 1.0.0 du questionnaire "demenagement-logement"
   * Ecran permettant à l'utilisateur soit de reprendre le formulaire, soit de repartir à 0
 
-## 0.5.1 [#44](https://github.com/betagouv/aides-simulateur-front/pull/44)
+### 0.5.1 [#44](https://github.com/betagouv/aides-simulateur-front/pull/44)
 
 * Ajout de fonctionnalité
 * Détail :
@@ -103,13 +119,13 @@
 * Détail :
   * Ajout de la première version du simulateur de simulation globale
 
-## 0.3.2 [#26](https://github.com/betagouv/aides-simulateur-front/pull/26)
+### 0.3.2 [#26](https://github.com/betagouv/aides-simulateur-front/pull/26)
 
 * Ajout de fonctionnalité
 * Détail :
   * Ajout d'un bandeau d'information dans le layout principal pour informer l'utilisateur de l'état de développement du projet
 
-## 0.3.1 [#25](https://github.com/betagouv/aides-simulateur-front/pull/25)
+### 0.3.1 [#25](https://github.com/betagouv/aides-simulateur-front/pull/25)
 
 * Evolutions techniques
 * Détail :

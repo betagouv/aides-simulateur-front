@@ -126,12 +126,26 @@ async function submitForm () {
   // eslint-disable-next-line no-console
   console.log('Form submitted with answers:', answers.value)
 
-  // Sending this data to a web API to calculate a set of 'aides'
+  // TODO : next step (to check with aides-calculatrice-back) = adding
+  // 'locapass', 'mobilite-master-1-eligibilite', 'mobilite-parcoursup-eligibilite'
+  // TODO : also validate that we will not have 'aide-personnalisee-logement-eligibilite' for now
+  const questionsToApi: string[] = [
+    'locapass-eligibilite',
+    'mobilite-master-1',
+    'mobilite-parcoursup',
+    'aide-personnalisee-logement',
+    'garantie-visale-eligibilite',
+    'garantie-visale'
+  ]
+
+  // Sending the data to a web API to calculate a set of 'aides'
   try {
-    const request: OpenFiscaCalculationRequest = buildRequest(answers.value)
-    const results = await fetchOpenFiscaFranceCalculation(request)
+    const request: OpenFiscaCalculationRequest = buildRequest(answers.value, questionsToApi)
+    const openfiscaResponse: OpenFiscaCalculationResponse = await fetchOpenFiscaFranceCalculation(request)
     // eslint-disable-next-line no-console
-    console.debug(results)
+    console.debug(openfiscaResponse)
+
+    const results: ResultAide = extractAidesResults(openfiscaResponse, questionsToApi)
 
     // Track form submission in Matomo
     if (typeof window !== 'undefined' && (window as any)._paq) {
@@ -140,7 +154,7 @@ async function submitForm () {
 
     // Store form data and results
     try {
-      const response = await $fetch('/api/store-form-data', {
+      const storeResponse = await $fetch('/api/store-form-data', {
         method: 'POST',
         body: {
           simulateurId,
@@ -149,12 +163,12 @@ async function submitForm () {
         },
       })
 
-      if (response.success) {
+      if (storeResponse.success) {
         // eslint-disable-next-line no-console
-        console.info('Form data stored successfully:', response.filename)
+        console.info('Form data stored successfully:', storeResponse.filename)
       }
       else {
-        console.error('Failed to store form data:', response.error)
+        console.error('Failed to store form data:', storeResponse.error)
       }
     }
     catch (storageError) {
