@@ -10,6 +10,10 @@ export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
   const ADMIN_PASSWORD = config.adminPassword || ''
 
+  console.log('Admin Password from env:', process.env.NUXT_ADMIN_PASSWORD)
+  console.log('Admin Password from env:', process.env.ADMIN_PASSWORD)
+  console.log('Admin Password from config:', useRuntimeConfig().adminPassword)
+
   try {
     // Vérification du mot de passe
     const query = getQuery(event)
