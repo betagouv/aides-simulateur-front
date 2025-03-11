@@ -11,8 +11,15 @@ function goToSubmissions () {
     return
   }
 
-  // Redirection vers la page des soumissions avec le mot de passe en paramètre
-  navigateTo(`/admin/submissions?password=${encodeURIComponent(password.value)}`)
+  // Stocker le mot de passe dans sessionStorage au lieu de l'URL
+  // sessionStorage est préféré à localStorage car les données sont effacées
+  // lorsque la session de navigation se termine
+  if (process.client) {
+    sessionStorage.setItem('admin_password', password.value)
+  }
+
+  // Redirection vers la page des soumissions sans le mot de passe dans l'URL
+  navigateTo('/admin/submissions')
 }
 </script>
 
