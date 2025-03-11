@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 0.8.3 [#50](https://github.com/betagouv/aides-simulateur-front/pull/50)
+* Refactorisations mineures
+* Détail : 
+  * Nettoyage du code inutile et formatage
+  * Amélioration du style du formulaire
+  * Gestion des types
+
 ## 0.8.2 [#49](https://github.com/betagouv/aides-simulateur-front/pull/49)
 * Détail : 
   * Intégration de vue-matomo en tant que plugin
