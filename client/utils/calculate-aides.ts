@@ -1,3 +1,10 @@
+import {
+  famillesQuestionsVariables,
+  foyersFiscauxQuestionsVariables,
+  individusQuestionsVariables,
+  menagesQuestionsVariables
+} from '@/utils/aides-mapping-questions'
+
 const YEAR = '2025'
 const MONTH = `${YEAR}-01`
 const ETERNITY_PERIOD = 'ETERNITY'
@@ -102,14 +109,40 @@ function addSurveyAnswerToRequest (
   return request
 }
 
-export function buildRequest (answers: SurveyAnswer[]): OpenFiscaCalculationRequest {
-  // eslint-disable-next-line no-console
-  console.debug('buildRequest...')
-  let request: OpenFiscaCalculationRequest = initRequest()
-  // sets: request[some entity][the entity id]
-  // eslint-disable-next-line no-console
-  console.debug(request)
+function formatSurveyQuestionToRequest (
+  variableMapping: OpenFiscaMapping
+) {
+  const result: { [key: string]: VariableToCalculateOnPeriod } = {}
+  const period = variableMapping.period === 'MONTH' ? MONTH : ETERNITY_PERIOD
+  result[variableMapping.openfiscaVariableName] = {
+    [period]: null
+  }
+  return result
+}
 
+function addSurveyQuestionToRequest (
+  questionKey: string,
+  mapping: OpenFiscaMapping,
+  entity: Entites,
+  request: OpenFiscaCalculationRequest
+): OpenFiscaCalculationRequest {
+  const openfiscaVariableName = mapping.openfiscaVariableName
+  const formattedQuestion = formatSurveyQuestionToRequest(mapping)
+
+  const entityId = getEntityId(entity)
+  if (entityId === UNDEFINED_ENTITY_ID) {
+    console.error(`Variable '${questionKey}' d'entité imprévue ou inconne: ${entity}`)
+    throw new UnknownEntityError(questionKey)
+  }
+
+  request[entity][entityId][openfiscaVariableName] = { ...formattedQuestion[openfiscaVariableName] }
+  return request
+}
+
+function addAnswersToRequest (
+  request: OpenFiscaCalculationRequest,
+  answers: SurveyAnswer[]
+): OpenFiscaCalculationRequest {
   for (const [answerKey, answerValue] of Object.entries(answers)) {
     try {
       // answerValue: boolean | number | string | undefined
@@ -130,7 +163,7 @@ export function buildRequest (answers: SurveyAnswer[]): OpenFiscaCalculationRequ
         request = addSurveyAnswerToRequest(answerKey, answerValue, famillesVariables[answerKey], Entites.Familles, request)
       }
       else {
-        console.error(`Variable inconnue : ${answerKey}`)
+        console.error(`Variable d'entrée de formulaire inconnue : ${answerKey}`)
         throw new UnknownVariableError(answerKey)
       }
     }
@@ -139,6 +172,65 @@ export function buildRequest (answers: SurveyAnswer[]): OpenFiscaCalculationRequ
       console.error(`Donnée '${answerKey}' non transcrite dans la requête de calcul suite à l'erreur '${anyError}'.`)
     }
   }
+  return request
+}
+
+function addQuestionsToRequest (
+  request: OpenFiscaCalculationRequest,
+  questions: string[]
+): OpenFiscaCalculationRequest {
+  for (const questionKey of questions) {
+    try {
+      if (questionKey in individusQuestionsVariables) {
+        request = addSurveyQuestionToRequest(questionKey, individusQuestionsVariables[questionKey], Entites.Individus, request)
+      }
+      else if (questionKey in menagesQuestionsVariables) {
+        request = addSurveyQuestionToRequest(questionKey, menagesQuestionsVariables[questionKey], Entites.Menages, request)
+      }
+      else if (questionKey in famillesQuestionsVariables) {
+        request = addSurveyQuestionToRequest(questionKey, famillesQuestionsVariables[questionKey], Entites.Familles, request)
+      }
+      else if (questionKey in foyersFiscauxQuestionsVariables) {
+        request = addSurveyQuestionToRequest(questionKey, foyersFiscauxQuestionsVariables[questionKey], Entites.FoyerFiscaux, request)
+      }
+      else {
+        console.error(`Variable de question inconnue : ${questionKey}`)
+        throw new UnknownVariableError(questionKey)
+      }
+    }
+    catch (anyError) {
+      // UnknownVariableError, UnknownEntityError, UnexpectedValueError, UndefinedValueError
+      console.error(`Question '${questionKey}' non transcrite dans la requête de calcul suite à l'erreur '${anyError}'.`)
+    }
+  }
+
+  return request
+}
+
+export function buildRequest (answers: SurveyAnswer[]): OpenFiscaCalculationRequest {
+  // eslint-disable-next-line no-console
+  console.debug('buildRequest...')
+  let request: OpenFiscaCalculationRequest = initRequest()
+  // sets: request[some entity][the entity id]
+  // eslint-disable-next-line no-console
+  console.debug(request)
+
+  request = addAnswersToRequest (request, answers)
+
+  // TODO : get questions from store
+  // TODO : next step (to check with aides-calculatrice-back) = adding
+  // 'locapass', 'mobilite-master-1-eligibilite', 'mobilite-parcoursup-eligibilite'
+  // TODO : also validate that we will not have 'aide-personnalisee-logement-eligibilite' for now
+  const questions: string[] = [
+    'locapass-eligibilite',
+    'mobilite-master-1',
+    'mobilite-parcoursup',
+    'aide-personnalisee-logement',
+    'garantie-visale-eligibilite',
+    'garantie-visale'
+  ]
+  request = addQuestionsToRequest(request, questions)
+
   return request
 }
 
