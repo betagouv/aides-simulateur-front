@@ -1,3 +1,11 @@
+<script lang="ts" setup>
+withDefaults(defineProps<{
+  fluid?: boolean
+}>(), {
+  fluid: false
+})
+</script>
+
 <template>
   <div class="fr-container">
     <hr class="section-separator">

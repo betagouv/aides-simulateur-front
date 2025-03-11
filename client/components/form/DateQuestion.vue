@@ -1,7 +1,5 @@
 <script lang="ts" setup>
-import { type SurveyQuestion } from '@/stores/survey'
-
-const props = defineProps<{
+defineProps<{
   question: SurveyQuestion
   modelValue: string | undefined
 }>()
@@ -10,7 +8,7 @@ const emit = defineEmits<{
   'update:modelValue': [value: string]
 }>()
 
-function handleChange(value: string) {
+function handleChange (value: string) {
   emit('update:modelValue', value)
 }
 </script>

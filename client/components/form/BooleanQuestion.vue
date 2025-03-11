@@ -1,7 +1,5 @@
 <script lang="ts" setup>
-import type { SurveyQuestion } from '@/stores/survey'
-
-const _props = defineProps<{
+defineProps<{
   question: SurveyQuestion
   modelValue: boolean | undefined
 }>()

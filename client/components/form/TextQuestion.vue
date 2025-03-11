@@ -74,7 +74,9 @@ function selectSuggestion (suggestion: { code: string, autocompletion: string })
 
 // Gestion des touches clavier pour naviguer dans les suggestions
 function handleKeyDown (event: KeyboardEvent) {
-  if (!showSuggestions.value) { return }
+  if (!showSuggestions.value) {
+    return
+  }
 
   switch (event.key) {
     case 'ArrowDown':

@@ -1,21 +1,7 @@
 <script lang="ts" setup>
 definePageMeta({
   layout: 'default',
-  validate ({ params }) {
-    /** @todo find a better way to validate aide_id */
-    const aides = [
-      'fsl',
-      'garantie-visale',
-    ]
-    /** @todo find a better way to validate simulateur_id */
-    const simulateurs = [
-      'demenagement-logement',
-    ]
-    return (
-      aides.includes(params.aide_id)
-      && simulateurs.includes(params.simulateur_id)
-    )
-  }
+  validate: getContentRouteValidator(['aide_id', 'simulateur_id'])
 })
 
 const route = useRoute()

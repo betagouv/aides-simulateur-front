@@ -7,7 +7,9 @@ const props = withDefaults(defineProps<{
 })
 
 const styles = computed(() => {
-  if (!props.contrast) { return {} }
+  if (!props.contrast) {
+    return {}
+  }
   return {
     '--text-default-grey': 'var(--brand-contrast-text--disabled)',
     '--text-mention-grey': 'var(--brand-contrast-text)',

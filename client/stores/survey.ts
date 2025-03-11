@@ -1,48 +1,3 @@
-// client/stores/form.ts
-export interface SurveyChoice {
-  id: string
-  title: string
-}
-
-export interface SurveyQuestion {
-  id: string
-  title: string
-  description?: string
-  type: 'radio' | 'checkbox' | 'number' | 'date' | 'text' | 'boolean'
-  notion: {
-    id: string
-    buttonLabel: string
-  }
-  autocompleteFunction?: string
-  choices?: SurveyChoice[]
-  nextQuestion?: string
-  bypassToQuestion?: Array<{
-    condition: string
-    question: string
-  }>
-}
-
-export interface SurveyAnswer {
-  [key: string]: string | number | boolean | undefined
-}
-
-// TODO: refacto : SurveyStep
-export interface SurveyStep {
-  id: string
-  title: string
-  questions: SurveyQuestion[]
-}
-
-export interface SurveySchema {
-  id: string
-  title: string
-  description: string
-  version: string
-  forceRefresh?: boolean
-  steps: SurveyStep[]
-  triggeredQuestions?: SurveyQuestion[]
-}
-
 export const useFormStore = defineStore('form', () => {
   // Form answers storage
   const answers = ref<Record<string, any>>({})
@@ -146,8 +101,12 @@ export const useFormStore = defineStore('form', () => {
       const part1 = i < parts1.length ? parts1[i] : 0
       const part2 = i < parts2.length ? parts2[i] : 0
 
-      if (part1 > part2) { return 1 }
-      if (part1 < part2) { return -1 }
+      if (part1 > part2) {
+        return 1
+      }
+      if (part1 < part2) {
+        return -1
+      }
     }
 
     return 0
@@ -155,7 +114,9 @@ export const useFormStore = defineStore('form', () => {
 
   // Get the current category
   const currentStep = computed(() => {
-    if (!surveySchema.value || !currentStepId.value) { return null }
+    if (!surveySchema.value || !currentStepId.value) {
+      return null
+    }
 
     return surveySchema.value.steps.find(
       category => category.id === currentStepId.value
@@ -163,7 +124,9 @@ export const useFormStore = defineStore('form', () => {
   })
 
   const nextCategory = computed(() => {
-    if (!surveySchema.value || !currentStepId.value) { return null }
+    if (!surveySchema.value || !currentStepId.value) {
+      return null
+    }
 
     // Find the index of the current category
     const currentStepIndex = surveySchema.value.steps.findIndex(
@@ -183,25 +146,37 @@ export const useFormStore = defineStore('form', () => {
   const currentQuestion = computed(() => {
     // First check if it's a triggered question
     const triggeredQuestion = currentQuestionId.value ? findTriggeredQuestion(currentQuestionId.value) : null
-    if (triggeredQuestion) { return triggeredQuestion }
+    if (triggeredQuestion) {
+      console.log('Current question is a triggered question:', triggeredQuestion)
+      return triggeredQuestion
+    }
 
     // If not, look in the current step
-    if (!currentStep.value || !currentQuestionId.value) { return null }
+    if (!currentStep.value || !currentQuestionId.value) {
+      console.warn('No current step or question ID')
+      return null
+    }
 
-    return currentStep.value.questions.find(
+    const found = currentStep.value.questions.find(
       question => question.id === currentQuestionId.value
     )
+    console.log('Found Current question ?', found)
+    return found
   })
 
   // Check if current question is a triggered question
   const isTriggeredQuestion = computed(() => {
-    if (!currentQuestionId.value) { return false }
+    if (!currentQuestionId.value) {
+      return false
+    }
     return !!findTriggeredQuestion(currentQuestionId.value)
   })
 
   // Find a question by ID across all questions (steps and triggered)
   function findQuestionById (questionId: string): { question: SurveyQuestion | null, stepId: string | null } {
-    if (!surveySchema.value) { return { question: null, stepId: null } }
+    if (!surveySchema.value) {
+      return { question: null, stepId: null }
+    }
 
     // First, search in the normal steps
     for (const step of surveySchema.value.steps) {
@@ -224,14 +199,18 @@ export const useFormStore = defineStore('form', () => {
 
   // Find a triggered question by ID
   function findTriggeredQuestion (questionId: string): SurveyQuestion | null {
-    if (!surveySchema.value || !surveySchema.value.triggeredQuestions) { return null }
+    if (!surveySchema.value || !surveySchema.value.triggeredQuestions) {
+      return null
+    }
 
     return surveySchema.value.triggeredQuestions.find(q => q.id === questionId) || null
   }
 
   // Evaluate a condition string
   function evaluateCondition (conditionStr: string): boolean {
-    if (!conditionStr) { return true }
+    if (!conditionStr) {
+      return true
+    }
 
     // Create a context with answers
     const getAnswerValue = (questionId: string): any => {
@@ -265,7 +244,9 @@ export const useFormStore = defineStore('form', () => {
           const selectedValues = getAnswerValue(questionId)
 
           // If no selection made yet, return false
-          if (!selectedValues) { return false }
+          if (!selectedValues) {
+            return false
+          }
 
           // For a single value (radio buttons), check if it's in the values to check
           if (typeof selectedValues === 'string') {
@@ -289,7 +270,9 @@ export const useFormStore = defineStore('form', () => {
           const leftValue = getAnswerValue(leftSide)
 
           // If the question hasn't been answered yet, return false
-          if (leftValue === undefined) { return false }
+          if (leftValue === undefined) {
+            return false
+          }
 
           // Parse right side value
           let rightValue: any = rightSide
@@ -348,12 +331,16 @@ export const useFormStore = defineStore('form', () => {
 
   // Determine the next question based on answers
   function getNextQuestionId (): { nextQuestionId: string | null, nextStepId: string | null } {
-    if (!currentQuestionId.value) { return { nextQuestionId: null, nextStepId: null } }
+    if (!currentQuestionId.value) {
+      return { nextQuestionId: null, nextStepId: null }
+    }
 
     // Find the current question (can be in steps or triggered questions)
     const { question: currentQ, stepId: currentStepId } = findQuestionById(currentQuestionId.value)
 
-    if (!currentQ) { return { nextQuestionId: null, nextStepId: null } }
+    if (!currentQ) {
+      return { nextQuestionId: null, nextStepId: null }
+    }
 
     // If there's a bypassToQuestion array with conditions
     if (currentQ.bypassToQuestion && currentQ.bypassToQuestion.length > 0) {
@@ -520,7 +507,9 @@ export const useFormStore = defineStore('form', () => {
 
   // Calculate progress
   const progress = computed(() => {
-    if (!surveySchema.value) { return 0 }
+    if (!surveySchema.value) {
+      return 0
+    }
 
     // Count all regular questions in steps
     const stepsQuestionsCount = surveySchema.value.steps.reduce(
@@ -545,13 +534,17 @@ export const useFormStore = defineStore('form', () => {
 
   // Current step tracking (category index + 1)
   const currentStepIndex = computed(() => {
-    if (!surveySchema.value || !currentStep.value) { return 1 }
+    if (!surveySchema.value || !currentStep.value) {
+      return 1
+    }
     const index = surveySchema.value.steps.findIndex(cat => cat.id === currentStep.value?.id)
     return index + 1
   })
 
   const totalCategoriesNumber = computed(() => {
-    if (!surveySchema.value) { return 1 }
+    if (!surveySchema.value) {
+      return 1
+    }
     return surveySchema.value.steps.length
   })
 

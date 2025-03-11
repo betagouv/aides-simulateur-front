@@ -1,13 +1,7 @@
 <script lang="ts" setup>
 definePageMeta({
   layout: 'default',
-  validate ({ params }) {
-    /** @todo find a better way to validate notion_id */
-    const notions = [
-      'revenus-apl',
-    ]
-    return notions.includes(params.notion_id)
-  }
+  validate: getContentRouteValidator('notion_id')
 })
 
 const route = useRoute()

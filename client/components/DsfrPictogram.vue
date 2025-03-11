@@ -3,7 +3,6 @@ withDefaults(defineProps<{
   svgPath: string
   svgAttrs?: () => Record<string, string>
 }>(), {
-  svgPath: undefined,
   svgAttrs: () => ({ viewBox: '0 0 80 80', width: '80px', height: '80px' }),
 })
 const defaultSvgAttrs = { viewBox: '0 0 80 80', width: '80px', height: '80px' }

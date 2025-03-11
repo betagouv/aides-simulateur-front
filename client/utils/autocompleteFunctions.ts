@@ -7,7 +7,7 @@
  * @param query - La requête de recherche
  * @returns Un tableau de suggestions
  */
-export async function getInseeNumber(query: string) {
+export async function getInseeNumber (query: string) {
   try {
     // Encodage de la requête pour l'URL
     const encodedQuery = encodeURIComponent(query)
@@ -31,7 +31,8 @@ export async function getInseeNumber(query: string) {
     // Extraction des données JSON
     const { suggestions } = await response.json()
     return suggestions || []
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Erreur lors de la récupération des suggestions:', error)
     return [] // En cas d'erreur, retourner un tableau vide
   }

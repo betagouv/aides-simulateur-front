@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { type SurveyQuestion } from '@/stores/survey'
-
 const props = defineProps<{
   question: SurveyQuestion
   modelValue: string[] | undefined
@@ -19,13 +17,14 @@ watch(() => props.modelValue, (newValue) => {
 })
 
 // Update parent when selection changes
-function toggleOption(choiceId: string) {
+function toggleOption (choiceId: string) {
   const values = [...selectedValues.value]
   const index = values.indexOf(choiceId)
 
   if (index === -1) {
     values.push(choiceId)
-  } else {
+  }
+  else {
     values.splice(index, 1)
   }
 
