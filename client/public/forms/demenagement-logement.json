@@ -142,7 +142,8 @@
             { "id": "revenus-entreprise", "title": "Revenus d'entreprise" },
             { "id": "ressources-parents", "title": "Ressources des parents" },
             { "id": "ressources-conjoint", "title": "Ressources du conjoint" },
-            { "id": "autres-revenus", "title": "Autres revenus" }
+            { "id": "autres-revenus", "title": "Autres revenus" },
+            { "id": "aucun-autres-revenus", "title": "Aucun autre revenu à déclarer" }
           ],
           "bypassToQuestion": [
             { "condition": "type-revenus.includes('revenus-activite')", "question": "salaire-imposable" },

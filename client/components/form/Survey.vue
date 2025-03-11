@@ -132,6 +132,34 @@ async function submitForm () {
     const results = await fetchOpenFiscaFranceCalculation(request)
     // eslint-disable-next-line no-console
     console.debug(results)
+
+    // Track form submission in Matomo
+    if (typeof window !== 'undefined' && (window as any)._paq) {
+      (window as any)._paq.push(['trackEvent', 'Survey', 'Submit', simulateurId])
+    }
+
+    // Store form data and results
+    try {
+      const response = await $fetch('/api/store-form-data', {
+        method: 'POST',
+        body: {
+          simulateurId,
+          answers: answers.value,
+          results,
+        },
+      })
+
+      if (response.success) {
+        // eslint-disable-next-line no-console
+        console.info('Form data stored successfully:', response.filename)
+      }
+      else {
+        console.error('Failed to store form data:', response.error)
+      }
+    }
+    catch (storageError) {
+      console.error('Error storing form data:', storageError)
+    }
   }
   catch (error) {
     // TODO Handle the error more professionnally and display a message to the user :)

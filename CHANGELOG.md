@@ -1,4 +1,10 @@
 # CHANGELOG
+## 0.9.0 [#54](https://github.com/betagouv/aides-simulateur-front/pull/54)
+* Ajout d'une mini-interface admin et amélioration des stats
+* Détail : 
+  * Amélioration des stats matomo : stockage des réponses aux questions des simulateurs
+  * Stockage sous forme de json avec un timestamp dans le back-end lorsqu'un utilisateur complète un simulateur
+  * Interface admin pour visualiser la liste de ces simulations
 
 ## 0.8.3 [#50](https://github.com/betagouv/aides-simulateur-front/pull/50)
 * Refactorisations mineures
