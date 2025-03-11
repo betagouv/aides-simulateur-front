@@ -1,11 +1,4 @@
 declare global {
-  enum Entites {
-    Individus = 'individus',
-    Menages = 'menages',
-    FoyerFiscaux = 'foyers_fiscaux',
-    Familles = 'familles'
-  }
-
   interface VariableToCalculateOnPeriod {
     [date: string]: null
   }
@@ -44,8 +37,8 @@ declare global {
       }
     }
   }
-type OpenFiscaCalculationResponse = OpenFiscaCalculationRequest | { error: string }
 
+  type OpenFiscaCalculationResponse = OpenFiscaCalculationRequest | { error: string }
 }
 
 export {}

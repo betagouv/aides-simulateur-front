@@ -13,14 +13,21 @@ import {
 } from '@/utils/aides-mapping-questions'
 
 const YEAR = '2025'
-const MONTH = `${YEAR}-01`
+export const MONTH = `${YEAR}-01`
 const ETERNITY_PERIOD = 'ETERNITY'
 
-const INDIVIDU_ID = 'usager'
-const MENAGE_ID = `menage_${INDIVIDU_ID}`
-const FOYER_FISCAL_ID = `foyer_fiscal_${INDIVIDU_ID}`
-const FAMILLE_ID = `famille_${INDIVIDU_ID}`
+export const INDIVIDU_ID = 'usager'
+export const MENAGE_ID = `menage_${INDIVIDU_ID}`
+export const FOYER_FISCAL_ID = `foyer_fiscal_${INDIVIDU_ID}`
+export const FAMILLE_ID = `famille_${INDIVIDU_ID}`
 const UNDEFINED_ENTITY_ID = 'INCONNU'
+
+enum Entites {
+  Individus = 'individus',
+  Menages = 'menages',
+  FoyerFiscaux = 'foyers_fiscaux',
+  Familles = 'familles'
+}
 
 function getEntityId (entity: Entites): string {
   switch (entity) {
@@ -116,6 +123,10 @@ function addSurveyAnswerToRequest (
   return request
 }
 
+/**
+ * format a question to the openfisca web API
+ * to calculate the variable defined in variableMapping
+ */
 function formatSurveyQuestionToRequest (
   variableMapping: OpenFiscaMapping
 ) {
@@ -217,7 +228,7 @@ function addQuestionsToRequest (
   return request
 }
 
-export function buildRequest (answers: SurveyAnswer[]): OpenFiscaCalculationRequest {
+export function buildRequest (answers: SurveyAnswer[], questions: string[]): OpenFiscaCalculationRequest {
   // eslint-disable-next-line no-console
   console.debug('buildRequest...')
   let request: OpenFiscaCalculationRequest = initRequest()
@@ -225,21 +236,8 @@ export function buildRequest (answers: SurveyAnswer[]): OpenFiscaCalculationRequ
   // eslint-disable-next-line no-console
   console.debug(request)
 
-  request = addAnswersToRequest (request, answers)
-
-  // TODO : get questions from store
-  // TODO : next step (to check with aides-calculatrice-back) = adding
-  // 'locapass', 'mobilite-master-1-eligibilite', 'mobilite-parcoursup-eligibilite'
-  // TODO : also validate that we will not have 'aide-personnalisee-logement-eligibilite' for now
-  const questions: string[] = [
-    'locapass-eligibilite',
-    'mobilite-master-1',
-    'mobilite-parcoursup',
-    'aide-personnalisee-logement',
-    'garantie-visale-eligibilite',
-    'garantie-visale'
-  ]
-  request = addQuestionsToRequest(request, questions)
+  request = addAnswersToRequest (request, answers)  // user answers
+  request = addQuestionsToRequest(request, questions)  // simulator questions to rules engine
 
   return request
 }
