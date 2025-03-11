@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { useRuntimeConfig } from '#imports'
-import { createError, defineEventHandler, getQuery } from 'h3'
+import { createError, defineEventHandler, readBody } from 'h3'
 
 export default defineEventHandler(async (event) => {
   // Utilise la variable d'environnement pour le mot de passe
@@ -12,8 +12,8 @@ export default defineEventHandler(async (event) => {
 
   try {
     // Vérification du mot de passe
-    const query = getQuery(event)
-    const password = query.password as string
+    const body = await readBody(event)
+    const password = body.password as string
 
     if (!ADMIN_PASSWORD || password !== ADMIN_PASSWORD) {
       throw createError({

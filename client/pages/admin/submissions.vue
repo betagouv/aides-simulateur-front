@@ -46,8 +46,8 @@ async function loadSubmissions () {
 
   try {
     const response = await $fetch('/api/admin/list-submissions', {
-      method: 'GET',
-      params: {
+      method: 'POST',
+      body: {
         password: password.value
       }
     })
@@ -81,8 +81,8 @@ async function viewSubmission (filename: string) {
 
   try {
     const response = await $fetch('/api/admin/get-submission', {
-      method: 'GET',
-      params: {
+      method: 'POST',
+      body: {
         password: password.value,
         filename
       }
@@ -150,12 +150,28 @@ function getSimulateurId (filename: string) {
   return parts[0] || 'inconnu'
 }
 
-// Chargement initial si URL contient un paramètre de mot de passe
+// Déconnexion
+function logout () {
+  if (process.client) {
+    // Supprimer le mot de passe de sessionStorage
+    sessionStorage.removeItem('admin_password')
+  }
+  // Réinitialiser l'état d'authentification
+  isAuthenticated.value = false
+  password.value = ''
+  submissions.value = []
+  selectedSubmission.value = null
+  submissionData.value = null
+}
+
+// Chargement initial si le mot de passe est stocké dans sessionStorage
 onMounted(() => {
-  const route = useRoute()
-  if (route.query.password) {
-    password.value = route.query.password as string
-    authenticate()
+  if (process.client) {
+    const storedPassword = sessionStorage.getItem('admin_password')
+    if (storedPassword) {
+      password.value = storedPassword
+      authenticate()
+    }
   }
 })
 </script>
@@ -194,11 +210,21 @@ onMounted(() => {
 
     <!-- Liste des soumissions -->
     <div v-else>
-      <DsfrButton
-        label="Actualiser"
-        class="fr-mb-2w"
-        @click="loadSubmissions"
-      />
+      <div class="fr-mb-2w fr-grid-row fr-grid-row--middle fr-grid-row--gutters">
+        <div class="fr-col">
+          <DsfrButton
+            label="Actualiser"
+            @click="loadSubmissions"
+          />
+        </div>
+        <div class="fr-col-auto">
+          <DsfrButton
+            label="Se déconnecter"
+            secondary
+            @click="logout"
+          />
+        </div>
+      </div>
 
       <div
         v-if="loading"
