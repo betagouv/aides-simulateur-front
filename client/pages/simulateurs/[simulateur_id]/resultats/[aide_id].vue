@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 definePageMeta({
   layout: 'default',
+  middleware: 'check-iframe-layout',
   validate: getContentRouteValidator(['aide_id', 'simulateur_id'])
 })
 
@@ -42,32 +43,58 @@ const crumbs = computed(() => {
     { text: aide.value.title, to: `/simulateurs/${simulateurId}/${aideId}` }
   ]
 })
+
+const { isIframe } = useIframeDisplay()
 </script>
 
 <template>
   <template v-if="simulateur">
-    <BrandBackgroundContainer>
-      <BreadcrumbSectionContainer :crumbs="crumbs" />
-      <SimulationHeaderSection v-bind="simulateur" />
-      <UserActionSectionRow>
-        <div>
-          <h1>
-            {{ aide.title }}
-          </h1>
-          <DsfrLink
-            icon-before
-            label="Revenir à mes résultats"
-            :link="{
-              to: `/simulateurs/${simulateurId}/resultats`,
-            }"
-            :icon="{ name: 'ri:arrow-left-line', ssr: true }"
-          />
-          <p class="fr-text--lg">
-            {{ aide.description }}
-          </p>
-        </div>
-      </UserActionSectionRow>
-    </BrandBackgroundContainer>
+    <template
+      v-if="isIframe"
+    >
+      <div>
+        <h1>
+          {{ aide?.title }}
+        </h1>
+        <DsfrLink
+          icon-before
+          label="Revenir à mes résultats"
+          :link="{
+            to: `/simulateurs/${simulateurId}/resultats`,
+            query: route.query,
+          }"
+          :icon="{ name: 'ri:arrow-left-line', ssr: true }"
+        />
+        <p>
+          {{ aide?.description }}
+        </p>
+      </div>
+    </template>
+    <template v-else>
+      <BrandBackgroundContainer>
+        <BreadcrumbSectionContainer :crumbs="crumbs" />
+        <SimulationHeaderSection v-bind="simulateur" />
+        <UserActionSectionRow>
+          <div>
+            <h1>
+              {{ aide.title }}
+            </h1>
+            <DsfrLink
+              icon-before
+              label="Revenir à mes résultats"
+              :link="{
+                to: `/simulateurs/${simulateurId}/resultats`,
+                query: route.query,
+              }"
+              :icon="{ name: 'ri:arrow-left-line', ssr: true }"
+            />
+            <p class="fr-text--lg">
+              {{ aide.description }}
+            </p>
+          </div>
+        </UserActionSectionRow>
+      </BrandBackgroundContainer>
+    </template>
   </template>
 </template>
 
