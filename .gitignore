@@ -27,3 +27,4 @@ logs
 # ai helper files
 claude
 claude.sh
+data/form-submissions/*

@@ -38,6 +38,13 @@ export const useFormStore = defineStore('form', () => {
     lastAnsweredQuestionId.value = questionId
     lastAnsweredStepId.value = currentStepId.value
 
+    // Track question answer in Matomo
+    if (typeof window !== 'undefined' && (window as any)._paq) {
+      const { question } = findQuestionById(questionId)
+      const questionTitle = question?.title || questionId
+      ;(window as any)._paq.push(['trackEvent', 'Question', 'Answer', questionTitle])
+    }
+
     // We no longer update history here - that happens in navigation methods
   }
 
@@ -147,7 +154,7 @@ export const useFormStore = defineStore('form', () => {
     // First check if it's a triggered question
     const triggeredQuestion = currentQuestionId.value ? findTriggeredQuestion(currentQuestionId.value) : null
     if (triggeredQuestion) {
-      console.log('Current question is a triggered question:', triggeredQuestion)
+      console.warn('Current question is a triggered question:', triggeredQuestion)
       return triggeredQuestion
     }
 
@@ -160,7 +167,8 @@ export const useFormStore = defineStore('form', () => {
     const found = currentStep.value.questions.find(
       question => question.id === currentQuestionId.value
     )
-    console.log('Found Current question ?', found)
+
+    console.warn('Found Current question ?', found)
     return found
   })
 
