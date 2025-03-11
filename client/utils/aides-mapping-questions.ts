@@ -43,16 +43,3 @@ export const menagesQuestionsVariables: { [aidesSimplifieesKey: string]: OpenFis
 }
 
 export const foyersFiscauxQuestionsVariables: { [aidesSimplifieesKey: string]: OpenFiscaMapping } = {}
-
-// TODO Attendu périmètre complet =
-// {   "aide-personnalisee-logement": 0,
-//     "aide-personnalisee-logement-eligibilite" : true,
-//     "mobilite-parcoursup": 0,
-//     "mobilite-parcoursup-eligibilite": true,
-//     "mobilite-master-1": 0,
-//     "mobilite-master-1-eligibilite": true,
-//     "locapass": 1500,
-//     "locapass-eligibilite": false,
-//     "garantie-visale": 100,
-//     "garantie-visale-eligibilite": false
-// }
