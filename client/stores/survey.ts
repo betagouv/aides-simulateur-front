@@ -42,7 +42,7 @@ export const useFormStore = defineStore('form', () => {
     if (typeof window !== 'undefined' && (window as any)._paq) {
       const { question } = findQuestionById(questionId)
       const questionTitle = question?.title || questionId
-      ;(window as any)._paq.push(['trackEvent', 'Question', 'Answer', questionTitle])
+      ;(window as any)._paq.push(['trackEvent', 'Survey', 'Answer', questionTitle, value])
     }
 
     // We no longer update history here - that happens in navigation methods

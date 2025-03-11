@@ -135,7 +135,7 @@ async function submitForm () {
 
     // Track form submission in Matomo
     if (typeof window !== 'undefined' && (window as any)._paq) {
-      (window as any)._paq.push(['trackEvent', 'Form', 'Submit', simulateurId])
+      (window as any)._paq.push(['trackEvent', 'Survey', 'Submit', simulateurId])
     }
 
     // Store form data and results
