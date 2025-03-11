@@ -57,6 +57,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: true,
   srcDir: 'client/',
+  serverDir: 'server/',
 
   modules: [
     'vue-dsfr-nuxt-module',

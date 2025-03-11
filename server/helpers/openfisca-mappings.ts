@@ -1,10 +1,5 @@
 // checked with openfisca-france v169.16.16
 
-export interface OpenFiscaMapping {
-  openfiscaVariableName: string
-  period: 'ETERNITY' | 'YEAR' | 'MONTH'
-}
-
 export const individusVariables: { [aidesSimplifieesKey: string]: OpenFiscaMapping } = {
   'date_naissance': { // '2000-01-01'
     openfiscaVariableName: 'date_naissance',

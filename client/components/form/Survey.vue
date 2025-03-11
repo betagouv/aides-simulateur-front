@@ -122,19 +122,48 @@ function handlePrevious () {
 }
 
 async function submitForm () {
+  const mockAnswers = {
+    'statut-professionnel': 'actif',
+    'situation-professionnelle': 'stage',
+    'date-naissance': '1996-12-13',
+    'code-postal-nouvelle-ville': '75101',
+    'colocation': false,
+    'confirmation-end': ['confirmation-end-oui'],
+    'habitation-avec-autre-personnes': true,
+    'habiter-avec-conjoint': false,
+    'handicap': false,
+    'logement-chambre': false,
+    'logement-parente-proprietaire': false,
+    'loyer-besoin-cautions': true,
+    'loyer-besoin-garant': true,
+    'loyer-difficile-payer': true,
+    'loyer-montant-charges': 100,
+    'loyer-montant-mensuel': 400,
+    'nombre-personnes-logement': 1,
+    'salaire-imposable': 200,
+    'situation-logement': 'locataire_meuble',
+    'statut-marital': 'celibataire',
+    'type-logement': 'logement-non-meuble',
+    'type-revenus': ['revenus-activite'],
+    'apl': null,
+  }
+  answers.value = mockAnswers
   // Process the final form data from the answers store
   // eslint-disable-next-line no-console
   console.log('Form submitted with answers:', answers.value)
 
-  // Sending this data to a web API to calculate a set of 'aides'
+  // Call our server API endpoint instead of directly calling OpenFisca
   try {
-    const request: OpenFiscaCalculationRequest = buildRequest(answers.value)
-    const results = await fetchOpenFiscaFranceCalculation(request)
+    const results = await $fetch('/api/calculate-aides', {
+      method: 'POST',
+      body: {
+        answers: unref(answers),
+      }
+    })
     // eslint-disable-next-line no-console
-    console.debug(results)
+    console.log('Results from our API:', results)
   }
   catch (error) {
-    // TODO Handle the error more professionnally and display a message to the user :)
     console.error('Erreur inattendue lors de la soumission du formulaire et de l\'appel au calcul :', error)
   }
 }
@@ -156,6 +185,11 @@ const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
 </script>
 
 <template>
+  <DsfrButton
+    label="Soumettre"
+    icon="ri-send-plane-fill"
+    @click="() => submitForm()"
+  />
   <div>
     <!-- Écran de choix (reprendre ou recommencer) -->
     <div
@@ -216,9 +250,7 @@ const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
             >
               {{ currentQuestion?.title }}
             </component>
-            <p
-              v-if="currentQuestion?.description"
-            >
+            <p v-if="currentQuestion?.description">
               {{ currentQuestion?.description }}
             </p>
           </hgroup>

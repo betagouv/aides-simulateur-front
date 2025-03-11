@@ -23,10 +23,6 @@ declare global {
     }>
   }
 
-  interface SurveyAnswer {
-    [key: string]: string | number | boolean | undefined
-  }
-
   interface SurveyStep {
     id: string
     title: string

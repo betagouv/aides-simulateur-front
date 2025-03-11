@@ -1,3 +1,23 @@
+import {
+  UndefinedValueError,
+  UnexpectedValueError,
+  UnknownEntityError,
+  UnknownVariableError
+} from './openfisca-errors'
+
+import {
+  famillesVariables,
+  individusVariables,
+  menagesVariables
+} from './openfisca-mappings'
+
+enum Entites {
+  Individus = 'individus',
+  Menages = 'menages',
+  FoyerFiscaux = 'foyers_fiscaux',
+  Familles = 'familles'
+}
+
 const YEAR = '2025'
 const MONTH = `${YEAR}-01`
 const ETERNITY_PERIOD = 'ETERNITY'
@@ -31,8 +51,6 @@ function getEntityId (entity: Entites): string {
 }
 
 function initRequest (): OpenFiscaCalculationRequest {
-  // eslint-disable-next-line no-console
-  console.debug('initRequest...')
   const request: OpenFiscaCalculationRequest = {
     individus: {
       [INDIVIDU_ID]: {}
@@ -60,14 +78,9 @@ function initRequest (): OpenFiscaCalculationRequest {
   return request
 }
 
-/**
- * for a survey answer found in the mapping, format it for an openfisca web API request
- * with the openfisca variable period
- * and the answer value already validated for openfisca usage
- */
 function formatSurveyAnswerToRequest (
   variableMapping: OpenFiscaMapping,
-  value: boolean | number | string // VariableValueOnPeriod allowed types
+  value: boolean | number | string
 ) {
   const result: { [key: string]: VariableValueOnPeriod } = {}
   const period = variableMapping.period === 'MONTH' ? MONTH : ETERNITY_PERIOD
@@ -77,11 +90,6 @@ function formatSurveyAnswerToRequest (
   return result
 }
 
-/**
- * one step of the openfisca web API request building:
- * for a survey answer found in the mapping, add the answer data to the given request
- * @thorows UnknownEntityError if the given entity is not referenced for the current simulation
- */
 function addSurveyAnswerToRequest (
   answerKey: string,
   answerValue: boolean | number | string,
@@ -102,46 +110,11 @@ function addSurveyAnswerToRequest (
   return request
 }
 
-export function buildRequest (answers: SurveyAnswer[]): OpenFiscaCalculationRequest {
-  // eslint-disable-next-line no-console
-  console.debug('buildRequest...')
+export function buildRequest (answers: SurveyAnswer): OpenFiscaCalculationRequest {
   let request: OpenFiscaCalculationRequest = initRequest()
-  // sets: request[some entity][the entity id]
-  // eslint-disable-next-line no-console
-  console.debug(request)
 
-  const mockAnswers = {
-    'statut-professionnel': 'actif',
-    'situation-professionnelle': 'stage',
-    'date-naissance': '1996-12-13',
-    'code-postal-nouvelle-ville': '75101',
-    'colocation': false,
-    'confirmation-end': ['confirmation-end-oui'],
-    'date-naissance': '1996-12-13',
-    'habitation-avec-autre-personnes': true,
-    'habiter-avec-conjoint': false,
-    'handicap': false,
-    'logement-chambre': false,
-    'logement-parente-proprietaire': false,
-    'loyer-besoin-cautions': true,
-    'loyer-besoin-garant': true,
-    'loyer-difficile-payer': true,
-    'loyer-montant-charges': 100,
-    'loyer-montant-mensuel': 400,
-    'nombre-personnes-logement': 1,
-    'salaire-imposable': 200,
-    'situation-logement': 'locataire_meuble',
-    'situation-professionnelle': 'stage',
-    'statut-marital': 'celibataire',
-    'statut-professionnel': 'actif',
-    'type-logement': 'logement-non-meuble',
-    'type-revenus': ['revenus-activite']
-  }
-
-  for (const [answerKey, answerValue] of Object.entries(mockAnswers)) {
-  // for (const [answerKey, answerValue] of Object.entries(answers)) {
+  for (const [answerKey, answerValue] of Object.entries(answers)) {
     try {
-      // answerValue: boolean | number | string | undefined
       if (answerValue === undefined) {
         throw new UndefinedValueError(answerKey)
       }
@@ -159,51 +132,13 @@ export function buildRequest (answers: SurveyAnswer[]): OpenFiscaCalculationRequ
         request = addSurveyAnswerToRequest(answerKey, answerValue, famillesVariables[answerKey], Entites.Familles, request)
       }
       else {
-        console.error(`Variable inconnue : ${answerKey}`)
+        console.warn(`Variable inconnue : ${answerKey}`)
         throw new UnknownVariableError(answerKey)
       }
     }
     catch (anyError) {
-      // UnknownVariableError, UnknownEntityError, UnexpectedValueError, UndefinedValueError
-      console.error(`Donnée '${answerKey}' non transcrite dans la requête de calcul suite à l'erreur '${anyError}'.`)
+      console.warn(`Donnée '${answerKey}' non transcrite dans la requête de calcul suite à l'erreur '${anyError}'.`)
     }
   }
   return request
-}
-
-export async function fetchOpenFiscaFranceCalculation (
-  request: OpenFiscaCalculationRequest,
-): Promise<OpenFiscaCalculationResponse> {
-  // eslint-disable-next-line no-console
-  console.debug('fetchOpenFiscaFranceCalculation...')
-  // eslint-disable-next-line no-console
-  console.debug('request:')
-  // eslint-disable-next-line no-console
-  console.debug(request)
-
-  const requestSettings = {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(request),
-  }
-
-  const config = useRuntimeConfig()
-  const response = await fetch(
-    config.public.apiEndpointOpenFiscaFranceCalculate,
-    requestSettings,
-  )
-
-  let result = await response.json()
-
-  if (!response.ok) {
-    result = {
-      error: response.status,
-      message: result
-    }
-  }
-
-  return result
 }
