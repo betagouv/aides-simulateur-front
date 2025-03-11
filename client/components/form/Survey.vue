@@ -188,7 +188,7 @@ const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
     <!-- Écran de choix (reprendre ou recommencer) -->
     <div
       v-if="showChoiceScreen"
-      class="fr-py-4w"
+      class="fr-p-4w"
     >
       <div class="fr-card fr-card--shadow fr-p-3w">
         <h2 class="fr-h4">

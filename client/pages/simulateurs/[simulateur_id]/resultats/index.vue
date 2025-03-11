@@ -33,27 +33,49 @@ const crumbs = computed(() => {
     { text: 'Résultats', to: `/simulateurs/${simulateurId}/resultats` }
   ]
 })
+
+const { isIframe } = useIframeDisplay()
 </script>
 
 <template>
   <template v-if="simulateur">
-    <BrandBackgroundContainer>
-      <BreadcrumbSectionContainer :crumbs="crumbs" />
-      <SimulationHeaderSection v-bind="simulateur" />
-      <UserActionSectionRow>
-        <div>
-          <h2>Les résultats de votre simulation</h2>
-          <DsfrLink
-            icon-before
-            label="Revenir à ma simulation"
-            :link="{
-              to: `/simulateurs/${simulateurId}`,
-            }"
-            :icon="{ name: 'ri:arrow-left-line', ssr: true }"
-          />
-          <p>Voici les résultats de votre simulation</p>
-        </div>
-      </UserActionSectionRow>
-    </BrandBackgroundContainer>
+    <template
+      v-if="isIframe"
+    >
+      <div>
+        <h2>Les résultats de votre simulation</h2>
+        <DsfrLink
+          icon-before
+          label="Revenir à ma simulation"
+          :link="{
+            to: `/simulateurs/${simulateurId}`,
+            query: route.query,
+          }"
+          :icon="{ name: 'ri:arrow-left-line', ssr: true }"
+        />
+        <p>Voici les résultats de votre simulation</p>
+      </div>
+    </template>
+    <template v-else>
+      <BrandBackgroundContainer>
+        <BreadcrumbSectionContainer :crumbs="crumbs" />
+        <SimulationHeaderSection v-bind="simulateur" />
+        <UserActionSectionRow>
+          <div>
+            <h2>Les résultats de votre simulation</h2>
+            <DsfrLink
+              icon-before
+              label="Revenir à ma simulation"
+              :link="{
+                to: `/simulateurs/${simulateurId}`,
+                query: route.query,
+              }"
+              :icon="{ name: 'ri:arrow-left-line', ssr: true }"
+            />
+            <p>Voici les résultats de votre simulation</p>
+          </div>
+        </UserActionSectionRow>
+      </BrandBackgroundContainer>
+    </template>
   </template>
 </template>

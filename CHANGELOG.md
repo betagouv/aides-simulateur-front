@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.9.2 [#56](https://github.com/betagouv/aides-simulateur-front/pull/56)
+* Corrections
+* Détail :
+  * Corrige le style des vues intégrées dans l'iframe
+  * Met à jour le contenu de la page 'Intégrer nos simulateurs'
+
 ## 0.9.1 [#55](https://github.com/betagouv/aides-simulateur-front/pull/55)
 * Amélioration de la partie admin
 * Détail : 
