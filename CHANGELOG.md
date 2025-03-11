@@ -1,4 +1,11 @@
 # CHANGELOG
+
+## 0.9.1 [#55](https://github.com/betagouv/aides-simulateur-front/pull/55)
+* Amélioration de la partie admin
+* Détail : 
+  * Sécurité : requête POST au lieu de GET pour accéder à l'admin
+  * Bouton de déconnexion et stockage dans la session du mdp
+
 ## 0.9.0 [#54](https://github.com/betagouv/aides-simulateur-front/pull/54)
 * Ajout d'une mini-interface admin et amélioration des stats
 * Détail : 
