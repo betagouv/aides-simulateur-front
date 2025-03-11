@@ -1,4 +1,11 @@
 import {
+  famillesVariables,
+  foyersFiscauxVariables,
+  individusVariables,
+  menagesVariables
+} from '@/utils/aides-mapping-ids'
+
+import {
   famillesQuestionsVariables,
   foyersFiscauxQuestionsVariables,
   individusQuestionsVariables,
@@ -161,6 +168,9 @@ function addAnswersToRequest (
       }
       else if (answerKey in famillesVariables) {
         request = addSurveyAnswerToRequest(answerKey, answerValue, famillesVariables[answerKey], Entites.Familles, request)
+      }
+      else if (answerKey in foyersFiscauxVariables) {
+        request = addSurveyAnswerToRequest(answerKey, answerValue, foyersFiscauxVariables[answerKey], Entites.FoyerFiscaux, request)
       }
       else {
         console.error(`Variable d'entrée de formulaire inconnue : ${answerKey}`)
