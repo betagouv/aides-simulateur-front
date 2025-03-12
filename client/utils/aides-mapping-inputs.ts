@@ -6,7 +6,7 @@ export interface OpenFiscaMapping {
 }
 
 export const individusVariables: { [aidesSimplifieesKey: string]: OpenFiscaMapping } = {
-  'date_naissance': { // '2000-01-01'
+  'date-naissance': { // '2000-01-01'
     openfiscaVariableName: 'date_naissance',
     period: 'ETERNITY'
   },
