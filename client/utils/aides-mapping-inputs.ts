@@ -28,6 +28,15 @@ export const individusVariables: { [aidesSimplifieesKey: string]: OpenFiscaMappi
     // possible values: https://legislation.fr.openfisca.org/activite
     openfiscaVariableName: 'activite',
     period: 'MONTH'
+  },
+  'situation-professionnelle': { // "salarie-hors-alternance"
+    openfiscaVariableName: 'activite',
+    period: 'MONTH'
+    // TODO: [FORM] distinguish between 'actif'/'chomage' then between 'actif' types ('alternant', 'stagiaire'...)? 
+    // value "stage" => openfisca variable 'stagiaire'
+    // value "alternance" => openfisca variable 'alternant' (formation)
+    // value "salarie-hors-alternance" => openfisca variable 'activite' = TypesActivite.actif (or 'salaire_net' != 0 & ! 'alternant' || 'categorie_salarie' != 'non_pertinent')
+    // value "sans-emploi" => openfisca variable 'activite' = TypesActivite.chomeur
   }
 }
 
