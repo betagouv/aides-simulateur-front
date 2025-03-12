@@ -188,9 +188,16 @@ function addAnswersToRequest (
         throw new UnknownVariableError(answerKey)
       }
     }
-    catch (anyError) {
-      // UnknownVariableError, UnknownEntityError, UnexpectedValueError, UndefinedValueError
-      console.error(`Donnée '${answerKey}' non transcrite dans la requête de calcul suite à l'erreur '${anyError}'.`)
+    catch (error) {
+      if (
+        error instanceof UnknownVariableError  
+        || error instanceof UnknownEntityError 
+        || error instanceof UnexpectedValueError
+        || error instanceof UndefinedValueError) {
+        console.warn(`Donnée '${answerKey}' non transcrite dans la requête de calcul suite à l'erreur '${error}'.`)
+      } else {
+        console.error(`Donnée '${answerKey}' non transcrite dans la requête de calcul suite à l'erreur inattendue '${error}'.`);
+      }
     }
   }
   return request
