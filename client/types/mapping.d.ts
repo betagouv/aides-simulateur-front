@@ -7,8 +7,11 @@ declare global {
     // to improve the survey logic etc. but with no effect on the questions to calculate
 
     export type OpenFiscaMapping = {
-      openfiscaVariableName: string
-      period: 'ETERNITY' | 'YEAR' | 'MONTH'
+        openfiscaVariableName: string
+        period: 'ETERNITY' | 'YEAR' | 'MONTH'
+    } | {
+        dispatch: (answerKey: string, answerValue: boolean, periodType: 'ETERNITY' | 'YEAR' | 'MONTH') => unknown
+        period: 'ETERNITY' | 'YEAR' | 'MONTH'  
     }
 }
 

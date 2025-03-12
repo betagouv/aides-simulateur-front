@@ -51,6 +51,31 @@ function getEntityId (entity: Entites): string {
   }
 }
 
+export function dispatchSituationProfessionnelle(
+  answerKey: string,
+  answerValue: boolean | number | string,
+  periodType: 'ETERNITY' | 'YEAR' | 'MONTH'
+): unknown{
+  let openfiscaVariableName = undefined
+  
+  if (answerValue == "stage"){ 
+    openfiscaVariableName = 'stagiaire'
+    return formatSurveyAnswerToRequest(openfiscaVariableName, periodType, answerValue)
+  } else if (answerValue == "alternance"){
+    openfiscaVariableName = 'alternant'
+    return formatSurveyAnswerToRequest(openfiscaVariableName, periodType, answerValue)
+  } else if (answerValue == "salarie-hors-alternance"){
+    openfiscaVariableName = 'activite' // TypesActivite possible values: https://legislation.fr.openfisca.org/activite
+    return formatSurveyAnswerToRequest(openfiscaVariableName, periodType, 'actif')
+  } else if (answerValue == "sans-emploi"){
+    openfiscaVariableName = 'activite' // TypesActivite possible values: https://legislation.fr.openfisca.org/activite
+    return formatSurveyAnswerToRequest(openfiscaVariableName, periodType, 'chomeur')
+  } else {
+    throw new UnexpectedValueError(answerKey)
+  }  
+}
+
+
 function initRequest (): OpenFiscaCalculationRequest {
   // eslint-disable-next-line no-console
   console.debug('initRequest...')
@@ -87,16 +112,18 @@ function initRequest (): OpenFiscaCalculationRequest {
  * and the answer value already validated for openfisca usage
  */
 function formatSurveyAnswerToRequest (
-  variableMapping: OpenFiscaMapping,
+  openfiscaVariableName: string,
+  periodType: string,
   value: boolean | number | string // VariableValueOnPeriod allowed types
 ): { [openfiscaKey: string]: VariableValueOnPeriod } {
   const result: { [key: string]: VariableValueOnPeriod } = {}
-  const period = variableMapping.period === 'MONTH' ? MONTH : ETERNITY_PERIOD
-  result[variableMapping.openfiscaVariableName] = {
+  const period = periodType === 'MONTH' ? MONTH : ETERNITY_PERIOD
+  result[openfiscaVariableName] = {
     [period]: value
   }
   return result
 }
+
 
 /**
  * one step of the openfisca web API request building:
@@ -121,16 +148,21 @@ function addSurveyAnswerToRequest (
       throw new UnexpectedValueError(answerKey)
     }
 
-    const openfiscaVariableName: string = mapping.openfiscaVariableName
-    const formattedAnswer = formatSurveyAnswerToRequest(mapping, answerValue)
-
+    let formattedAnswer: { [openfiscaKey: string]: VariableValueOnPeriod } | undefined = undefined
+    if ('dispatch' in mapping){
+      formattedAnswer = mapping.dispatch(answerKey, answerValue, mapping.period) as { [openfiscaKey: string]: VariableValueOnPeriod }
+    } else { 
+      formattedAnswer = formatSurveyAnswerToRequest(mapping.openfiscaVariableName, mapping.period, answerValue)
+    }
+    let formattedVariableName = Object.keys(formattedAnswer)[0]
+    
     const entityId = getEntityId(entity)
     if (entityId === UNDEFINED_ENTITY_ID) {
       console.error(`Variable '${answerKey}' d'entité imprévue ou inconnue: ${entity}`)
       throw new UnknownEntityError(answerKey)
     }
 
-  request[entity][entityId][openfiscaVariableName] = { ...formattedAnswer[openfiscaVariableName] }
+  request[entity][entityId][formattedVariableName] = { ...formattedAnswer[formattedVariableName] }
   }
   return request
 }

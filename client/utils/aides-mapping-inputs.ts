@@ -1,3 +1,5 @@
+// mapping client/public/forms/demenagement-logement.json
+// to aides-calculatrice-back (openfisca-france here)
 // checked with openfisca-france v169.16.16
 
 export const individusVariables: { [aidesSimplifieesKey: string]: AidesSimplifieesMapping } = {
@@ -24,13 +26,9 @@ export const individusVariables: { [aidesSimplifieesKey: string]: AidesSimplifie
     period: 'MONTH'
   },
   'situation-professionnelle': { // "salarie-hors-alternance"
-    openfiscaVariableName: 'activite',
+    dispatch: dispatchSituationProfessionnelle,
     period: 'MONTH'
-    // TODO: [FORM] distinguish between 'actif'/'chomage' then between 'actif' types ('alternant', 'stagiaire'...)? 
-    // value "stage" => openfisca variable 'stagiaire'
-    // value "alternance" => openfisca variable 'alternant' (formation)
-    // value "salarie-hors-alternance" => openfisca variable 'activite' = TypesActivite.actif (or 'salaire_net' != 0 & ! 'alternant' || 'categorie_salarie' != 'non_pertinent')
-    // value "sans-emploi" => openfisca variable 'activite' = TypesActivite.chomeur
+    // TODO: [FORM] distinguish between 'actif'/'chomage' then between 'actif' types ('alternant', 'stagiaire'...)?
   },
   'habitation-avec-autre-personnes': { // false
     exclude: true
