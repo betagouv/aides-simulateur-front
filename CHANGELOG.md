@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 0.13.0 [#32](https://github.com/betagouv/aides-simulateur-front/pull/32)
+* Ajout de fonctionnalités.
+* Détails :
+  * Créé un store pour enregistrer les résultats d'une simulation
+  * Navigue vers la page résultats lorsqu'un l'api back retourne un résultat valide
+  * Dynamise la page de résultats avec les résultats enregistrés dans le store
+
 ## 0.12.2 [#61](https://github.com/betagouv/aides-simulateur-front/pull/61)
 * Ajout de fonctionnalités.
 * Détails :
