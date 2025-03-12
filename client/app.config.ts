@@ -32,5 +32,27 @@ export default defineAppConfig({
     personalDataLink: '/content/donnees-personnelles',
     cookiesLink: '/content/cookies',
     a11yComplianceLink: '/content/accessibilite',
+    ecosystemLinks: [
+      {
+        label: 'info.gouv.fr',
+        href: 'https://info.gouv.fr',
+        title: 'info.gouv.fr, nouvelle fenêtre',
+      },
+      {
+        label: 'service-public.fr',
+        href: 'https://service-public.fr',
+        title: 'service-public.fr, nouvelle fenêtre',
+      },
+      {
+        label: 'legifrance.gouv.fr',
+        href: 'https://legifrance.gouv.fr',
+        title: 'legifrance.gouv.fr, nouvelle fenêtre',
+      },
+      {
+        label: 'data.gouv.fr',
+        href: 'https://data.gouv.fr',
+        title: 'data.gouv.fr, nouvelle fenêtre',
+      },
+    ],
   }
 })
