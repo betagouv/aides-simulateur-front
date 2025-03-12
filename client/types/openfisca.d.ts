@@ -39,12 +39,6 @@ declare global {
   }
 
   type OpenFiscaCalculationResponse = OpenFiscaCalculationRequest | { error: string }
-
-  interface OpenFiscaAidesCalculationResponse {
-    [id: string]: boolean | number
-  }
-
-  type OpenFiscaCalculationResponse = OpenFiscaCalculationRequest | { error: string }
 }
 
 export {}

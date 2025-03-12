@@ -180,7 +180,7 @@ async function submitForm () {
     // eslint-disable-next-line no-console
     console.debug(openfiscaResponse)
 
-    const results: ResultAide = extractAidesResults(openfiscaResponse, questionsToApi)
+    const results: SimulationResultsAides = extractAidesResults(openfiscaResponse, questionsToApi)
     if (results) {
       resultStore.setResults(simulateurId, results)
       navigateTo(`/simulateurs/${simulateurId}/resultats`)
@@ -237,7 +237,6 @@ function restartForm () {
   // Focus the question after restarting
   focusQuestionContainer()
 }
-
 const surveyTitleTag = computed(() => isIframe.value ? 'h1' : 'h2')
 const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
 </script>
@@ -396,42 +395,42 @@ const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
               <RadioButtonQuestion
                 v-if="currentQuestion.type === 'radio'"
                 :question="currentQuestion"
-                :model-value="answers[currentQuestion.id]"
+                :model-value="(answers[currentQuestion.id] as string)"
                 @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
               />
 
               <BooleanQuestion
                 v-else-if="currentQuestion.type === 'boolean'"
                 :question="currentQuestion"
-                :model-value="answers[currentQuestion.id]"
+                :model-value="(answers[currentQuestion.id] as boolean)"
                 @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
               />
 
               <MultiSelectQuestion
                 v-else-if="currentQuestion.type === 'checkbox'"
                 :question="currentQuestion"
-                :model-value="answers[currentQuestion.id]"
+                :model-value="(answers[currentQuestion.id] as string[])"
                 @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
               />
 
               <NumberQuestion
                 v-else-if="currentQuestion.type === 'number'"
                 :question="currentQuestion"
-                :model-value="answers[currentQuestion.id]"
+                :model-value="(answers[currentQuestion.id] as number)"
                 @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
               />
 
               <DateQuestion
                 v-else-if="currentQuestion.type === 'date'"
                 :question="currentQuestion"
-                :model-value="answers[currentQuestion.id]"
+                :model-value="(answers[currentQuestion.id] as string)"
                 @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
               />
 
               <TextQuestion
                 v-else-if="currentQuestion.type === 'text'"
                 :question="currentQuestion"
-                :model-value="answers[currentQuestion.id]"
+                :model-value="(answers[currentQuestion.id] as string)"
                 :autocomplete-fn="getAutocompleteFn"
                 @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
               />

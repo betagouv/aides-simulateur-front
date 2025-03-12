@@ -4,8 +4,8 @@ const REQUESTED_MONTH_PERIOD = MONTH
 export function extractAidesResults(
     apiResponse: OpenFiscaCalculationResponse,
     resultsToExtract: string[]
-): ResultAide {
-    let results: ResultAide = {}
+): SimulationResultsAides {
+    let results: SimulationResultsAides = {}
     // for (const questionKey in resultsToExtract){
     //     try {
     //         if (questionKey in individusQuestionsVariables){
@@ -29,14 +29,14 @@ export function extractAidesResults(
     //       console.error(`Réponse à question '${questionKey}' non transcrite dans les résultats de simulation suite à l'erreur '${anyError}'.`)
     //     }
     // }
-    
+
     results = {
         'locapass-eligibilite': true,
         'mobilite-master-1': 1000,
         'mobilite-parcoursup': 500,
         'aide-personnalisee-logement': 172.78,
         'garantie-visale-eligibilite': true,
-        'garantie-visale': 1300  // maximum for one month != Ile de France 
+        'garantie-visale': 1300  // maximum for one month != Ile de France
     }
     return results
 }

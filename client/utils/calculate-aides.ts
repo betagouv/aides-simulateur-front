@@ -159,7 +159,7 @@ function addSurveyQuestionToRequest (
 
 function addAnswersToRequest (
   request: OpenFiscaCalculationRequest,
-  answers: SurveyAnswer[]
+  answers: SurveyAnswers
 ): OpenFiscaCalculationRequest {
   for (const [answerKey, answerValue] of Object.entries(answers)) {
     try {
@@ -228,7 +228,7 @@ function addQuestionsToRequest (
   return request
 }
 
-export function buildRequest (answers: SurveyAnswer[], questions: string[]): OpenFiscaCalculationRequest {
+export function buildRequest (answers: SurveyAnswers, questions: string[]): OpenFiscaCalculationRequest {
   // eslint-disable-next-line no-console
   console.debug('buildRequest...')
   let request: OpenFiscaCalculationRequest = initRequest()
@@ -244,7 +244,7 @@ export function buildRequest (answers: SurveyAnswer[], questions: string[]): Ope
 
 export async function fetchOpenFiscaFranceCalculation (
   request: OpenFiscaCalculationRequest,
-): Promise<OpenFiscaAidesCalculationResponse> {
+): Promise<OpenFiscaCalculationResponse> {
   // eslint-disable-next-line no-console
   console.debug('fetchOpenFiscaFranceCalculation...')
   // eslint-disable-next-line no-console

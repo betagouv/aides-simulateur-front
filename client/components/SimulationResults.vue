@@ -2,7 +2,7 @@
 import type { DsfrSegmentedSetProps } from '@gouvminint/vue-dsfr'
 
 const props = defineProps<{
-  results: OpenFiscaAidesCalculationResponse
+  results: SimulationResultsAides
   simulateurId: string
   simulateurTitle: string
   simulationDateTime: {

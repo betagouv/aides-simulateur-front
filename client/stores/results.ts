@@ -1,7 +1,7 @@
 export const useResultsStore = defineStore('results', () => {
-  const results = ref<{ [id: string]: OpenFiscaAidesCalculationResponse }> ({})
+  const results = ref<{ [id: string]: SimulationResultsAides }> ({})
 
-  const setResults = (simulateurId: string, data: OpenFiscaAidesCalculationResponse) => {
+  const setResults = (simulateurId: string, data: SimulationResultsAides) => {
     results.value[simulateurId] = data
   }
 

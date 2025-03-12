@@ -2,7 +2,7 @@ declare global {
 
   type TypeAide = 'pret' | 'garantie' | 'caution' | 'periode' | 'une-fois' | 'reduction-impots' | 'aide-materielle' | 'financements' | 'mensuelle'
 
-  interface ResultAide { [aidesSimplifieesKey: string]: boolean | number }
+  interface SimulationResultsAides { [aidesSimplifieesKey: string]: boolean | number }
 
   interface RawAide {
     id: string

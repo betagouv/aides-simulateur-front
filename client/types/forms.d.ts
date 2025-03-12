@@ -23,8 +23,8 @@ declare global {
     }>
   }
 
-  interface SurveyAnswer {
-    [key: string]: string | number | boolean | undefined
+  interface SurveyAnswers {
+    [key: string]: string | string[] | number | boolean | undefined
   }
 
   interface SurveyStep {

@@ -2,7 +2,7 @@
  * Transforms raw aides data from OpenFisca into rich content for UI display
  */
 export async function transformSimulationResults (
-  calculationResponse: OpenFiscaAidesCalculationResponse,
+  calculationResponse: SimulationResultsAides,
   simulateurId: string
 ): Promise<RichSimulationResults> {
   const rawAides: RawAide[] = Object.entries(calculationResponse)

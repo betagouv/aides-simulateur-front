@@ -1,6 +1,6 @@
 export const useFormStore = defineStore('form', () => {
   // Form answers storage
-  const answers = ref<Record<string, any>>({})
+  const answers = ref<SurveyAnswers>({})
 
   // Current question being displayed
   const currentQuestionId = ref<string | null>(null)
