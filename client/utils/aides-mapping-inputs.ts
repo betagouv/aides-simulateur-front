@@ -1,11 +1,6 @@
 // checked with openfisca-france v169.16.16
 
-export interface OpenFiscaMapping {
-  openfiscaVariableName: string
-  period: 'ETERNITY' | 'YEAR' | 'MONTH'
-}
-
-export const individusVariables: { [aidesSimplifieesKey: string]: OpenFiscaMapping } = {
+export const individusVariables: { [aidesSimplifieesKey: string]: AidesSimplifieesMapping } = {
   'date-naissance': { // '2000-01-01'
     openfiscaVariableName: 'date_naissance',
     period: 'ETERNITY'
@@ -18,10 +13,9 @@ export const individusVariables: { [aidesSimplifieesKey: string]: OpenFiscaMappi
     openfiscaVariableName: 'salaire_imposable',
     period: 'MONTH'
   },
-  'situation-familiale': { // 'celibataire'
-    // TODO: update aides-simplifiee variable to "marital" instead of "familiale"
-    // possible values: https://legislation.fr.openfisca.org/statut_marital
+  'statut-marital': { // 'celibataire'
     openfiscaVariableName: 'statut_marital',
+    // possible values: https://legislation.fr.openfisca.org/statut_marital
     period: 'MONTH'
   },
   'statut-professionnel': { // 'salarie'
@@ -37,10 +31,32 @@ export const individusVariables: { [aidesSimplifieesKey: string]: OpenFiscaMappi
     // value "alternance" => openfisca variable 'alternant' (formation)
     // value "salarie-hors-alternance" => openfisca variable 'activite' = TypesActivite.actif (or 'salaire_net' != 0 & ! 'alternant' || 'categorie_salarie' != 'non_pertinent')
     // value "sans-emploi" => openfisca variable 'activite' = TypesActivite.chomeur
+  },
+  'habitation-avec-autre-personnes': { // false
+    exclude: true
+  },
+  'nombre-personnes-logement': { // int
+    exclude: true
+  },
+  'loyer-difficile-payer': { // true
+    // TODO: link to APL calculation?
+    exclude: true
+  },
+  'loyer-besoin-garant': { // true
+    // TODO: link to Garantie visale calculation?
+    exclude: true
+  },
+  'loyer-besoin-cautions': {
+    // TODO: link to Locapass calculation?
+    exclude: true
+  },
+  'confirmation-end': {
+    // end of survey
+    exclude: true
   }
 }
 
-export const menagesVariables: { [aidesSimplifieesKey: string]: OpenFiscaMapping } = {
+export const menagesVariables: { [aidesSimplifieesKey: string]: AidesSimplifieesMapping } = {
   'code-postal-nouvelle-ville': { // '75015'
     openfiscaVariableName: 'depcom',
     period: 'MONTH'
@@ -72,14 +88,14 @@ export const menagesVariables: { [aidesSimplifieesKey: string]: OpenFiscaMapping
   }
 }
 
-export const famillesVariables: { [aidesSimplifieesKey: string]: OpenFiscaMapping } = {
+export const famillesVariables: { [aidesSimplifieesKey: string]: AidesSimplifieesMapping } = {
   'logement-parente-proprietaire': { // 'logement-parente-proprietaire-non' TODO: move to boolean value
     openfiscaVariableName: 'proprietaire_proche_famille',
     period: 'MONTH'
   }
 }
 
-export const foyersFiscauxVariables: { [aidesSimplifieesKey: string]: OpenFiscaMapping } = {}
+export const foyersFiscauxVariables: { [aidesSimplifieesKey: string]: AidesSimplifieesMapping } = {}
 
 // TODO check what these variables mean:
 // confirmation-end

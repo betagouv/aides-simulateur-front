@@ -89,7 +89,7 @@ function initRequest (): OpenFiscaCalculationRequest {
 function formatSurveyAnswerToRequest (
   variableMapping: OpenFiscaMapping,
   value: boolean | number | string // VariableValueOnPeriod allowed types
-) {
+): { [openfiscaKey: string]: VariableValueOnPeriod } {
   const result: { [key: string]: VariableValueOnPeriod } = {}
   const period = variableMapping.period === 'MONTH' ? MONTH : ETERNITY_PERIOD
   result[variableMapping.openfiscaVariableName] = {
@@ -101,25 +101,28 @@ function formatSurveyAnswerToRequest (
 /**
  * one step of the openfisca web API request building:
  * for a survey answer found in the mapping, add the answer data to the given request
+ * unless it's a survey answer that should not be sent to the calculation (excluded answers)
  * @thorows UnknownEntityError if the given entity is not referenced for the current simulation
  */
 function addSurveyAnswerToRequest (
   answerKey: string,
   answerValue: boolean | number | string,
-  mapping: OpenFiscaMapping,
+  mapping: AidesSimplifieesMapping,
   entity: Entites,
   request: OpenFiscaCalculationRequest
 ): OpenFiscaCalculationRequest {
-  const openfiscaVariableName = mapping.openfiscaVariableName
-  const formattedAnswer = formatSurveyAnswerToRequest(mapping, answerValue)
+  if (! ('exclude' in mapping) ) {
+    const openfiscaVariableName: string = mapping.openfiscaVariableName
+    const formattedAnswer = formatSurveyAnswerToRequest(mapping, answerValue)
 
-  const entityId = getEntityId(entity)
-  if (entityId === UNDEFINED_ENTITY_ID) {
-    console.error(`Variable '${answerKey}' d'entité imprévue ou inconne: ${entity}`)
-    throw new UnknownEntityError(answerKey)
-  }
+    const entityId = getEntityId(entity)
+    if (entityId === UNDEFINED_ENTITY_ID) {
+      console.error(`Variable '${answerKey}' d'entité imprévue ou inconnue: ${entity}`)
+      throw new UnknownEntityError(answerKey)
+    }
 
   request[entity][entityId][openfiscaVariableName] = { ...formattedAnswer[openfiscaVariableName] }
+  }
   return request
 }
 
@@ -128,11 +131,12 @@ function addSurveyAnswerToRequest (
  * to calculate the variable defined in variableMapping
  */
 function formatSurveyQuestionToRequest (
-  variableMapping: OpenFiscaMapping
+  openfiscaVariableName: string,
+  periodType: string
 ) {
   const result: { [key: string]: VariableToCalculateOnPeriod } = {}
-  const period = variableMapping.period === 'MONTH' ? MONTH : ETERNITY_PERIOD
-  result[variableMapping.openfiscaVariableName] = {
+  const period = periodType === 'MONTH' ? MONTH : ETERNITY_PERIOD
+  result[openfiscaVariableName] = {
     [period]: null
   }
   return result
@@ -145,7 +149,7 @@ function addSurveyQuestionToRequest (
   request: OpenFiscaCalculationRequest
 ): OpenFiscaCalculationRequest {
   const openfiscaVariableName = mapping.openfiscaVariableName
-  const formattedQuestion = formatSurveyQuestionToRequest(mapping)
+  const formattedQuestion = formatSurveyQuestionToRequest(openfiscaVariableName, mapping.period)
 
   const entityId = getEntityId(entity)
   if (entityId === UNDEFINED_ENTITY_ID) {
