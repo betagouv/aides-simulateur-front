@@ -12,6 +12,9 @@ const simulateurId = props.simulateurId
 // État pour afficher ou non l'écran de choix
 const showChoiceScreen = ref(false)
 
+// Etat pour afficher ou non l'écran de bienvenue
+const showWelcomeScreen = ref(false)
+
 // Get iframe display information
 const { isIframe, getIframeSource } = useIframeDisplay()
 
@@ -110,12 +113,13 @@ onMounted(async () => {
 
     // Afficher l'écran de choix si un formulaire est en cours
     showChoiceScreen.value = hasInProgressForm.value && !doResume.value
+    showWelcomeScreen.value = !hasInProgressForm.value && !doResume.value
 
     // Track form start in Matomo
     if (typeof window !== 'undefined' && (window as any)._paq) {
       const source = isIframe.value ? `iframe@${getIframeSource()}` : 'website'
       const category = `[${simulateurId}][${source}]Survey`
-      ;(window as any)._paq.push(['trackEvent', category, 'Start'])
+        ; (window as any)._paq.push(['trackEvent', category, 'Start'])
     }
   }
   catch (error) {
@@ -123,6 +127,10 @@ onMounted(async () => {
     isLoading.value = false
   }
 })
+
+function handleStart () {
+  showWelcomeScreen.value = false
+}
 
 // Handle updates from question components
 function handleQuestionUpdate (questionId: string, value: any) {
@@ -176,7 +184,7 @@ async function submitForm () {
     if (typeof window !== 'undefined' && (window as any)._paq) {
       const source = isIframe.value ? `iframe@${getIframeSource()}` : 'website'
       const category = `[${simulateurId}][${source}]Survey`
-      ;(window as any)._paq.push(['trackEvent', category, 'Submit'])
+        ; (window as any)._paq.push(['trackEvent', category, 'Submit'])
     }
 
     // Store form data and results
@@ -212,12 +220,14 @@ async function submitForm () {
 function resumeForm () {
   goToLastAnsweredQuestion()
   showChoiceScreen.value = false
+  showWelcomeScreen.value = false
   // Focus the question after resuming
   focusQuestionContainer()
 }
 
 function restartForm () {
   resetForm()
+  showWelcomeScreen.value = true
   showChoiceScreen.value = false
   // Focus the question after restarting
   focusQuestionContainer()
@@ -230,12 +240,13 @@ const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
 <template>
   <div>
     <!-- Écran de choix (reprendre ou recommencer) -->
-    <div
-      v-if="showChoiceScreen"
-      class="fr-p-4w"
-    >
+    <div v-if="showChoiceScreen">
       <div class="fr-card fr-card--shadow fr-p-3w">
         <h2 class="fr-h4">
+          <VIcon
+            name="ri:information-line"
+            ssr
+          />
           Vous avez un formulaire en cours
         </h2>
         <p class="fr-text--bold">
@@ -255,6 +266,67 @@ const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
               secondary: true,
               icon: { name: 'ri:restart-line', ssr: true },
               onClick: restartForm,
+            },
+          ]"
+        />
+      </div>
+    </div>
+    <!-- Écran de bienvenue -->
+    <div v-else-if="showWelcomeScreen">
+      <div class="fr-card fr-card--shadow fr-p-3w">
+        <h2 class="fr-h4">
+          <VIcon
+            name="ri:information-line"
+            ssr
+          />
+          Un simulateur en construction
+        </h2>
+        <p>
+          <span class="fr-text--bold">Bienvenue !</span>
+          Ce simulateur vous permet d’estimer 5 aides financières pour le logement et le déménagement, en particulier
+          destinées aux étudiants.
+          <DsfrLink
+            :link="{
+              to: '/aides',
+              target: '__blank',
+            }"
+            label="Consulter la liste des aides couvertes."
+            :icon="{ name: 'ri:arrow-right-line', ssr: true }"
+          />
+        </p>
+        <p>
+          Nous continuons à l’améliorer. Vos retours sont précieux :
+          <ul>
+            <li>
+              Par mail à l'adresse <DsfrLink
+                :link="{
+                  to: 'mailto:aides.simplifiees@numerique.gouv.fr',
+                }"
+                :icon="{ name: 'ri:mail-line', ssr: true }"
+                label="aides.simplifiees@numerique.gouv.fr"
+              />
+            </li>
+            <li>
+              Via <DsfrLink
+                :icon="{ name: 'ri:external-link-line', ssr: true }"
+                :link="{
+                  target: '__blank',
+                  to: 'https://tally.so/r/w27b9D',
+                }"
+                label="le questionnaire de satisfaction"
+              />
+            </li>
+          </ul>
+          Merci pour votre aide !
+        </p>
+
+        <DsfrButtonGroup
+          inline-layout-when="md"
+          :buttons="[
+            {
+              label: 'Commencer la simulation',
+              icon: { name: 'ri:play-line', ssr: true },
+              onClick: handleStart,
             },
           ]"
         />
@@ -300,9 +372,7 @@ const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
               >
                 {{ currentQuestion?.title }}
               </component>
-              <p
-                v-if="currentQuestion?.description"
-              >
+              <p v-if="currentQuestion?.description">
                 {{ currentQuestion?.description }}
               </p>
             </hgroup>

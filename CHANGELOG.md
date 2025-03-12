@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.12.2 [#61](https://github.com/betagouv/aides-simulateur-front/pull/61)
+* Ajout de fonctionnalités.
+* Détails :
+  * Ajoute un écran de démarrage au formulaire
+
 ## 0.12.1 [#59](https://github.com/betagouv/aides-simulateur-front/pull/59)
 
 * Amélioration de l'accessibilité
