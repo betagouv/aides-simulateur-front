@@ -11,11 +11,7 @@ const { data: simulateurs } = useAsyncData('simulateurs', () => {
     return simulateurs.map((simulateur) => {
       return {
         id: simulateur.path.split('/').pop(),
-        /**
-         * /!\ le champ 'titre' est défini par le rédacteur dans le fichier
-         * !== du champ 'title' (qui correspond au nom dans le filesystem)
-         */
-        title: simulateur.titre,
+        titre: simulateur.titre as string,
       }
     })
   }
@@ -42,7 +38,7 @@ setBreadcrumbs([
         >
           <div class="fr-col-12 fr-col-sm-6 fr-col-md-4">
             <DsfrCard
-              :title="simulateur.title"
+              :title="simulateur.titre"
               description=""
               :link="`/simulateurs/${simulateur.id}`"
             />

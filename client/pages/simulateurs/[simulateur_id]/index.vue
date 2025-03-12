@@ -2,7 +2,7 @@
 import { autocompleteFunctions } from '@/utils/autocompleteFunctions'
 
 definePageMeta({
-  layout: 'default',
+  layout: 'user-simulation',
   middleware: 'check-iframe-layout',
   validate: getContentRouteValidator('simulateur_id')
 })
@@ -14,13 +14,16 @@ const { data: simulateur } = useAsyncData(`simulateur-${simulateurId}`, () => {
   return queryCollection('simulateurs')
     .where('stem', '=', `simulateurs/${simulateurId}`)
     .first()
-}, {
-  transform: (data) => {
-    return {
-      id: data.id,
-      title: data.titre,
-      pictogram: data.pictogramme
-    }
+})
+
+const { setBreadcrumbs } = useBreadcrumbStore()
+watchEffect(() => {
+  if (simulateur.value) {
+    setBreadcrumbs([
+      { text: 'Accueil', to: '/' },
+      { text: 'Simulateurs', to: '/simulateurs' },
+      { text: simulateur.value.titre, to: `/simulateurs/${simulateurId}` }
+    ])
   }
 })
 
@@ -34,40 +37,13 @@ onMounted(() => {
     document.head.appendChild(script)
   }
 })
-
-const { setBreadcrumbs } = useBreadcrumbStore()
-watchEffect(() => {
-  if (simulateur.value) {
-    setBreadcrumbs([
-      { text: 'Accueil', to: '/' },
-      { text: 'Simulateurs', to: '/simulateurs' },
-      { text: simulateur.value.title, to: `/simulateurs/${simulateurId}` }
-    ])
-  }
-})
 </script>
 
 <template>
   <template v-if="simulateur">
-    <div
-      v-if="isIframe"
-    >
-      <Survey
-        :simulateur-id="simulateurId"
-        :autocomplete-functions="autocompleteFunctions"
-      />
-    </div>
-    <div v-else>
-      <BrandBackgroundContainer>
-        <BreadcrumbSectionContainer />
-        <SimulationHeaderSection v-bind="simulateur" />
-        <UserActionSectionRow>
-          <Survey
-            :simulateur-id="simulateurId"
-            :autocomplete-functions="autocompleteFunctions"
-          />
-        </UserActionSectionRow>
-      </BrandBackgroundContainer>
-    </div>
+    <Survey
+      :simulateur-id="simulateurId"
+      :autocomplete-functions="autocompleteFunctions"
+    />
   </template>
 </template>
