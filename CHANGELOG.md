@@ -1,18 +1,34 @@
 # CHANGELOG
 
+## 0.14.0 [#60](https://github.com/betagouv/aides-simulateur-front/pull/60)
+
+* Ajout de fonctionnalités.
+* Détail :
+  * Renomme `client/utils/aides-mapping-ids.ts` en `client/utils/aides-mapping-inputs.ts`
+  * Transcrit les valeurs énumérées du formulaire en énuméré pour `aides-calculatrice-back`
+    * Évite les réponses `{ "error": ... }` de l'API web
+    * Ajoute le mécanisme de fonction `dispatch` pour la transcription d'inputs complexes
+    * Met à jour la configuration de la transcription dans `client/utils/aides-mapping-inputs.ts`
+  * Définit les périodes de la requête à partir de la date du jour de la simulation
+  * Construit le dictionnaire de résultats de simulation à partir de la réponse `aides-calculatrice-back`
+    * Déduit `aide-personnalisee-logement-eligibilite` du montant d'`aide-personnalisee-logement`
+  * Introduit `UnknownPeriodError` et `UnexpectedValueUpdateError`
+
 ## 0.13.0 [#32](https://github.com/betagouv/aides-simulateur-front/pull/32)
+
 * Ajout de fonctionnalités.
 * Détails :
   * Créé un store pour enregistrer les résultats d'une simulation
   * Navigue vers la page résultats lorsqu'un l'api back retourne un résultat valide
   * Dynamise la page de résultats avec les résultats enregistrés dans le store
 
-## 0.12.2 [#61](https://github.com/betagouv/aides-simulateur-front/pull/61)
+### 0.12.2 [#61](https://github.com/betagouv/aides-simulateur-front/pull/61)
+
 * Ajout de fonctionnalités.
 * Détails :
   * Ajoute un écran de démarrage au formulaire
 
-## 0.12.1 [#59](https://github.com/betagouv/aides-simulateur-front/pull/59)
+### 0.12.1 [#59](https://github.com/betagouv/aides-simulateur-front/pull/59)
 
 * Amélioration de l'accessibilité
 * Détails :
