@@ -163,12 +163,12 @@ async function submitForm () {
 
   // TODO : next step (to check with aides-calculatrice-back) = adding
   // 'locapass', 'mobilite-master-1-eligibilite', 'mobilite-parcoursup-eligibilite'
-  // TODO : also validate that we will not have 'aide-personnalisee-logement-eligibilite' for now
   const questionsToApi: string[] = [
     'locapass-eligibilite',
     'mobilite-master-1',
     'mobilite-parcoursup',
     'aide-personnalisee-logement',
+    // 'aide-personnalisee-logement-eligibilite' will be deduced from 'aide-personnalisee-logement' amount
     'garantie-visale-eligibilite',
     'garantie-visale'
   ]
@@ -179,13 +179,13 @@ async function submitForm () {
     const openfiscaResponse: OpenFiscaCalculationResponse = await fetchOpenFiscaFranceCalculation(request)
     
     // eslint-disable-next-line no-console
-    console.debug("Réponse reçue :")
+    console.debug('Réponse reçue :')
     // eslint-disable-next-line no-console
     console.debug(openfiscaResponse)
 
     const results: SimulationResultsAides = extractAidesResults(openfiscaResponse, questionsToApi)
     // eslint-disable-next-line no-console
-    console.debug("Résulats de simulation extraits :")
+    console.debug('Résulats de simulation extraits :')
     // eslint-disable-next-line no-console
     console.debug(results)
 

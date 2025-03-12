@@ -1,5 +1,15 @@
 import { getPeriod } from "./calculate-aides"
 
+
+function addDeducedResults(results: SimulationResultsAides){
+    // for now, we will not have a specific calculation of 'aide-personnalisee-logement-eligibilite' from the web API
+    if ('aide-personnalisee-logement' in results){
+        const apl_amount = results['aide-personnalisee-logement'] as number
+        results['aide-personnalisee-logement-eligibilite'] = apl_amount > 0
+    }
+    return results
+}
+
 export function extractAidesResults(
     apiResponse: OpenFiscaCalculationResponse,
     resultsToExtract: string[]
@@ -40,6 +50,8 @@ export function extractAidesResults(
         }
     })
 
+    results = addDeducedResults(results)
     console.warn(`Les questions suivantes étaient attendues mais n'ont pas été extraites de la réponse d'API : ${resultsToExtract.filter(key => !results.hasOwnProperty(key))}`)
+
     return results
 }
