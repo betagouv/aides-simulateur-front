@@ -38,6 +38,9 @@ export const individusVariables: { [aidesSimplifieesKey: string]: AidesSimplifie
   'nombre-personnes-logement': { // int
     exclude: true
   },
+  'type-revenus': {
+    exclude: true
+  },
   'loyer-difficile-payer': { // true
     // TODO: link to APL calculation?
     exclude: true

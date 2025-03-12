@@ -103,15 +103,24 @@ function formatSurveyAnswerToRequest (
  * for a survey answer found in the mapping, add the answer data to the given request
  * unless it's a survey answer that should not be sent to the calculation (excluded answers)
  * @thorows UnknownEntityError if the given entity is not referenced for the current simulation
+ * @throws UndefinedValueError if some issue occured on the survey input 
+ * @throws UnexpectedValueError if a mapping is defined on an unexpected form input type
  */
 function addSurveyAnswerToRequest (
   answerKey: string,
-  answerValue: boolean | number | string,
+  answerValue: boolean | number | string | undefined,
   mapping: AidesSimplifieesMapping,
   entity: Entites,
   request: OpenFiscaCalculationRequest
 ): OpenFiscaCalculationRequest {
   if (! ('exclude' in mapping) ) {
+    if (answerValue === undefined) {
+      throw new UndefinedValueError(answerKey)
+    }
+    if (typeof answerValue !== 'boolean' && typeof answerValue !== 'number' && typeof answerValue !== 'string') {
+      throw new UnexpectedValueError(answerKey)
+    }
+
     const openfiscaVariableName: string = mapping.openfiscaVariableName
     const formattedAnswer = formatSurveyAnswerToRequest(mapping, answerValue)
 
@@ -166,26 +175,19 @@ function addAnswersToRequest (
   answers: SurveyAnswers
 ): OpenFiscaCalculationRequest {
   for (const [answerKey, answerValue] of Object.entries(answers)) {
+    const typedValue = answerValue as unknown as string | number | boolean | undefined // bypass 'any' type infered by loop
     try {
-      // answerValue: boolean | number | string | undefined
-      if (answerValue === undefined) {
-        throw new UndefinedValueError(answerKey)
-      }
-      if (typeof answerValue !== 'boolean' && typeof answerValue !== 'number' && typeof answerValue !== 'string') {
-        throw new UnexpectedValueError(answerKey)
-      }
-
       if (answerKey in individusVariables) {
-        request = addSurveyAnswerToRequest(answerKey, answerValue, individusVariables[answerKey], Entites.Individus, request)
+        request = addSurveyAnswerToRequest(answerKey, typedValue, individusVariables[answerKey], Entites.Individus, request)
       }
       else if (answerKey in menagesVariables) {
-        request = addSurveyAnswerToRequest(answerKey, answerValue, menagesVariables[answerKey], Entites.Menages, request)
+        request = addSurveyAnswerToRequest(answerKey, typedValue, menagesVariables[answerKey], Entites.Menages, request)
       }
       else if (answerKey in famillesVariables) {
-        request = addSurveyAnswerToRequest(answerKey, answerValue, famillesVariables[answerKey], Entites.Familles, request)
+        request = addSurveyAnswerToRequest(answerKey, typedValue, famillesVariables[answerKey], Entites.Familles, request)
       }
       else if (answerKey in foyersFiscauxVariables) {
-        request = addSurveyAnswerToRequest(answerKey, answerValue, foyersFiscauxVariables[answerKey], Entites.FoyerFiscaux, request)
+        request = addSurveyAnswerToRequest(answerKey, typedValue, foyersFiscauxVariables[answerKey], Entites.FoyerFiscaux, request)
       }
       else {
         console.error(`Variable d'entrée de formulaire inconnue : ${answerKey}`)
@@ -247,7 +249,7 @@ export function buildRequest (answers: SurveyAnswers, questions: string[]): Open
   // eslint-disable-next-line no-console
   console.debug(request)
 
-  request = addAnswersToRequest (request, answers) // user answers
+  request = addAnswersToRequest(request, answers) // user answers
   request = addQuestionsToRequest(request, questions) // simulator questions to rules engine
 
   return request
