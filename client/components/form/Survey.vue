@@ -184,6 +184,11 @@ async function submitForm () {
     console.debug(openfiscaResponse)
 
     const results: SimulationResultsAides = extractAidesResults(openfiscaResponse, questionsToApi)
+    // eslint-disable-next-line no-console
+    console.debug("Résulats de simulation extraits :")
+    // eslint-disable-next-line no-console
+    console.debug(results)
+
     if (results) {
       resultStore.setResults(simulateurId, results)
       navigateTo(`/simulateurs/${simulateurId}/resultats`)

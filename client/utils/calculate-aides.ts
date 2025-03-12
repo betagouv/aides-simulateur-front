@@ -42,7 +42,7 @@ export const FOYER_FISCAL_ID = `foyer_fiscal_${INDIVIDU_ID}`
 export const FAMILLE_ID = `famille_${INDIVIDU_ID}`
 const UNDEFINED_ENTITY_ID = 'IDENTIFIANT_ENTITE_INCONNUE'
 
-enum Entites {
+export enum Entites {
   Individus = 'individus',
   Menages = 'menages',
   FoyerFiscaux = 'foyers_fiscaux',
@@ -71,7 +71,7 @@ function getEntityId (entity: Entites): string {
   }
 }
 
-function getPeriod(
+export function getPeriod(
   periodType: 'ETERNITY' | 'YEAR' | 'YEAR_ROLLING' | 'MONTH'
 ): string {
   switch(periodType){
@@ -80,7 +80,6 @@ function getPeriod(
     case 'YEAR':
       return YEAR
     case 'YEAR_ROLLING':
-      console.log(`YEAR_ROLLING ${YEAR_ROLLING}`)
       return YEAR_ROLLING
     case 'ETERNITY':
       return ETERNITY_PERIOD
