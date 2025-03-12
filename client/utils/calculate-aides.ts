@@ -3,7 +3,7 @@ import {
   foyersFiscauxVariables,
   individusVariables,
   menagesVariables
-} from '@/utils/aides-mapping-ids'
+} from '~/utils/aides-mapping-inputs'
 
 import {
   famillesQuestionsVariables,
