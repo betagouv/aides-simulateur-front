@@ -28,20 +28,17 @@ const { data: aide } = useAsyncData(`aide-${aideId}`, () => {
     .first()
 })
 
-const crumbs = computed(() => {
-  if (!aide.value) {
-    return []
+const { setBreadcrumbs } = useBreadcrumbStore()
+watchEffect(() => {
+  if (simulateur.value && aide.value) {
+    setBreadcrumbs([
+      { text: 'Accueil', to: '/' },
+      { text: 'Simulateurs', to: '/simulateurs' },
+      { text: simulateur.value.title, to: `/simulateurs/${simulateurId}` },
+      { text: 'Résultats', to: `/simulateurs/${simulateurId}/resultats` },
+      { text: aide.value.title, to: `/simulateurs/${simulateurId}/resultats/${aideId}` }
+    ])
   }
-  if (!simulateur.value) {
-    return []
-  }
-  return [
-    { text: 'Accueil', to: '/' },
-    { text: 'Simulateurs', to: '/simulateurs' },
-    { text: simulateur.value.title, to: `/simulateurs/${simulateurId}` },
-    { text: 'Résultats', to: `/simulateurs/${simulateurId}/resultats` },
-    { text: aide.value.title, to: `/simulateurs/${simulateurId}/${aideId}` }
-  ]
 })
 
 const { isIframe } = useIframeDisplay()
@@ -72,7 +69,7 @@ const { isIframe } = useIframeDisplay()
     </template>
     <template v-else>
       <BrandBackgroundContainer>
-        <BreadcrumbSectionContainer :crumbs="crumbs" />
+        <BreadcrumbSectionContainer />
         <SimulationHeaderSection v-bind="simulateur" />
         <UserActionSectionRow>
           <div>
@@ -82,10 +79,7 @@ const { isIframe } = useIframeDisplay()
             <DsfrLink
               icon-before
               label="Revenir à mes résultats"
-              :link="{
-                to: `/simulateurs/${simulateurId}/resultats`,
-                query: route.query,
-              }"
+              :to="`/simulateurs/${simulateurId}/resultats`"
               :icon="{ name: 'ri:arrow-left-line', ssr: true }"
             />
             <p class="fr-text--lg">

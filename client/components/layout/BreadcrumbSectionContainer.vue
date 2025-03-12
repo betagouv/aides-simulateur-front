@@ -1,10 +1,11 @@
 <script setup lang="ts">
 const props = withDefaults(defineProps<{
-  crumbs: { text: string, to: string }[]
   contrast?: boolean
 }>(), {
   contrast: false
 })
+
+const { breadcrumbs } = storeToRefs(useBreadcrumbStore())
 
 const styles = computed(() => {
   if (!props.contrast) {
@@ -22,10 +23,11 @@ const styles = computed(() => {
     <div class="fr-grid-row fr-grid-row--gutters">
       <div class="fr-col-12">
         <DsfrBreadcrumb
+          v-if="breadcrumbs.length"
           class="fr-m-0"
           :style="styles"
           breadcrumb-id="fil-ariane"
-          :links="crumbs"
+          :links="breadcrumbs"
         />
       </div>
     </div>

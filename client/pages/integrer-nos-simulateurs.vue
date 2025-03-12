@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-const crumbs = [
+const { setBreadcrumbs } = useBreadcrumbStore()
+setBreadcrumbs([
   { text: 'Accueil', to: '/' },
   { text: 'Intégrer nos simulateurs', to: '/integrer-nos-simulateurs' },
-]
+])
 
 // Choix des options d'affichage (inutilisé pour le moment)
 const displayOptions = ref([
@@ -68,10 +69,7 @@ const activeAccordion = ref<number>()
     contrast
     blue
   >
-    <BreadcrumbSectionContainer
-      contrast
-      :crumbs="crumbs"
-    />
+    <BreadcrumbSectionContainer contrast />
     <SectionContainer
       type="page-header"
     >

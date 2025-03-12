@@ -22,16 +22,16 @@ const { data: simulateur } = useAsyncData(`simulateur-${simulateurId}`, () => {
   }
 })
 
-const crumbs = computed(() => {
-  if (!simulateur.value) {
-    return []
+const { setBreadcrumbs } = useBreadcrumbStore()
+watchEffect(() => {
+  if (simulateur.value) {
+    setBreadcrumbs([
+      { text: 'Accueil', to: '/' },
+      { text: 'Simulateurs', to: '/simulateurs' },
+      { text: simulateur.value.title, to: `/simulateurs/${simulateurId}` },
+      { text: 'Résultats', to: `/simulateurs/${simulateurId}/resultats` }
+    ])
   }
-  return [
-    { text: 'Accueil', to: '/' },
-    { text: 'Simulateurs', to: '/simulateurs' },
-    { text: simulateur.value.title, to: `/simulateurs/${simulateurId}` },
-    { text: 'Résultats', to: `/simulateurs/${simulateurId}/resultats` }
-  ]
 })
 
 const { isIframe } = useIframeDisplay()
@@ -58,7 +58,7 @@ const { isIframe } = useIframeDisplay()
     </template>
     <template v-else>
       <BrandBackgroundContainer>
-        <BreadcrumbSectionContainer :crumbs="crumbs" />
+        <BreadcrumbSectionContainer />
         <SimulationHeaderSection v-bind="simulateur" />
         <UserActionSectionRow>
           <div>

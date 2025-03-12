@@ -13,21 +13,22 @@ const { data: aide } = useAsyncData(`aide-${aideId}`, () => {
     .where('stem', '=', `aides/${aideId}`)
     .first()
 })
-const crumbs = computed(() => {
-  if (!aide.value) {
-    return []
+
+const { setBreadcrumbs } = useBreadcrumbStore()
+watchEffect(() => {
+  if (aide.value) {
+    setBreadcrumbs([
+      { text: 'Accueil', to: '/' },
+      { text: 'Aides', to: '/aides' },
+      { text: aide.value.title, to: `/aides/${aideId}` }
+    ])
   }
-  return [
-    { text: 'Accueil', to: '/' },
-    { text: 'Aides', to: '/aides' },
-    { text: aide.value.title, to: `/aides/${aide.value.id}` }
-  ]
 })
 </script>
 
 <template>
   <BrandBackgroundContainer>
-    <BreadcrumbSectionContainer :crumbs="crumbs" />
+    <BreadcrumbSectionContainer />
     <SectionContainer
       v-if="aide"
       type="page-header"

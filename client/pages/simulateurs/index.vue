@@ -21,17 +21,16 @@ const { data: simulateurs } = useAsyncData('simulateurs', () => {
   }
 })
 
-const crumbs = computed(() => {
-  return [
-    { text: 'Accueil', to: '/' },
-    { text: 'Simulateurs', to: '/simulateurs' },
-  ]
-})
+const { setBreadcrumbs } = useBreadcrumbStore()
+setBreadcrumbs([
+  { text: 'Accueil', to: '/' },
+  { text: 'Simulateurs', to: '/simulateurs' },
+])
 </script>
 
 <template>
   <BrandBackgroundContainer>
-    <BreadcrumbSectionContainer :crumbs="crumbs" />
+    <BreadcrumbSectionContainer />
     <SectionContainer type="page-header">
       <div class="fr-grid-row fr-grid-row--gutters">
         <h1 class="fr-col-12">

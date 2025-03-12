@@ -35,15 +35,15 @@ onMounted(() => {
   }
 })
 
-const crumbs = computed(() => {
-  if (!simulateur.value) {
-    return []
+const { setBreadcrumbs } = useBreadcrumbStore()
+watchEffect(() => {
+  if (simulateur.value) {
+    setBreadcrumbs([
+      { text: 'Accueil', to: '/' },
+      { text: 'Simulateurs', to: '/simulateurs' },
+      { text: simulateur.value.title, to: `/simulateurs/${simulateurId}` }
+    ])
   }
-  return [
-    { text: 'Accueil', to: '/' },
-    { text: 'Simulateurs', to: '/simulateurs' },
-    { text: simulateur.value.title, to: `/simulateurs/${simulateurId}` }
-  ]
 })
 </script>
 
@@ -59,7 +59,7 @@ const crumbs = computed(() => {
     </div>
     <div v-else>
       <BrandBackgroundContainer>
-        <BreadcrumbSectionContainer :crumbs="crumbs" />
+        <BreadcrumbSectionContainer />
         <SimulationHeaderSection v-bind="simulateur" />
         <UserActionSectionRow>
           <Survey

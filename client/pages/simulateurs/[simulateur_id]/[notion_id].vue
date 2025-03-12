@@ -29,19 +29,16 @@ const { data: notion } = useAsyncData(`notion-${notionId}`, () => {
     .first()
 })
 
-const crumbs = computed(() => {
-  if (!notion.value) {
-    return []
+const { setBreadcrumbs } = useBreadcrumbStore()
+watchEffect(() => {
+  if (simulateur.value && notion.value) {
+    setBreadcrumbs([
+      { text: 'Accueil', to: '/' },
+      { text: 'Simulateurs', to: '/simulateurs' },
+      { text: simulateur.value.title, to: `/simulateurs/${simulateurId}` },
+      { text: notion.value.title, to: `/simulateurs/${simulateurId}/${notionId}` }
+    ])
   }
-  if (!simulateur.value) {
-    return []
-  }
-  return [
-    { text: 'Accueil', to: '/' },
-    { text: 'Simulateurs', to: '/simulateurs' },
-    { text: simulateur.value.title, to: `/simulateurs/${simulateurId}` },
-    { text: notion.value.title, to: `/simulateurs/${simulateurId}/${notionId}` }
-  ]
 })
 
 const { isIframe } = useIframeDisplay()
@@ -72,7 +69,7 @@ const { isIframe } = useIframeDisplay()
     </template>
     <template v-else>
       <BrandBackgroundContainer>
-        <BreadcrumbSectionContainer :crumbs="crumbs" />
+        <BreadcrumbSectionContainer />
         <SimulationHeaderSection v-bind="simulateur" />
         <UserActionSectionRow>
           <div>
