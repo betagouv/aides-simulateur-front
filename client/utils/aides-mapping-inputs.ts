@@ -79,12 +79,11 @@ export const menagesVariables: { [aidesSimplifieesKey: string]: AidesSimplifiees
     period: 'MONTH'
   },
   'situation-logement': { // 'locataire'
-    // possible values: https://legislation.fr.openfisca.org/statut_occupation_logement
-    openfiscaVariableName: 'statut_occupation_logement',
+    dispatch: dispatchSituationLogement,
     period: 'MONTH'
   },
   'type-logement': { // 'logement-foyer' TODO: check what we mean by "type-logement" (foyer, chambre... or conventionne / not conventionne)
-    openfiscaVariableName: 'logement_conventionne',
+    dispatch: dispatchTypeLogement,
     period: 'MONTH'
   }
 }

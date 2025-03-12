@@ -56,23 +56,77 @@ export function dispatchSituationProfessionnelle(
   answerValue: boolean | number | string,
   periodType: 'ETERNITY' | 'YEAR' | 'MONTH'
 ): unknown{
+  const period = periodType === 'MONTH' ? MONTH : ETERNITY_PERIOD
   let openfiscaVariableName = undefined
   
   if (answerValue == "stage"){ 
     openfiscaVariableName = 'stagiaire'
-    return formatSurveyAnswerToRequest(openfiscaVariableName, periodType, answerValue)
+    return formatSurveyAnswerToRequest(openfiscaVariableName, period, answerValue)
+
   } else if (answerValue == "alternance"){
     openfiscaVariableName = 'alternant'
-    return formatSurveyAnswerToRequest(openfiscaVariableName, periodType, answerValue)
+    return formatSurveyAnswerToRequest(openfiscaVariableName, period, answerValue)
+
   } else if (answerValue == "salarie-hors-alternance"){
     openfiscaVariableName = 'activite' // TypesActivite possible values: https://legislation.fr.openfisca.org/activite
-    return formatSurveyAnswerToRequest(openfiscaVariableName, periodType, 'actif')
+    return formatSurveyAnswerToRequest(openfiscaVariableName, period, 'actif')
+
   } else if (answerValue == "sans-emploi"){
     openfiscaVariableName = 'activite' // TypesActivite possible values: https://legislation.fr.openfisca.org/activite
-    return formatSurveyAnswerToRequest(openfiscaVariableName, periodType, 'chomeur')
+    return formatSurveyAnswerToRequest(openfiscaVariableName, period, 'chomeur')
+
   } else {
     throw new UnexpectedValueError(answerKey)
   }  
+}
+
+export function dispatchSituationLogement(
+  answerKey: string,
+  answerValue: boolean | number | string,
+  periodType: 'ETERNITY' | 'YEAR' | 'MONTH'
+): unknown {
+  const period = periodType === 'MONTH' ? MONTH : ETERNITY_PERIOD
+  let openfiscaVariableName = "statut_occupation_logement"
+  // possible values: https://legislation.fr.openfisca.org/statut_occupation_logement
+
+  if (answerValue == "locataire"){
+    // TypesStatutOccupationLogement: 'locataire_foyer', 'locataire_hlm', 'locataire_meuble', 'locataire_vide'
+    // exemple d'input 'type-logement': "logement-foyer"
+    console.debug(`Transcription simplifiee de '${answerKey}': '${answerValue}' en '${openfiscaVariableName}': 'locataire_vide'.`)
+    console.debug(`Transcription pouvant être mise à jour en cas de valeur 'type-logement'`)
+    return formatSurveyAnswerToRequest(openfiscaVariableName, period, 'locataire_vide')
+
+  } else if (answerValue == "proprietaire"){
+    // TypesStatutOccupationLogement: 'proprietaire' (could also be a subset: 'primo_accedant')
+    return formatSurveyAnswerToRequest(openfiscaVariableName, period, 'proprietaire')
+
+  } else if (answerValue == "heberge"){
+    return formatSurveyAnswerToRequest(openfiscaVariableName, period, 'loge_gratuitement')
+  
+  } else if (answerValue == "sans-domicile"){
+    return formatSurveyAnswerToRequest(openfiscaVariableName, period, 'sans_domicile')
+  
+  } else {
+    throw new UnexpectedValueError(answerKey)
+  }
+}
+
+export function dispatchTypeLogement(
+  answerKey: string,
+  answerValue: boolean | number | string,
+  periodType: 'ETERNITY' | 'YEAR' | 'MONTH'
+): unknown {
+  const period = periodType === 'MONTH' ? MONTH : ETERNITY_PERIOD
+  let openfiscaVariableName = "statut_occupation_logement"
+  if (answerValue == "logement-non-meuble"){
+    return formatSurveyAnswerToRequest(openfiscaVariableName, period, 'locataire_vide')
+  } else if (answerValue == "logement-meuble"){
+    return formatSurveyAnswerToRequest(openfiscaVariableName, period, 'locataire_meuble')
+  } else if (answerValue == "locataire_foyer" ){
+    return formatSurveyAnswerToRequest(openfiscaVariableName, period, 'locataire_foyer')
+  } else {
+    throw new UnexpectedValueError(answerKey)
+  }
 }
 
 
@@ -113,11 +167,10 @@ function initRequest (): OpenFiscaCalculationRequest {
  */
 function formatSurveyAnswerToRequest (
   openfiscaVariableName: string,
-  periodType: string,
+  period: string,
   value: boolean | number | string // VariableValueOnPeriod allowed types
 ): { [openfiscaKey: string]: VariableValueOnPeriod } {
   const result: { [key: string]: VariableValueOnPeriod } = {}
-  const period = periodType === 'MONTH' ? MONTH : ETERNITY_PERIOD
   result[openfiscaVariableName] = {
     [period]: value
   }
@@ -150,11 +203,11 @@ function addSurveyAnswerToRequest (
 
     let formattedAnswer: { [openfiscaKey: string]: VariableValueOnPeriod } | undefined = undefined
     if ('dispatch' in mapping){
+      // dispatch and manage period in dispatch
       formattedAnswer = mapping.dispatch(answerKey, answerValue, mapping.period) as { [openfiscaKey: string]: VariableValueOnPeriod }
     } else { 
-      formattedAnswer = formatSurveyAnswerToRequest(mapping.openfiscaVariableName, mapping.period, answerValue)
+      formattedAnswer = formatSurveyAnswerToRequest(mapping.openfiscaVariableName, period, answerValue)
     }
-    let formattedVariableName = Object.keys(formattedAnswer)[0]
     
     const entityId = getEntityId(entity)
     if (entityId === UNDEFINED_ENTITY_ID) {
@@ -162,7 +215,26 @@ function addSurveyAnswerToRequest (
       throw new UnknownEntityError(answerKey)
     }
 
-  request[entity][entityId][formattedVariableName] = { ...formattedAnswer[formattedVariableName] }
+    let formattedVariableName = Object.keys(formattedAnswer)[0]
+    if (request[entity][entityId][formattedVariableName]){
+      // MANAGING VERY SPECIFIC CASES
+      // a value already exist in the request for formattedVariableName 
+      // we expect it to ba at the same period as, for now, only one period value is set for each variable
+      let existingValue = request[entity][entityId][formattedVariableName][period]
+      if (formattedVariableName == 'statut_occupation_logement' && existingValue == 'locataire_vide') {
+        // expected: one of dispatchSituationLogement or dispatchTypeLogement already updated the value once
+        // we allow updates as 'locataire_vide' is kind of a default value for 'locataire'
+        // (happens at least when dispatchSituationLogement is called before dispatchTypeLogement)
+        console.warn(`Transcription mise à jour pour '${formattedVariableName}': '${existingValue}' suite input '${answerKey}': '${answerValue}'`)
+        request[entity][entityId][formattedVariableName] = { ...formattedAnswer[formattedVariableName] }
+      } else {
+        // not one of the expected very specific cases :-o
+        throw new UnexpectedValueUpdateError(answerKey)
+      }
+    } else {
+      // formattedVariableName value is set for the first time here
+      request[entity][entityId][formattedVariableName] = { ...formattedAnswer[formattedVariableName] }
+    }
   }
   return request
 }
@@ -238,6 +310,9 @@ function addAnswersToRequest (
       }
     }
   }
+
+  // TODO add additional information from gathered data? 
+  // ex: logement_conventionne
   return request
 }
 
