@@ -67,7 +67,6 @@ const activeAccordion = ref<number>()
   <BrandBackgroundContainer
     textured
     contrast
-    blue
   >
     <BreadcrumbSectionContainer contrast />
     <SectionContainer

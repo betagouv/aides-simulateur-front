@@ -16,13 +16,24 @@ const props = withDefaults(defineProps<{
 const schemeStore = useSchemeStore()
 const { preferences } = storeToRefs(schemeStore)
 const mixBlendMode = computed(() => {
-  return preferences.value.theme === 'dark' ? 'lighten' : 'darken'
+  return (
+    preferences.value.theme === 'dark'
+    || props.contrast
+  )
+    ? 'lighten'
+    : 'darken'
 })
 
 const opacity = props.subtle ? 0.2 : 0.8
 
 const backgroundColorClass = computed(() => {
-  if (props.blue) {
+  if (
+    props.contrast
+    && preferences.value.theme === 'light'
+  ) {
+    return 'fr-background-action-high--blue-france'
+  }
+  else if (props.blue) {
     return 'fr-background-alt--blue-france'
   }
   return `fr-background-default--grey`

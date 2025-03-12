@@ -13,10 +13,12 @@ const simulationTiles: DsfrTileProps[] = [
   {
     title: 'Déménagement & logement',
     to: '/simulateurs/demenagement-logement',
+    titleTag: 'h2',
     svgPath: '/artworks/custom-pictograms/demenagement.svg'
   },
   {
     title: 'Rénovation du logement',
+    titleTag: 'h2',
     to: '#',
     svgPath: '/artworks/pictograms/buildings/house.svg'
   }
@@ -82,7 +84,6 @@ const simulationTiles: DsfrTileProps[] = [
   <BrandBackgroundContainer
     textured
     contrast
-    blue
   >
     <SectionContainer>
       <hgroup class="fr-mb-6w">
