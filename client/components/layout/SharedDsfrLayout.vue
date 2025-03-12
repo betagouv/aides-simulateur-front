@@ -63,15 +63,15 @@ const noticeMessage = 'Ce site est en cours de développement. Certaines fonctio
   <main
     id="content"
     role="main"
-    tabindex="0"
+    tabindex="-1"
   >
     <slot />
   </main>
   <DsfrFooter
     v-if="footerProps"
     id="footer"
+    tabindex="-1"
     v-bind="footerProps"
-    tabindex="0"
   />
   <SchemeModal />
 </template>
