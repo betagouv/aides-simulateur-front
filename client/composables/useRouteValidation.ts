@@ -3,7 +3,14 @@ import type { RouteLocationNormalizedGeneric } from 'vue-router'
 export const VALID_ROUTES = {
   simulateur_id: ['demenagement-logement'],
   notion_id: ['revenus-apl'],
-  aide_id: ['fsl', 'garantie-visale'],
+  aide_id: [
+    'aide-personnalisee-logement',
+    'fond-solidarite-logement',
+    'garantie-visale',
+    'locapass',
+    'mobilite-master-1',
+    'mobilite-parcourssup'
+  ],
 }
 
 export type RouteCategory = keyof typeof VALID_ROUTES

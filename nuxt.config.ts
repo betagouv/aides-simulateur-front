@@ -22,6 +22,12 @@ export default defineNuxtConfig({
     client: true
   },
 
+  content: {
+    renderer: {
+      anchorLinks: false
+    }
+  },
+
   vite: {
     build: {
       sourcemap: true,

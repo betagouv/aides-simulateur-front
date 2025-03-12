@@ -4,7 +4,7 @@ definePageMeta({
 })
 
 const { data: aides } = useAsyncData('aides', () => {
-  return queryCollectionNavigation('aides', ['titre', 'type', 'montant', 'resume'])
+  return queryCollectionNavigation('aides', ['titre', 'type', 'montant', 'resume', 'instructeur'])
 }, {
   transform: (data) => {
     const aides = data?.[0]?.children || []
@@ -17,6 +17,7 @@ const { data: aides } = useAsyncData('aides', () => {
          */
         title: aide.titre,
         type: aide.type,
+        instructeur: aide.instructeur,
         montant: aide.montant,
         resume: aide.resume,
       }
@@ -48,6 +49,7 @@ setBreadcrumbs([
               :title="aide.title"
               :description="aide.resume"
               :link="`/aides/${aide.id}`"
+              :instructeur="aide.instructeur"
               :type-aide="aide.type"
               :montant="aide.montant"
             />

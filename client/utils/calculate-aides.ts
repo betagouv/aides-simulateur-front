@@ -159,7 +159,7 @@ function addSurveyQuestionToRequest (
 
 function addAnswersToRequest (
   request: OpenFiscaCalculationRequest,
-  answers: SurveyAnswer[]
+  answers: SurveyAnswers
 ): OpenFiscaCalculationRequest {
   for (const [answerKey, answerValue] of Object.entries(answers)) {
     try {
@@ -228,7 +228,7 @@ function addQuestionsToRequest (
   return request
 }
 
-export function buildRequest (answers: SurveyAnswer[], questions: string[]): OpenFiscaCalculationRequest {
+export function buildRequest (answers: SurveyAnswers, questions: string[]): OpenFiscaCalculationRequest {
   // eslint-disable-next-line no-console
   console.debug('buildRequest...')
   let request: OpenFiscaCalculationRequest = initRequest()
@@ -236,8 +236,8 @@ export function buildRequest (answers: SurveyAnswer[], questions: string[]): Ope
   // eslint-disable-next-line no-console
   console.debug(request)
 
-  request = addAnswersToRequest (request, answers)  // user answers
-  request = addQuestionsToRequest(request, questions)  // simulator questions to rules engine
+  request = addAnswersToRequest (request, answers) // user answers
+  request = addQuestionsToRequest(request, questions) // simulator questions to rules engine
 
   return request
 }

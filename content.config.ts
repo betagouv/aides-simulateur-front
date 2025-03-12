@@ -28,7 +28,9 @@ export default defineContentConfig({
       schema: z.object({
         titre: z.string(),
         resume: z.string(),
+        instructeur: z.string(),
         montant: z.number().nullable(),
+        textesLoi: z.array(z.string()).nullable(),
         type: z.enum([
           'pret',
           'garantie',

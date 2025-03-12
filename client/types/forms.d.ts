@@ -23,8 +23,8 @@ declare global {
     }>
   }
 
-  interface SurveyAnswer {
-    [key: string]: string | number | boolean | undefined
+  interface SurveyAnswers {
+    [key: string]: string | string[] | number | boolean | undefined
   }
 
   interface SurveyStep {
@@ -41,6 +41,13 @@ declare global {
     forceRefresh?: boolean
     steps: SurveyStep[]
     triggeredQuestions?: SurveyQuestion[]
+  }
+
+  interface SurveyResults {
+    data: SimulationResultsAides
+    meta: {
+      createdAt: Date
+    }
   }
 }
 

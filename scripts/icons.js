@@ -6,19 +6,29 @@ import { icons as riCollection } from '@iconify-json/ri'
  * @type {string[]}
  */
 const riIconNames = [
-  'arrow-right-line',
-  'flag-line',
-  'sun-line',
+  'arrow-left-line',
   'arrow-left-right-line',
-  'chat-check-line',
-  'calendar-event-line',
-  'flashlight-line',
+  'arrow-right-line',
   'arrow-right-down-line',
-  'shopping-bag-line',
   'bank-card-line',
+  'chat-check-line',
+  'chat-delete-line',
+  'calendar-event-line',
+  'calendar-2-line',
+  'edit-box-line',
   'external-link-line',
+  'flashlight-line',
+  'flag-line',
+  'government-line',
+  'information-line',
+  'mail-line',
+  'money-euro-circle-line',
   'play-line',
+  'question-line',
   'restart-line',
+  'scales-3-line',
+  'shopping-bag-line',
+  'sun-line',
 ]
 
 /**
