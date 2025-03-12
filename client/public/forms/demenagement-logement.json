@@ -11,7 +11,7 @@
       "questions": [
         {
           "id": "statut-professionnel",
-          "title": "Quel est votre statut professionnel ?",
+          "title": "Êtes-vous :",
           "description": "Sélectionnez votre situation actuelle",
           "type": "radio",
           "choices": [
@@ -37,8 +37,7 @@
             }
           ],
           "bypassToQuestion": [
-            { "condition": "statut-professionnel=etudiant", "question": "etudiant-mobilite" },
-            { "condition": "statut-professionnel=actif", "question": "situation-professionnelle" }
+            { "condition": "statut-professionnel=etudiant", "question": "situation-professionnelle" }
           ]
         },
         {
@@ -64,7 +63,8 @@
       "questions": [
         {
           "id": "statut-marital",
-          "title": "Situation familiale",
+          "title": "Êtes-vous :",
+          "description": "Sélectionnez votre situation actuelle",
           "type": "radio",
           "choices": [
             { "id": "celibataire", "title": "Célibataire ou en union libre" },
@@ -73,16 +73,20 @@
             { "id": "divorce", "title": "Divorcé(e)" },
             { "id": "veuf", "title": "Veuf(ve)" },
             { "id": "jeune_veuf", "title": "Veuf(ve) d’un(e) conjoint(e) décédé(e) dans l’année" },
-            { "id": "non_renseigne", "title": "Non renseigné" }
+            { "id": "non_renseigne", "title": "Je préfère ne pas renseigner" }
           ]
         },
         {
-          "id": "habitation-avec-autre-personnes",
-          "title": "Habiterez-vous avec d'autres personnes ?",
-          "description": "Sélectionnez le type de votre logement",
+          "id": "habiter-avec-conjoint",
+          "title": "Habiterez-vous avec votre conjoint(e) ?",
+          "notion": {
+            "id": "habiter-avec-conjoint",
+            "buttonLabel": "En savoir plus"
+          },
           "type": "boolean",
+          "nextQuestion": "code-postal-nouvelle-ville",
           "bypassToQuestion": [
-            { "condition": "habitation-avec-autre-personnes=true", "question": "habiter-avec-conjoint" }
+            { "condition": "habiter-avec-conjoint=true", "question": "revenus-conjoint" }
           ]
         }
       ]
@@ -93,13 +97,15 @@
       "questions": [
         {
           "id": "code-postal-nouvelle-ville",
-          "title": "Veuillez saisir le code postal ou le nom de la commune de la ville dans laquelle vous allez résider. Nous saisirons alors automatiquement le code insee pour vous.",
+          "title": "Dans quelle ville allez-vous résider ?",
+          "description": "Veuillez saisir le code postal ou le nom de la commune de la ville dans laquelle vous allez résider. Nous saisirons alors automatiquement le code INSEE pour vous.",
           "type": "text",
           "autocompleteFunction": "getInseeNumber"
         },
         {
           "id": "situation-logement",
           "title": "Êtes-vous :",
+          "description": "Sélectionnez votre situation actuelle",
           "type": "radio",
           "choices": [
             {
@@ -108,11 +114,11 @@
             },
             {
               "id": "proprietaire",
-              "title": "Propriétaire ou location-accession"
+              "title": "Propriétaire ou en location-accession"
             },
             {
               "id": "heberge",
-              "title": "Hébergé chez vos parents, un particulier ou en logement de fonction"
+              "title": "Hébergé(e) chez vos parents, un particulier ou en logement de fonction"
             },
             {
               "id": "sans-domicile",
@@ -133,6 +139,7 @@
         {
           "id": "type-revenus",
           "title": "Quels sont les types de revenus qui s'appliquent à votre situation ?",
+          "description": "Sélectionnez tous les types de revenus que vous avez perçus dans les 12 derniers mois. Vous pourrez ensuite saisir les montants.",
           "type": "checkbox",
           "choices": [
             { "id": "revenus-activite", "title": "Revenus d'activité" },
@@ -172,12 +179,12 @@
       "title": "Quelle est votre situation professionnelle ?",
       "type": "radio",
       "choices": [
-        { "id": "stage", "title": "Stage" },
-        { "id": "alternance", "title": "Alternance" },
-        { "id": "salarie-hors-alternance", "title": "Salarié·e hors alternance" },
+        { "id": "stage", "title": "En stage" },
+        { "id": "alternance", "title": "En alternance" },
+        { "id": "salarie-hors-alternance", "title": "Étudiant salarié" },
         { "id": "sans-emploi", "title": "Je n'ai pas d'emploi" }
       ],
-      "nextQuestion": "date-naissance"
+      "nextQuestion": "etudiant-mobilite"
     },
     {
       "id": "etudiant-mobilite",
@@ -201,17 +208,13 @@
       "nextQuestion": "date-naissance"
     },
     {
-      "id": "habiter-avec-conjoint",
-      "title": "Habiterez-vous avec votre conjoint·e ?",
-      "type": "boolean",
-      "nextQuestion": "code-postal-nouvelle-ville",
-      "bypassToQuestion": [
-        { "condition": "habiter-avec-conjoint=true", "question": "revenus-conjoint" }
-      ]
-    },
-    {
       "id": "revenus-conjoint",
-      "title": "Revenus du conjoint·e",
+      "title": "Quels sont les revenus de votre conjoint(e) ?",
+      "description": "Si vous habitez avec votre conjoint(e), ses revenus sont pris en compte pour le calcul de vos aides. Indiquez ici ses ressources annuelles avant impôts. Si vous ne connaissez pas le montant exact, une estimation suffit.",
+      "notion": {
+        "id": "revenus-conjoint",
+        "buttonLabel": "En savoir plus"
+      },
       "type": "number",
       "nextQuestion": "code-postal-nouvelle-ville"
     },
@@ -223,48 +226,50 @@
     },
     {
       "id": "type-logement",
-      "title": "Quel est le type de logement ?",
+      "title": "Quel sera le type de logement ?",
       "type": "radio",
       "choices": [
         { "id": "logement-non-meuble", "title": "Logement non meublé" },
         { "id": "logement-meuble", "title": "Logement meublé" },
-        { "id": "logement-foyer", "title": "Foyer (résidence CROUS, etc.) ou logement conventionné" }
+        { "id": "logement-foyer", "title": "Foyer (résidence CROUS, etc.) ou logement conventionné" },
+        { "id": "logement-chambre", "title": "Chambre chez un particulier" }
       ],
       "nextQuestion": "colocation"
     },
     {
       "id": "colocation",
-      "title": "Est-ce une colocation ?",
-      "type": "boolean",
-      "nextQuestion": "logement-chambre"
-    },
-    {
-      "id": "logement-chambre",
-      "title": "Est-ce une chambre dans un logement meublé ?",
+      "title": "Allez-vous habiter en colocation ?",
       "type": "boolean",
       "nextQuestion": "logement-parente-proprietaire"
     },
     {
       "id": "logement-parente-proprietaire",
       "title": "Avez-vous un lien de parenté direct avec le propriétaire ?",
+      "description": "Est-il un(e) ascendant(e) ou un(e) descendant(e) de vous ou de votre conjoint(e), par exemple, enfant ou grand-parent ?",
       "type": "boolean",
       "nextQuestion": "nombre-personnes-logement"
     },
     {
       "id": "nombre-personnes-logement",
-      "title": "Combien de personnes habiteront dans le logement ?",
+      "title": "Combien de personnes habiteront dans le logement (y compris vous-même) ?",
       "type": "number",
       "nextQuestion": "loyer-montant-mensuel"
     },
     {
       "id": "loyer-montant-mensuel",
-      "title": "Quel est le montant du loyer mensuel ?",
+      "title": "Quel est le montant de votre part du loyer (charges non comprises) ?",
+      "description": "Indiquez le montant en euros par mois, sans déduire vos aides au logement si vous en recevez.",
       "type": "number",
       "nextQuestion": "loyer-montant-charges"
     },
     {
       "id": "loyer-montant-charges",
+      "notion": {
+        "id": "loyer-montant-charges",
+        "buttonLabel": "En savoir plus"
+      },
       "title": "Quel est le montant des charges locatives ?",
+      "description": "Indiquez le montant en euros par mois. Cela peut inclure l'eau froide, le chauffage collectif, l'entretien des parties communes.",
       "type": "number",
       "nextQuestion": "loyer-difficile-payer"
     },
@@ -272,23 +277,16 @@
       "id": "loyer-difficile-payer",
       "title": "Rencontrez-vous des difficultés importantes pour accéder à un logement ou payer votre loyer ?",
       "type": "boolean",
-      "nextQuestion": "loyer-besoin-garant"
-    },
-    {
-      "id": "loyer-besoin-garant",
-      "title": "Avez-vous besoin d'un garant ?",
-      "type": "boolean",
-      "nextQuestion": "loyer-besoin-cautions"
-    },
-    {
-      "id": "loyer-besoin-cautions",
-      "title": "Avez-vous besoin d'une caution ?",
-      "type": "boolean",
       "nextQuestion": "type-revenus"
     },
     {
       "id": "salaire-imposable",
-      "title": "Salaire imposable (revenu d'activité salariale) - année glissante",
+      "title": "Salaire : montant total sur les 12 derniers mois (dont primes et indemnités de fin de contrat)",
+      "description": "Indiquez le montant en euros de vos revenus d'activité salariale au cours des 12 derniers mois avant impôts.",
+      "notion": {
+        "id": "salaire-imposable",
+        "buttonLabel": "En savoir plus"
+      },
       "type": "number",
       "nextQuestion": "confirmation-end",
       "bypassToQuestion": [

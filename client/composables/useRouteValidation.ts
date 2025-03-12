@@ -2,7 +2,14 @@ import type { RouteLocationNormalizedGeneric } from 'vue-router'
 
 export const VALID_ROUTES = {
   simulateur_id: ['demenagement-logement'],
-  notion_id: ['revenus-apl', 'handicap'],
+  notion_id: [
+    'revenus-apl',
+    'handicap',
+    'habiter-avec-conjoint',
+    'revenus-conjoint',
+    'loyer-montant-charges',
+    'salaire-imposable'
+  ],
   aide_id: [
     'aide-personnalisee-logement',
     'fond-solidarite-logement',
