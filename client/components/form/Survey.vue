@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { onKeyDown } from '@vueuse/core'
+
 const props = defineProps<{
   simulateurId: string
   autocompleteFunctions?: Record<string, (query: string) => Promise<any[]>>
@@ -73,12 +75,33 @@ const hasAnswer = computed(() => {
   }
 })
 
+// Resume the form if the query parameter is present
 const route = useRoute()
 const doResume = computed(() => route.query.resume === 'true')
 if (doResume.value) {
   resumeForm()
   route.query.resume = null
 }
+
+// Focus on the question container after navigation
+const questionContainer = ref<HTMLElement | null>(null)
+function focusQuestionContainer () {
+  nextTick(() => {
+    if (questionContainer.value) {
+      questionContainer.value.focus()
+    }
+  })
+}
+
+/**
+ * If Enter is pressed while we are within form container
+ * and there's an answer, go to next question
+ */
+onKeyDown('Enter', () => {
+  if (hasAnswer.value) {
+    handleNext()
+  }
+}, { target: questionContainer })
 
 onMounted(async () => {
   try {
@@ -94,9 +117,6 @@ onMounted(async () => {
       const category = `[${simulateurId}][${source}]Survey`
       ;(window as any)._paq.push(['trackEvent', category, 'Start'])
     }
-
-    // Add event listener for Enter key
-    window.addEventListener('keydown', handleKeyDown)
   }
   catch (error) {
     console.error('Error loading form:', error)
@@ -104,25 +124,12 @@ onMounted(async () => {
   }
 })
 
-onUnmounted(() => {
-  // Remove event listener when component is unmounted
-  window.removeEventListener('keydown', handleKeyDown)
-})
-
-// Handle Enter key press
-function handleKeyDown (event: KeyboardEvent) {
-  if (event.key === 'Enter' && hasAnswer.value) {
-    // If Enter is pressed and there's an answer, go to next question
-    handleNext()
-  }
-}
-
 // Handle updates from question components
 function handleQuestionUpdate (questionId: string, value: any) {
   setAnswer(questionId, value)
 }
 
-// Navigation functions
+// Navigation functions with focus restoration
 function handleNext () {
   if (isLastQuestion.value) {
     // Handle form completion, maybe redirect to results
@@ -130,11 +137,13 @@ function handleNext () {
   }
   else {
     goToNextQuestion()
+    focusQuestionContainer()
   }
 }
 
 function handlePrevious () {
   goToPreviousQuestion()
+  focusQuestionContainer()
 }
 
 async function submitForm () {
@@ -203,11 +212,15 @@ async function submitForm () {
 function resumeForm () {
   goToLastAnsweredQuestion()
   showChoiceScreen.value = false
+  // Focus the question after resuming
+  focusQuestionContainer()
 }
 
 function restartForm () {
   resetForm()
   showChoiceScreen.value = false
+  // Focus the question after restarting
+  focusQuestionContainer()
 }
 
 const surveyTitleTag = computed(() => isIframe.value ? 'h1' : 'h2')
@@ -268,15 +281,15 @@ const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
         >
           Votre simulation « {{ surveySchema?.title }} »
         </component>
-
         <DsfrStepper
           :steps="surveySchema?.steps.map(step => step.title).filter(Boolean) || []"
           :current-step="currentStepIndex"
         />
-
         <div
           v-if="surveySchema && currentQuestion"
+          ref="questionContainer"
           class="fr-card fr-card--shadow fr-p-3w"
+          tabindex="-1"
         >
           <!-- Current Question -->
           <div class="fr-form-group">
