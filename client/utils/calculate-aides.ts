@@ -201,6 +201,7 @@ function addSurveyAnswerToRequest (
       throw new UnexpectedValueError(answerKey)
     }
 
+    const period = mapping.period === 'MONTH' ? MONTH : ETERNITY_PERIOD
     let formattedAnswer: { [openfiscaKey: string]: VariableValueOnPeriod } | undefined = undefined
     if ('dispatch' in mapping){
       // dispatch and manage period in dispatch
@@ -229,6 +230,7 @@ function addSurveyAnswerToRequest (
         request[entity][entityId][formattedVariableName] = { ...formattedAnswer[formattedVariableName] }
       } else {
         // not one of the expected very specific cases :-o
+        console.warn(`Valeur déjà existante pour '${formattedVariableName}': '${existingValue}'. Input complémentaire ignoré : '${answerKey}': '${answerValue}'`)
         throw new UnexpectedValueUpdateError(answerKey)
       }
     } else {
