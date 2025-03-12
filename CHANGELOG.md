@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 0.12.1 [#59](https://github.com/betagouv/aides-simulateur-front/pull/59)
+
+* Amélioration de l'accessibilité
+* Détails :
+  * Améliore le contraste des sections
+  * Améliore la hierarchie des titres
+  * Améliore la navigation globale au clavier
+  * Améliore la navigation au clavier du formulaire
+
 ## 0.12.0 [#58](https://github.com/betagouv/aides-simulateur-front/pull/58)
 
 * Ajout de fonctionnalités.
