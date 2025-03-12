@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 0.11.0 [#57](https://github.com/betagouv/aides-simulateur-front/pull/57)
+
+* Ajout d'une fonctionnalité.
+* Détails :
+  * Ajout d'un suivi détaillé des événements Matomo du type Survey["survey_id"]["utm_source"] : Inclusion de l'ID et de la source du simulateur dans le suivi des événements
+  * Ajout du tracking du début de formulaire
+  * Ajout du composant MatomoOptOut aux mises en page par défaut et iframe
+
 ## 0.10.0 [#53](https://github.com/betagouv/aides-simulateur-front/pull/53)
 
 * Ajout d'une fonctionnalité.

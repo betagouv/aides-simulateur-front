@@ -60,6 +60,7 @@ const noticeMessage = 'Ce site est en cours de développement. Certaines fonctio
     v-if="noticeMessage"
     :title="noticeMessage"
   />
+  <MatomoOptOut />
   <main
     id="content"
     role="main"
