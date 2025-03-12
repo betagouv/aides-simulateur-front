@@ -14,7 +14,6 @@ setBreadcrumbs([
   <BrandBackgroundContainer
     textured
     contrast
-    blue
   >
     <BreadcrumbSectionContainer contrast />
     <SectionContainer type="page-header">
