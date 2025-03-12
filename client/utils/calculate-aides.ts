@@ -236,15 +236,15 @@ export function buildRequest (answers: SurveyAnswer[], questions: string[]): Ope
   // eslint-disable-next-line no-console
   console.debug(request)
 
-  request = addAnswersToRequest (request, answers)  // user answers
-  request = addQuestionsToRequest(request, questions)  // simulator questions to rules engine
+  request = addAnswersToRequest (request, answers) // user answers
+  request = addQuestionsToRequest(request, questions) // simulator questions to rules engine
 
   return request
 }
 
 export async function fetchOpenFiscaFranceCalculation (
   request: OpenFiscaCalculationRequest,
-): Promise<OpenFiscaCalculationResponse> {
+): Promise<OpenFiscaAidesCalculationResponse> {
   // eslint-disable-next-line no-console
   console.debug('fetchOpenFiscaFranceCalculation...')
   // eslint-disable-next-line no-console

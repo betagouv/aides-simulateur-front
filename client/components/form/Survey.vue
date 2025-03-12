@@ -154,6 +154,8 @@ function handlePrevious () {
   focusQuestionContainer()
 }
 
+const resultStore = useResultsStore()
+
 async function submitForm () {
   // Process the final form data from the answers store
   // eslint-disable-next-line no-console
@@ -179,7 +181,10 @@ async function submitForm () {
     console.debug(openfiscaResponse)
 
     const results: ResultAide = extractAidesResults(openfiscaResponse, questionsToApi)
-
+    if (results) {
+      resultStore.setResults(simulateurId, results)
+      navigateTo(`/simulateurs/${simulateurId}/resultats`)
+    }
     // Track form submission in Matomo
     if (typeof window !== 'undefined' && (window as any)._paq) {
       const source = isIframe.value ? `iframe@${getIframeSource()}` : 'website'
