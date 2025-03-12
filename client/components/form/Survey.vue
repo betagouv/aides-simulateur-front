@@ -73,13 +73,20 @@ const hasAnswer = computed(() => {
   }
 })
 
+const route = useRoute()
+const doResume = computed(() => route.query.resume === 'true')
+if (doResume.value) {
+  resumeForm()
+  route.query.resume = null
+}
+
 onMounted(async () => {
   try {
     await loadSurveySchema(simulateurId)
     isLoading.value = false
 
     // Afficher l'écran de choix si un formulaire est en cours
-    showChoiceScreen.value = hasInProgressForm.value
+    showChoiceScreen.value = hasInProgressForm.value && !doResume.value
 
     // Track form start in Matomo
     if (typeof window !== 'undefined' && (window as any)._paq) {
@@ -243,121 +250,128 @@ const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
 
     <!-- Formulaire -->
     <template v-else>
-      <component
-        :is="surveyTitleTag"
-        class="fr-h3"
-      >
-        Votre simulation « {{ surveySchema?.title }} »
-      </component>
-
-      <DsfrStepper
-        :steps="surveySchema?.steps.map(step => step.title).filter(Boolean) || []"
-        :current-step="currentStepIndex"
-      />
-
+      <template v-if="isLoading">
+        <p>
+          Chargement...
+        </p>
+      </template>
       <div
-        v-if="surveySchema && currentQuestion"
-        class="fr-card fr-card--shadow fr-p-3w"
-      >
-        <!-- Current Question -->
-        <div class="fr-form-group">
-          <hgroup>
-            <component
-              :is="surveyQuestionTitleTag"
-              class="fr-h5"
-            >
-              {{ currentQuestion?.title }}
-            </component>
-            <p
-              v-if="currentQuestion?.description"
-            >
-              {{ currentQuestion?.description }}
-            </p>
-          </hgroup>
-          <DsfrButton
-            v-if="currentQuestion?.notion"
-            :label="currentQuestion?.notion.buttonLabel"
-            icon="ri-information-line"
-            secondary
-            icon-right
-            class="fr-mb-2w"
-            @click="() => navigateTo(`/simulateurs/${simulateurId}/${currentQuestion?.notion.id}`)"
-          />
-
-          <!-- Question component based on type -->
-          <template v-if="currentQuestion">
-            <RadioButtonQuestion
-              v-if="currentQuestion.type === 'radio'"
-              :question="currentQuestion"
-              :model-value="answers[currentQuestion.id]"
-              @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
-            />
-
-            <BooleanQuestion
-              v-else-if="currentQuestion.type === 'boolean'"
-              :question="currentQuestion"
-              :model-value="answers[currentQuestion.id]"
-              @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
-            />
-
-            <MultiSelectQuestion
-              v-else-if="currentQuestion.type === 'checkbox'"
-              :question="currentQuestion"
-              :model-value="answers[currentQuestion.id]"
-              @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
-            />
-
-            <NumberQuestion
-              v-else-if="currentQuestion.type === 'number'"
-              :question="currentQuestion"
-              :model-value="answers[currentQuestion.id]"
-              @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
-            />
-
-            <DateQuestion
-              v-else-if="currentQuestion.type === 'date'"
-              :question="currentQuestion"
-              :model-value="answers[currentQuestion.id]"
-              @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
-            />
-
-            <TextQuestion
-              v-else-if="currentQuestion.type === 'text'"
-              :question="currentQuestion"
-              :model-value="answers[currentQuestion.id]"
-              :autocomplete-fn="getAutocompleteFn"
-              @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
-            />
-          </template>
-        </div>
-
-        <DsfrButtonGroup
-          class="fr-mt-3w"
-          align="right"
-          inline-layout-when="md"
-          :buttons="[
-            {
-              label: 'Précédent',
-              secondary: true,
-              icon: { name: 'ri-arrow-left-line', ssr: true },
-              onClick: handlePrevious,
-            },
-            {
-              label: isLastQuestion ? 'Terminer' : 'Suivant',
-              icon: { name: 'ri-arrow-right-line', ssr: true },
-              iconRight: true,
-              disabled: !hasAnswer,
-              onClick: handleNext,
-            },
-          ]"
-        />
-      </div>
-      <div
-        v-else
+        v-else-if="!surveySchema"
         class="fr-py-5w fr-text--center"
       >
         <p>Erreur lors du chargement du formulaire</p>
       </div>
+      <template v-else-if="surveySchema">
+        <component
+          :is="surveyTitleTag"
+          class="fr-h3"
+        >
+          Votre simulation « {{ surveySchema?.title }} »
+        </component>
+
+        <DsfrStepper
+          :steps="surveySchema?.steps.map(step => step.title).filter(Boolean) || []"
+          :current-step="currentStepIndex"
+        />
+
+        <div
+          v-if="surveySchema && currentQuestion"
+          class="fr-card fr-card--shadow fr-p-3w"
+        >
+          <!-- Current Question -->
+          <div class="fr-form-group">
+            <hgroup>
+              <component
+                :is="surveyQuestionTitleTag"
+                class="fr-h5"
+              >
+                {{ currentQuestion?.title }}
+              </component>
+              <p
+                v-if="currentQuestion?.description"
+              >
+                {{ currentQuestion?.description }}
+              </p>
+            </hgroup>
+            <DsfrButton
+              v-if="currentQuestion?.notion"
+              :label="currentQuestion?.notion.buttonLabel"
+              icon="ri-information-line"
+              secondary
+              icon-right
+              class="fr-mb-2w"
+              @click="() => navigateTo(`/simulateurs/${simulateurId}/${currentQuestion?.notion.id}`)"
+            />
+
+            <!-- Question component based on type -->
+            <template v-if="currentQuestion">
+              <RadioButtonQuestion
+                v-if="currentQuestion.type === 'radio'"
+                :question="currentQuestion"
+                :model-value="answers[currentQuestion.id]"
+                @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
+              />
+
+              <BooleanQuestion
+                v-else-if="currentQuestion.type === 'boolean'"
+                :question="currentQuestion"
+                :model-value="answers[currentQuestion.id]"
+                @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
+              />
+
+              <MultiSelectQuestion
+                v-else-if="currentQuestion.type === 'checkbox'"
+                :question="currentQuestion"
+                :model-value="answers[currentQuestion.id]"
+                @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
+              />
+
+              <NumberQuestion
+                v-else-if="currentQuestion.type === 'number'"
+                :question="currentQuestion"
+                :model-value="answers[currentQuestion.id]"
+                @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
+              />
+
+              <DateQuestion
+                v-else-if="currentQuestion.type === 'date'"
+                :question="currentQuestion"
+                :model-value="answers[currentQuestion.id]"
+                @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
+              />
+
+              <TextQuestion
+                v-else-if="currentQuestion.type === 'text'"
+                :question="currentQuestion"
+                :model-value="answers[currentQuestion.id]"
+                :autocomplete-fn="getAutocompleteFn"
+                @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
+              />
+            </template>
+          </div>
+
+          <DsfrButtonGroup
+            class="fr-mt-3w"
+            align="right"
+            inline-layout-when="md"
+            :buttons="[
+              {
+                label: 'Précédent',
+                secondary: true,
+                icon: { name: 'ri-arrow-left-line', ssr: true },
+                onClick: handlePrevious,
+              },
+              {
+                label: isLastQuestion ? 'Terminer' : 'Suivant',
+                icon: { name: 'ri-arrow-right-line', ssr: true },
+                iconRight: true,
+                disabled: !hasAnswer,
+                onClick: handleNext,
+              },
+            ]"
+          />
+        </div>
+      </template>
     </template>
   </div>
 </template>

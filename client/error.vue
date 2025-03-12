@@ -5,7 +5,7 @@ defineProps({
 </script>
 
 <template>
-  <NuxtLayout>
+  <NuxtLayout name="default">
     <main
       id="content"
       role="main"

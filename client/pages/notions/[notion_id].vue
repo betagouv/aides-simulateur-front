@@ -13,21 +13,21 @@ const { data: notion } = useAsyncData(`notion-${notionId}`, () => {
     .first()
 })
 
-const crumbs = computed(() => {
-  if (!notion.value) {
-    return []
+const { setBreadcrumbs } = useBreadcrumbStore()
+watchEffect(() => {
+  if (notion.value) {
+    setBreadcrumbs([
+      { text: 'Accueil', to: '/' },
+      { text: 'Aides', to: '/aides' },
+      { text: notion.value.title, to: `/notions/${notionId}` }
+    ])
   }
-  return [
-    { text: 'Accueil', to: '/' },
-    { text: 'Notions', to: '/notions' },
-    { text: notion.value.title, to: `/notions/${notion.value.id}` }
-  ]
 })
 </script>
 
 <template>
   <BrandBackgroundContainer>
-    <BreadcrumbSectionContainer :crumbs="crumbs" />
+    <BreadcrumbSectionContainer />
     <SectionContainer
       v-if="notion"
       type="page-header"

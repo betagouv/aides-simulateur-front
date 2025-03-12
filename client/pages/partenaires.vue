@@ -3,10 +3,11 @@ definePageMeta({
   title: 'Partenaires',
 })
 
-const crumbs = [
+const { setBreadcrumbs } = useBreadcrumbStore()
+setBreadcrumbs([
   { text: 'Accueil', to: '/' },
   { text: 'Partenaires', to: '/partenaires' },
-]
+])
 </script>
 
 <template>
@@ -15,10 +16,7 @@ const crumbs = [
     contrast
     blue
   >
-    <BreadcrumbSectionContainer
-      contrast
-      :crumbs="crumbs"
-    />
+    <BreadcrumbSectionContainer contrast />
     <SectionContainer type="page-header">
       <h1 class="brand-contrast-text">
         <span class="brand-contrast-text--highlight">

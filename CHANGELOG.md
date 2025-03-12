@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 0.12.0 [#58](https://github.com/betagouv/aides-simulateur-front/pull/58)
+
+* Ajout de fonctionnalités.
+* Détails :
+  * Créé un store pour la gestion du fil d'arianne
+  * Extrait le layout partagé par les pages de simulation vers un NuxtLayout
+  * Rajoute l'écran de chargement du formulaire
+  * Sert le script d'iframeresizer depuis l'application
+  * Permet de reprendre son questionnaire directement selon certains chemins de navigation
+
 ## 0.11.0 [#57](https://github.com/betagouv/aides-simulateur-front/pull/57)
 
 * Ajout d'une fonctionnalité.

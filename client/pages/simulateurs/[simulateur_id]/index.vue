@@ -2,8 +2,37 @@
 import { autocompleteFunctions } from '@/utils/autocompleteFunctions'
 
 definePageMeta({
-  layout: 'default',
-  middleware: 'check-iframe-layout',
+  layout: 'user-simulation',
+  middleware: [
+    'check-iframe-layout',
+    function (to, from) {
+      const resume = to.query.resume
+      const fromName = from.matched[0].name as string
+
+      const shouldForceResume = [
+        'simulateurs-simulateur_id-notion_id',
+        'simulateurs-simulateur_id-resultats'
+      ].includes(fromName)
+
+      /**
+       * Important :
+       * If user is coming from certain pages (notion_id, resultats)
+       * we do not want to render the modal which propose to resume the simulation.
+       * We want to force the resume by adding the query param resume=true.
+       */
+      if (!resume && shouldForceResume) {
+        return navigateTo(`${to.fullPath}?resume=true`)
+      }
+      /**
+       * If the query param resume=true is present,
+       * and we are not coming from certain pages,
+       * we want to remove the query param *resume=true
+       */
+      if (resume && !shouldForceResume) {
+        return navigateTo(to.fullPath.replace('?resume=true', ''))
+      }
+    }
+  ],
   validate: getContentRouteValidator('simulateur_id')
 })
 
@@ -14,13 +43,16 @@ const { data: simulateur } = useAsyncData(`simulateur-${simulateurId}`, () => {
   return queryCollection('simulateurs')
     .where('stem', '=', `simulateurs/${simulateurId}`)
     .first()
-}, {
-  transform: (data) => {
-    return {
-      id: data.id,
-      title: data.titre,
-      pictogram: data.pictogramme
-    }
+})
+
+const { setBreadcrumbs } = useBreadcrumbStore()
+watchEffect(() => {
+  if (simulateur.value) {
+    setBreadcrumbs([
+      { text: 'Accueil', to: '/' },
+      { text: 'Simulateurs', to: '/simulateurs' },
+      { text: simulateur.value.titre, to: `/simulateurs/${simulateurId}` }
+    ])
   }
 })
 
@@ -29,45 +61,18 @@ const { isIframe } = useIframeDisplay()
 onMounted(() => {
   if (isIframe.value) {
     const script = document.createElement('script')
-    script.src = 'https://cdn.jsdelivr.net/npm/iframe-resizer@4.3.2/js/iframeResizer.contentWindow.min.js'
+    script.src = '/scripts/iframeResizer.contentWindow.min.js'
     script.async = true
     document.head.appendChild(script)
   }
-})
-
-const crumbs = computed(() => {
-  if (!simulateur.value) {
-    return []
-  }
-  return [
-    { text: 'Accueil', to: '/' },
-    { text: 'Simulateurs', to: '/simulateurs' },
-    { text: simulateur.value.title, to: `/simulateurs/${simulateurId}` }
-  ]
 })
 </script>
 
 <template>
   <template v-if="simulateur">
-    <div
-      v-if="isIframe"
-    >
-      <Survey
-        :simulateur-id="simulateurId"
-        :autocomplete-functions="autocompleteFunctions"
-      />
-    </div>
-    <div v-else>
-      <BrandBackgroundContainer>
-        <BreadcrumbSectionContainer :crumbs="crumbs" />
-        <SimulationHeaderSection v-bind="simulateur" />
-        <UserActionSectionRow>
-          <Survey
-            :simulateur-id="simulateurId"
-            :autocomplete-functions="autocompleteFunctions"
-          />
-        </UserActionSectionRow>
-      </BrandBackgroundContainer>
-    </div>
+    <Survey
+      :simulateur-id="simulateurId"
+      :autocomplete-functions="autocompleteFunctions"
+    />
   </template>
 </template>

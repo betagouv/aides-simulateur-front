@@ -2,12 +2,11 @@
 definePageMeta({
   layout: 'default',
 })
-const crumbs = computed(() => {
-  return [
-    { text: 'Accueil', to: '/' },
-    { text: 'Contact', to: '/contact' },
-  ]
-})
+const { setBreadcrumbs } = useBreadcrumbStore()
+setBreadcrumbs([
+  { text: 'Accueil', to: '/' },
+  { text: 'Contact', to: '/contact' },
+])
 </script>
 
 <template>
@@ -15,7 +14,7 @@ const crumbs = computed(() => {
     textured
     subtle
   >
-    <BreadcrumbSectionContainer :crumbs="crumbs" />
+    <BreadcrumbSectionContainer />
     <SectionContainer type="page-full">
       <div class="fr-grid-row fr-grid-row--gutters">
         <div class="fr-col-12">
