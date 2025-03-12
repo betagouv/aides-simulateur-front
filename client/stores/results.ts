@@ -1,8 +1,13 @@
 export const useResultsStore = defineStore('results', () => {
-  const results = ref<{ [id: string]: SimulationResultsAides }> ({})
+  const results = ref<{ [id: string]: SurveyResults }>({})
 
   const setResults = (simulateurId: string, data: SimulationResultsAides) => {
-    results.value[simulateurId] = data
+    results.value[simulateurId] = {
+      data,
+      meta: {
+        createdAt: new Date()
+      }
+    }
   }
 
   const getResults = (simulateurId: string) => {

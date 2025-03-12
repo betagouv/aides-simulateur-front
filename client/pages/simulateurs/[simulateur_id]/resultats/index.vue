@@ -32,19 +32,6 @@ const results = resultsStore.getResults(simulateurId)
 if (!results) {
   navigateTo(`/simulateurs/${simulateurId}`)
 }
-
-const simulationDateTime = formatDateTime(
-  /**
-   * @todo Replace this with the actual time the simulation was completed
-   */
-  new Date()
-)
-function formatDateTime (date: Date) {
-  return {
-    date: date.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
-    time: date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
-  }
-}
 </script>
 
 <template>
@@ -53,6 +40,5 @@ function formatDateTime (date: Date) {
     :results="results"
     :simulateur-id="simulateurId"
     :simulateur-title="simulateur.titre"
-    :simulation-date-time="simulationDateTime"
   />
 </template>

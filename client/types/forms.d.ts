@@ -42,6 +42,13 @@ declare global {
     steps: SurveyStep[]
     triggeredQuestions?: SurveyQuestion[]
   }
+
+  interface SurveyResults {
+    data: SimulationResultsAides
+    meta: {
+      createdAt: Date
+    }
+  }
 }
 
 export {}

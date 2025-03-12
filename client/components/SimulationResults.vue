@@ -2,16 +2,14 @@
 import type { DsfrSegmentedSetProps } from '@gouvminint/vue-dsfr'
 
 const props = defineProps<{
-  results: SimulationResultsAides
+  results: SurveyResults
   simulateurId: string
   simulateurTitle: string
-  simulationDateTime: {
-    date: string
-    time: string
-  }
 }>()
 
-const richResults = await transformSimulationResults(props.results, props.simulateurId)
+const simulationDateTime = formatDateTime(new Date(props.results.meta.createdAt))
+
+const richResults = await transformSimulationResults(props.results.data, props.simulateurId)
 
 const hasAides = richResults.aides.length > 0
 const hasEcheances = richResults.echeances.length > 0
