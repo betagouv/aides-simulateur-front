@@ -32,6 +32,10 @@ const results = resultsStore.getResults(simulateurId)
 if (!results) {
   navigateTo(`/simulateurs/${simulateurId}`)
 }
+useSeoMeta({
+  title: `Résultats de votre simulation ${simulateur.value?.title || simulateurId} | Aides simplifiées`,
+  description: `Découvrez les aides auxquelles vous êtes eligibles avec les résultats de votre simulation ${simulateur.value?.title || simulateurId}.`
+})
 </script>
 
 <template>

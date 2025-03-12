@@ -2,42 +2,38 @@
   "version": "1.0.0",
   "forceRefresh": true,
   "id": "demenagement-logement",
-  "title": "Aides financières au déménagement et au logement",
+  "title": "Déménagement et logement",
   "description": "Répondez à ces questions pour découvrir les aides au logement et déménagement auxquelles vous pourriez être éligible",
   "steps": [
     {
       "id": "profil",
-      "title": "Profil",
+      "title": "Votre profil",
       "questions": [
         {
           "id": "statut-professionnel",
           "title": "Quel est votre statut professionnel ?",
           "description": "Sélectionnez votre situation actuelle",
           "type": "radio",
-          "notion": {
-            "id": "revenus-apl",
-            "buttonLabel": "Tout savoir"
-          },
           "choices": [
             {
+              "id": "etudiant",
+              "title": "En études ou en alternance"
+            },
+            {
               "id": "actif",
-              "title": "Actif occupé"
+              "title": "Salarié(e) ou Indépendant(e)"
             },
             {
               "id": "chomeur",
-              "title": "Chômeur"
-            },
-            {
-              "id": "etudiant",
-              "title": "Étudiant, élève"
-            },
-            {
-              "id": "inactif",
-              "title": "Autre, inactif"
+              "title": "Inscrit(e) comme demandeur d'emploi"
             },
             {
               "id": "retraite",
-              "title": "Retraité"
+              "title": "Retraité(e)"
+            },
+            {
+              "id": "inactif",
+              "title": "Autre"
             }
           ],
           "bypassToQuestion": [
@@ -48,32 +44,35 @@
         {
           "id": "date-naissance",
           "title": "Quelle est votre date de naissance ?",
-          "description": "Indiquez votre date de naissance",
+          "description": "Renseignez le jour, le mois et l'année sous le format jj/mm/aaaa (exemple : 15/08/1995)",
           "type": "date"
         },
         {
           "id": "handicap",
-          "title": "Êtes-vous en situation de handicap ?",
-          "description": "Indiquez si vous êtes en situation de handicap",
+          "notion": {
+            "id": "handicap",
+            "buttonLabel": "En savoir plus"
+          },
+          "title": "Avez-vous une reconnaissance administrative de votre situation de handicap ?",
           "type": "boolean"
         }
       ]
     },
     {
       "id": "foyer",
-      "title": "Foyer",
+      "title": "Votre foyer",
       "questions": [
         {
           "id": "statut-marital",
           "title": "Situation familiale",
           "type": "radio",
           "choices": [
-            { "id": "celibataire", "title": "Célibataire" },
-            { "id": "divorce", "title": "Divorcé" },
-            { "id": "jeune_veuf", "title": "Veuf d’un conjoint décédé dans l’année" },
-            { "id": "marie", "title": "Marié" },
-            { "id": "pacse", "title": "Pacsé" },
-            { "id": "veuf", "title": "Veuf" },
+            { "id": "celibataire", "title": "Célibataire ou en union libre" },
+            { "id": "pacse", "title": "Pacsé(e)" },
+            { "id": "marie", "title": "Marié(e)" },
+            { "id": "divorce", "title": "Divorcé(e)" },
+            { "id": "veuf", "title": "Veuf(ve)" },
+            { "id": "jeune_veuf", "title": "Veuf(ve) d’un(e) conjoint(e) décédé(e) dans l’année" },
             { "id": "non_renseigne", "title": "Non renseigné" }
           ]
         },
@@ -90,7 +89,7 @@
     },
     {
       "id": "logement",
-      "title": "Décrivez-nous votre logement",
+      "title": "Votre logement",
       "questions": [
         {
           "id": "code-postal-nouvelle-ville",
@@ -129,7 +128,7 @@
     },
     {
       "id": "revenus",
-      "title": "Revenus",
+      "title": "Vos revenus",
       "questions": [
         {
           "id": "type-revenus",

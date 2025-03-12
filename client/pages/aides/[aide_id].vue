@@ -24,6 +24,11 @@ watchEffect(() => {
     ])
   }
 })
+
+useSeoMeta({
+  title: `Aide ${aide.value?.title || aideId} | Aides simplifiées`,
+  description: `${aide.value?.resume}`
+})
 </script>
 
 <template>

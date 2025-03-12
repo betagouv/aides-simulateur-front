@@ -1,9 +1,14 @@
 <script lang="ts" setup>
 const { setBreadcrumbs } = useBreadcrumbStore()
 setBreadcrumbs([
-  { text: 'Accueil', to: '/' },
+{ text: 'Accueil', to: '/' },
   { text: 'Intégrer nos simulateurs', to: '/integrer-nos-simulateurs' },
 ])
+
+useSeoMeta({
+  title: 'Intégrer nos simulateurs d\'aides sur votre plateforme | Aides simplifiées',
+  description: 'Offrez à vos usagers un accès simple aux aides pertinentes en intégrant nos simulateurs via API ou iFrame. Solution clé en main, rapide à mettre en place.'
+})
 
 // Choix des options d'affichage (inutilisé pour le moment)
 const displayOptions = ref([

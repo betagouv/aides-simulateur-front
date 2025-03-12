@@ -1,4 +1,8 @@
 <script setup lang="ts">
+useSeoMeta({
+  title: 'Devenir partenaire | Aides simplifiées',
+  description: 'Facilitez l\'accès aux aides sur votre territoire. Optimisez le parcours usager du simulateur au dépôt de dossier et améliorez l\'efficacité de vos dispositifs d\'aide.'
+})
 definePageMeta({
   title: 'Partenaires',
 })

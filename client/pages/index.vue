@@ -5,7 +5,10 @@ definePageMeta({
   layout: 'default',
 })
 
-useHead({ title: 'Page d’accueil - Gabarit de démarrage VueDsfr' })
+useSeoMeta({
+  title: 'La bonne aide, au bon moment, au bon endroit : page d\'accueil | Aides simplifiées',
+  description: 'Découvrez les aides adaptées à votre situation personnelle. Simulateurs pour le logement, le déménagement et plus encore. Un service public simple et rapide pour connaître vos droits.'
+})
 const baselineTitle = 'Trouvez les aides&nbsp;adaptées à&nbsp;votre&nbsp;situation'
 const baselineSubtitle = 'Un service simple et rapide pour savoir à quelles aides vous avez droit.'
 
@@ -95,14 +98,14 @@ const simulationTiles: DsfrTileProps[] = [
         <p class="fr-text--xl brand-contrast-text">
           Aides simplifiées permet aux citoyens de trouver facilement les aides auxquelles ils sont éligibles et de
           simplifier leur parcours administratif. Nous collaborons avec des acteurs publics et des plateformes en ligne
-          pour intégrer notre service et fluidifier l’accès aux dispositifs existants.
+          pour intégrer notre service et fluidifier l'accès aux dispositifs existants.
         </p>
       </hgroup>
       <div class="fr-grid-row fr-grid-row--gutters">
         <div class="fr-col-12 fr-col-md-6">
           <DsfrTile
             title="Vous êtes une administration ou vous opérez un service public&nbsp;?"
-            description="Facilitez l’accès aux aides sur votre territoire ou sur votre domaine de compétence et optimisez le passage de la simulation au dépôt de dossier."
+            description="Facilitez l'accès aux aides sur votre territoire ou sur votre domaine de compétence et optimisez le passage de la simulation au dépôt de dossier."
             title-tag="h3"
             to="/partenaires"
             horizontal

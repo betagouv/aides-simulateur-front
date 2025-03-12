@@ -2,6 +2,7 @@
 defineProps<{
   id: string
   title: string
+  shortTitle: string
   pictogram: string
 }>()
 </script>
@@ -19,7 +20,7 @@ defineProps<{
       </div>
       <div class="simulation-title-container fr-col-9 fr-col-sm-10 fr-col-md-11">
         <h1 class="fr-h5 fr-m-0">
-          {{ title }}
+          {{ shortTitle }}
         </h1>
       </div>
     </div>

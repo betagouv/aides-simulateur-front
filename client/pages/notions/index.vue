@@ -1,4 +1,8 @@
 <script lang="ts" setup>
+useSeoMeta({
+  title: 'Toutes les informations sur les notions | Aides simplifiées',
+  description: 'Découvrez toutes les informations sur les notions pour vous accompagner dans vos démarches.'
+})
 definePageMeta({
   layout: 'default',
 })

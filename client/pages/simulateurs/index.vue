@@ -22,6 +22,11 @@ setBreadcrumbs([
   { text: 'Accueil', to: '/' },
   { text: 'Simulateurs', to: '/simulateurs' },
 ])
+
+useSeoMeta({
+  title: 'Liste des simulateurs | Aides simplifiées',
+  description: 'Découvrez les simulateurs vous permettant de découvrir si vous pouvez bénéficier d\'aides.'
+})
 </script>
 
 <template>

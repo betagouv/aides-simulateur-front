@@ -7,6 +7,10 @@ setBreadcrumbs([
   { text: 'Accueil', to: '/' },
   { text: 'Contact', to: '/contact' },
 ])
+useSeoMeta({
+  title: 'Nous contacter pour toute question sur vos droits | Aides simplifiées',
+  description: 'Besoin d\'aide pour utiliser nos simulateurs ou comprendre vos résultats ? Notre équipe est à votre disposition pour vous accompagner dans vos démarches.'
+})
 </script>
 
 <template>

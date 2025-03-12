@@ -32,6 +32,11 @@ watchEffect(() => {
     ])
   }
 })
+
+useSeoMeta({
+  title: `Informations sur la notion ${notion.value?.title || notionId} | Aides simplifiées`,
+  description: `${notion.value?.description.slice(0, 155)}...`
+})
 </script>
 
 <template>
