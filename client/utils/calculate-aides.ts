@@ -76,6 +76,7 @@ export function dispatchSituationProfessionnelle(
     return formatSurveyAnswerToRequest(openfiscaVariableName, period, 'chomeur')
 
   } else {
+    console.debug(`Valeur inattendue ${answerKey}: ${answerValue}`)
     throw new UnexpectedValueError(answerKey)
   }  
 }
@@ -107,6 +108,7 @@ export function dispatchSituationLogement(
     return formatSurveyAnswerToRequest(openfiscaVariableName, period, 'sans_domicile')
   
   } else {
+    console.debug(`Valeur inattendue ${answerKey}: ${answerValue}`)
     throw new UnexpectedValueError(answerKey)
   }
 }
@@ -122,9 +124,10 @@ export function dispatchTypeLogement(
     return formatSurveyAnswerToRequest(openfiscaVariableName, period, 'locataire_vide')
   } else if (answerValue == "logement-meuble"){
     return formatSurveyAnswerToRequest(openfiscaVariableName, period, 'locataire_meuble')
-  } else if (answerValue == "locataire_foyer" ){
+  } else if (answerValue == "logement-foyer" ){
     return formatSurveyAnswerToRequest(openfiscaVariableName, period, 'locataire_foyer')
   } else {
+    console.debug(`Valeur inattendue ${answerKey}: ${answerValue}`)
     throw new UnexpectedValueError(answerKey)
   }
 }
@@ -367,10 +370,10 @@ export function buildRequest (answers: SurveyAnswers, questions: string[]): Open
 export async function fetchOpenFiscaFranceCalculation (
   request: OpenFiscaCalculationRequest,
 ): Promise<OpenFiscaCalculationResponse> {
+  const config = useRuntimeConfig()
+
   // eslint-disable-next-line no-console
-  console.debug('fetchOpenFiscaFranceCalculation...')
-  // eslint-disable-next-line no-console
-  console.debug('request:')
+  console.debug(`Requête à transmettre à ${config.public.apiEndpointOpenFiscaFranceCalculate} :`)
   // eslint-disable-next-line no-console
   console.debug(request)
 
@@ -383,7 +386,7 @@ export async function fetchOpenFiscaFranceCalculation (
     body: JSON.stringify(request),
   }
 
-  const config = useRuntimeConfig()
+  
   const response = await fetch(
     config.public.apiEndpointOpenFiscaFranceCalculate,
     requestSettings,

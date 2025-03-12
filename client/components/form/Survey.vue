@@ -177,6 +177,9 @@ async function submitForm () {
   try {
     const request: OpenFiscaCalculationRequest = buildRequest(answers.value, questionsToApi)
     const openfiscaResponse: OpenFiscaCalculationResponse = await fetchOpenFiscaFranceCalculation(request)
+    
+    // eslint-disable-next-line no-console
+    console.debug("Réponse reçue :")
     // eslint-disable-next-line no-console
     console.debug(openfiscaResponse)
 
