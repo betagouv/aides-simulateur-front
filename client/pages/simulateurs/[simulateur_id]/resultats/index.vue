@@ -36,7 +36,7 @@ if (!results) {
 
 <template>
   <SimulationResults
-    v-if="simulateur"
+    v-if="simulateur && results"
     :results="results"
     :simulateur-id="simulateurId"
     :simulateur-title="simulateur.titre"

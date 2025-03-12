@@ -9,26 +9,39 @@ const props = defineProps<{
 
 const simulationDateTime = formatDateTime(new Date(props.results.meta.createdAt))
 
-const richResults = await transformSimulationResults(props.results.data, props.simulateurId)
+const { data: richResults } = useAsyncData('rich-results', async () => {
+  return transformSimulationResults(props.results.data, props.simulateurId)
+}, {
+  default: () => ({
+    aides: [],
+    montants: [],
+    echeances: [],
+    aidesNonEligibles: [],
+    textesDeLoi: []
+  })
+})
 
-const hasAides = richResults.aides.length > 0
-const hasEcheances = richResults.echeances.length > 0
-const hasMontants = richResults.montants.length > 0
-const hasAidesNonEligibles = richResults.aidesNonEligibles.length > 0
-const hasTextesDeLoi = richResults.textesDeLoi.length > 0
+const hasAides = computed(() => richResults.value.aides.length > 0)
+const hasEcheances = computed(() => richResults.value.echeances.length > 0)
+const hasMontants = computed(() => richResults.value.montants.length > 0)
+const hasAidesNonEligibles = computed(() => richResults.value.aidesNonEligibles.length > 0)
+const hasTextesDeLoi = computed(() => richResults.value.textesDeLoi.length > 0)
 
-const segmentedSetOptions: DsfrSegmentedSetProps['options'] = [
+const segmentedSetOptions = computed<DsfrSegmentedSetProps['options']>(() => {
+  const options = [
   /**
    * @todo Restore "Vos informations" below once the feature is implemented
    */
   // { label: 'Vos informations', value: 'informations', icon: 'ri:edit-box-line' }
-]
-if (hasEcheances) {
-  segmentedSetOptions.unshift({ label: 'Échéances estimées', value: 'echeances', icon: 'ri:calendar-2-line' })
-}
-if (hasMontants) {
-  segmentedSetOptions.unshift({ label: 'Montants estimés', value: 'montants', icon: 'ri:money-euro-circle-line' })
-}
+  ]
+  if (hasEcheances.value) {
+    options.unshift({ label: 'Échéances estimées', value: 'echeances', icon: 'ri:calendar-2-line' })
+  }
+  if (hasMontants.value) {
+    options.unshift({ label: 'Montants estimés', value: 'montants', icon: 'ri:money-euro-circle-line' })
+  }
+  return options
+})
 
 const visibleTabName = ref<'montants' | 'echeances' | 'informations'>('montants')
 
@@ -110,7 +123,8 @@ const activeAccordion = ref<number>()
           </div>
           <div v-else-if="hasEcheances && visibleTabName === 'echeances'">
             <p>
-              Le montant de votre aide pourrait être versé en <strong>2 fois</strong> sur une période de <strong>6 mois</strong>.
+              Le montant de votre aide pourrait être versé en <strong>2 fois</strong> sur une période de <strong>6
+                mois</strong>.
             </p>
           </div>
           <div v-else-if="visibleTabName === 'informations'">
@@ -129,11 +143,10 @@ const activeAccordion = ref<number>()
           <h3>2. Les aides que nous avons identifiées</h3>
           <p>
             Selon les informations que vous avez fournies, vous pourriez être éligible à ces aides.
-            Ces résultats sont basés uniquement sur les données communiquées et ne constituent pas un engagement officiel de la part des organismes mentionnés.
+            Ces résultats sont basés uniquement sur les données communiquées et ne constituent pas un engagement
+            officiel de la part des organismes mentionnés.
           </p>
-          <AidesList
-            :aides="richResults.aides"
-          />
+          <AidesList :aides="richResults.aides" />
         </template>
         <p v-else>
           Nous n'avons pas trouvé d'aides correspondant à votre situation.
@@ -149,9 +162,7 @@ const activeAccordion = ref<number>()
           <div class="fr-card__body">
             <div class="fr-card__content">
               <DsfrAccordionsGroup v-model="activeAccordion">
-                <DsfrAccordion
-                  id="methodologie"
-                >
+                <DsfrAccordion id="methodologie">
                   <template #title>
                     <VIcon
                       name="ri:question-line"
@@ -180,9 +191,7 @@ const activeAccordion = ref<number>()
                     </span>
                   </template>
                   <template #default>
-                    <AidesList
-                      :aides="richResults.aidesNonEligibles"
-                    />
+                    <AidesList :aides="richResults.aidesNonEligibles" />
                   </template>
                 </DsfrAccordion>
                 <DsfrAccordion
