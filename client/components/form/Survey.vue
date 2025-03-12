@@ -149,14 +149,8 @@ async function submitForm () {
 
   // Sending the data to a web API to calculate a set of 'aides'
   try {
-<<<<<<< HEAD
     const request: OpenFiscaCalculationRequest = buildRequest(answers.value, questionsToApi)
     const openfiscaResponse: OpenFiscaCalculationResponse = await fetchOpenFiscaFranceCalculation(request)
-=======
-    const request: OpenFiscaCalculationRequest = buildRequest(answers.value)
-    const results = await fetchOpenFiscaFranceCalculation(request)
-
->>>>>>> 3f62f4e (feat(tracking): Enhance Matomo tracking for surveys and iframes)
     // eslint-disable-next-line no-console
     console.debug(openfiscaResponse)
 
