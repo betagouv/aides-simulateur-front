@@ -3,7 +3,36 @@ import { autocompleteFunctions } from '@/utils/autocompleteFunctions'
 
 definePageMeta({
   layout: 'user-simulation',
-  middleware: 'check-iframe-layout',
+  middleware: [
+    'check-iframe-layout',
+    function (to, from) {
+      const resume = to.query.resume
+      const fromName = from.matched[0].name as string
+
+      const shouldForceResume = [
+        'simulateurs-simulateur_id-notion_id',
+        'simulateurs-simulateur_id-resultats'
+      ].includes(fromName)
+
+      /**
+       * Important :
+       * If user is coming from certain pages (notion_id, resultats)
+       * we do not want to render the modal which propose to resume the simulation.
+       * We want to force the resume by adding the query param resume=true.
+       */
+      if (!resume && shouldForceResume) {
+        return navigateTo(`${to.fullPath}?resume=true`)
+      }
+      /**
+       * If the query param resume=true is present,
+       * and we are not coming from certain pages,
+       * we want to remove the query param *resume=true
+       */
+      if (resume && !shouldForceResume) {
+        return navigateTo(to.fullPath.replace('?resume=true', ''))
+      }
+    }
+  ],
   validate: getContentRouteValidator('simulateur_id')
 })
 
