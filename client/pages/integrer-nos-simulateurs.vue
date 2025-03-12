@@ -199,7 +199,7 @@ const activeAccordion = ref<number>()
               <p>
                 Si vous souhaitez une intégration personnalisée du simulateur, vous pouvez
                 contacter notre équipe à l'adresse
-                <a href="mailto:contact@aides-simplifiees.fr">contact@aides-simplifiees.fr</a>.
+                <a href="mailto:aides.simplifiees@numerique.gouv.fr">aides.simplifiees@numerique.gouv.fr</a>.
               </p>
             </div>
           </DsfrAccordion>
@@ -212,7 +212,7 @@ const activeAccordion = ref<number>()
             </p>
             <p>
               Pour plus d'informations, contactez notre équipe à l'adresse
-              <a href="mailto:contact@aides-simplifiees.fr">contact@aides-simplifiees.fr</a>.
+              <a href="mailto:aides.simplifiees@numerique.gouv.fr">aides.simplifiees@numerique.gouv.fr</a>.
             </p>
           </DsfrAccordion>
         </DsfrAccordionGroup>

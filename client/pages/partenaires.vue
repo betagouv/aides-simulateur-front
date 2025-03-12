@@ -28,4 +28,27 @@ setBreadcrumbs([
       </h1>
     </SectionContainer>
   </BrandBackgroundContainer>
+  <SectionContainer type="page-footer">
+    <div>
+      <p class="fr-text--xl">
+        Les administrations et organismes publics jouent un rôle clé dans l’accès aux aides. En travaillant avec nous, vous :
+        <ul>
+          <li>
+            Facilitez le parcours d’accès aux aides sur votre territoire ou votre domaine de compétences.
+          </li>
+          <li>
+            Accompagnez les usagers du diagnostic au dépôt de dossier.
+          </li>
+          <li>
+            Intégrez des simulateurs fiables et à jour, incluant les aides dont vous êtes responsable, sans développement complexe.
+          </li>
+        </ul>
+        Nous collaborons avec des acteurs engagés pour une administration plus simple et plus accessible.<br>
+        Intéressé ? Discutons ensemble de la meilleure manière d’intégrer aides simplifiées à votre service :contactez-nous à aides.simplifiees@numerique.gouv.fr.
+        <br>
+        <br>
+        Contacter notre équipe à l'adresse <a href="mailto:aides.simplifiees@numerique.gouv.fr">aides.simplifiees@numerique.gouv.fr</a>.
+      </p>
+    </div>
+  </SectionContainer>
 </template>
