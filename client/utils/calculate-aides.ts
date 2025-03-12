@@ -12,15 +12,35 @@ import {
   menagesQuestionsVariables
 } from '@/utils/aides-mapping-questions'
 
-const YEAR = '2025'
-export const MONTH = `${YEAR}-01`
-const ETERNITY_PERIOD = 'ETERNITY'
+
+function initDates(){
+  const today = new Date().toISOString() // YYYY-MM-DD
+  const monthDate = today.slice(0, 7)
+  const month = today.slice(5, 7)
+  const year = today.slice(0, 4)
+  const previous_year = String(parseInt(year) - 1)
+
+  // rolling year format:
+  // https://openfisca.org/doc/coding-the-legislation/35_periods.html#periods
+  const rolling_year = `month:${previous_year}-${month}:12`
+
+  return {
+    MONTH: monthDate,
+    YEAR: year,
+    YEAR_ROLLING: rolling_year
+  }
+}
+
+// init all periods once according to today's date
+export const { MONTH, YEAR, YEAR_ROLLING } = initDates()
+const ETERNITY_PERIOD = 'ETERNITY' // https://openfisca.org/doc/coding-the-legislation/35_periods.html#periods
+const UNDEFINED_PERIOD_TYPE = 'PERIODE_DEFNITION_INCONNUE'
 
 export const INDIVIDU_ID = 'usager'
 export const MENAGE_ID = `menage_${INDIVIDU_ID}`
 export const FOYER_FISCAL_ID = `foyer_fiscal_${INDIVIDU_ID}`
 export const FAMILLE_ID = `famille_${INDIVIDU_ID}`
-const UNDEFINED_ENTITY_ID = 'INCONNU'
+const UNDEFINED_ENTITY_ID = 'IDENTIFIANT_ENTITE_INCONNUE'
 
 enum Entites {
   Individus = 'individus',
@@ -28,6 +48,7 @@ enum Entites {
   FoyerFiscaux = 'foyers_fiscaux',
   Familles = 'familles'
 }
+
 
 function getEntityId (entity: Entites): string {
   switch (entity) {
@@ -46,17 +67,36 @@ function getEntityId (entity: Entites): string {
     default:
       // should not happen for simulators calling openfisca-france
       // (the entities list might change for a simulator calculating beyond natural persons)
-      console.error(`Entité inconnue: ${entity}`)
+      console.error(`Entité inconnue : ${entity}`)
       return UNDEFINED_ENTITY_ID
+  }
+}
+
+function getPeriod(
+  periodType: 'ETERNITY' | 'YEAR' | 'YEAR_ROLLING' | 'MONTH'
+): string {
+  switch(periodType){
+    case 'MONTH':
+      return MONTH
+    case 'YEAR':
+      return YEAR
+    case 'YEAR_ROLLING':
+      console.log(`YEAR_ROLLING ${YEAR_ROLLING}`)
+      return YEAR_ROLLING
+    case 'ETERNITY':
+      return ETERNITY_PERIOD
+    default:
+      console.error(`Période inconnue : ${periodType}`)
+      return UNDEFINED_PERIOD_TYPE
   }
 }
 
 export function dispatchSituationProfessionnelle(
   answerKey: string,
   answerValue: boolean | number | string,
-  periodType: 'ETERNITY' | 'YEAR' | 'MONTH'
+  periodType: 'ETERNITY' | 'YEAR' | 'YEAR_ROLLING' | 'MONTH'
 ): unknown{
-  const period = periodType === 'MONTH' ? MONTH : ETERNITY_PERIOD
+  const period = getPeriod(periodType)
   let openfiscaVariableName = undefined
   
   if (answerValue == "stage"){ 
@@ -84,9 +124,9 @@ export function dispatchSituationProfessionnelle(
 export function dispatchSituationLogement(
   answerKey: string,
   answerValue: boolean | number | string,
-  periodType: 'ETERNITY' | 'YEAR' | 'MONTH'
+  periodType: 'ETERNITY' | 'YEAR' | 'YEAR_ROLLING' | 'MONTH'
 ): unknown {
-  const period = periodType === 'MONTH' ? MONTH : ETERNITY_PERIOD
+  const period = getPeriod(periodType)
   let openfiscaVariableName = "statut_occupation_logement"
   // possible values: https://legislation.fr.openfisca.org/statut_occupation_logement
 
@@ -116,9 +156,9 @@ export function dispatchSituationLogement(
 export function dispatchTypeLogement(
   answerKey: string,
   answerValue: boolean | number | string,
-  periodType: 'ETERNITY' | 'YEAR' | 'MONTH'
+  periodType: 'ETERNITY' | 'YEAR' | 'YEAR_ROLLING' | 'MONTH'
 ): unknown {
-  const period = periodType === 'MONTH' ? MONTH : ETERNITY_PERIOD
+  const period = getPeriod(periodType)
   let openfiscaVariableName = "statut_occupation_logement"
   if (answerValue == "logement-non-meuble"){
     return formatSurveyAnswerToRequest(openfiscaVariableName, period, 'locataire_vide')
@@ -204,7 +244,7 @@ function addSurveyAnswerToRequest (
       throw new UnexpectedValueError(answerKey)
     }
 
-    const period = mapping.period === 'MONTH' ? MONTH : ETERNITY_PERIOD
+    const period = getPeriod(mapping.period)
     let formattedAnswer: { [openfiscaKey: string]: VariableValueOnPeriod } | undefined = undefined
     if ('dispatch' in mapping){
       // dispatch and manage period in dispatch
@@ -250,10 +290,9 @@ function addSurveyAnswerToRequest (
  */
 function formatSurveyQuestionToRequest (
   openfiscaVariableName: string,
-  periodType: string
+  period: string
 ) {
   const result: { [key: string]: VariableToCalculateOnPeriod } = {}
-  const period = periodType === 'MONTH' ? MONTH : ETERNITY_PERIOD
   result[openfiscaVariableName] = {
     [period]: null
   }
@@ -267,7 +306,8 @@ function addSurveyQuestionToRequest (
   request: OpenFiscaCalculationRequest
 ): OpenFiscaCalculationRequest {
   const openfiscaVariableName = mapping.openfiscaVariableName
-  const formattedQuestion = formatSurveyQuestionToRequest(openfiscaVariableName, mapping.period)
+  const period = getPeriod(mapping.period)
+  const formattedQuestion = formatSurveyQuestionToRequest(openfiscaVariableName, period)
 
   const entityId = getEntityId(entity)
   if (entityId === UNDEFINED_ENTITY_ID) {

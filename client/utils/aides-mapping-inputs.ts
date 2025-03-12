@@ -23,7 +23,7 @@ export const individusVariables: { [aidesSimplifieesKey: string]: AidesSimplifie
   },
   'salaire-imposable': { // '20000' TODO: move to month value or multiple month values?
     openfiscaVariableName: 'salaire_imposable',
-    period: 'MONTH'
+    period: 'YEAR_ROLLING'
   },
   'revenus-chomage': { // imposable
     openfiscaVariableName: 'chomage_imposable',

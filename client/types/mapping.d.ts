@@ -8,10 +8,10 @@ declare global {
 
     export type OpenFiscaMapping = {
         openfiscaVariableName: string
-        period: 'ETERNITY' | 'YEAR' | 'MONTH'
+        period: 'ETERNITY' | 'YEAR' | 'YEAR_ROLLING' | 'MONTH'
     } | {
-        dispatch: (answerKey: string, answerValue: boolean, periodType: 'ETERNITY' | 'YEAR' | 'MONTH') => unknown
-        period: 'ETERNITY' | 'YEAR' | 'MONTH'  
+        dispatch: (answerKey: string, answerValue: boolean, periodType: 'ETERNITY' | 'YEAR' | 'YEAR_ROLLING' | 'MONTH') => unknown
+        period: 'ETERNITY' | 'YEAR' | 'YEAR_ROLLING' | 'MONTH'  
     }
 }
 
