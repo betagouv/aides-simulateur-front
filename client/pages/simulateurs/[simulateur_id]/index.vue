@@ -32,7 +32,7 @@ const { isIframe } = useIframeDisplay()
 onMounted(() => {
   if (isIframe.value) {
     const script = document.createElement('script')
-    script.src = 'https://cdn.jsdelivr.net/npm/iframe-resizer@4.3.2/js/iframeResizer.contentWindow.min.js'
+    script.src = '/scripts/iframeResizer.contentWindow.min.js'
     script.async = true
     document.head.appendChild(script)
   }
