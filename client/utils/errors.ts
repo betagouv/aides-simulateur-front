@@ -16,6 +16,14 @@ export class UnknownEntityError extends Error {
   }
 }
 
+export class UnknownPeriodError extends Error {
+  // unconsistency in the request builder
+  constructor (formInputId: string) {
+    super(`Période inconnue pour le champ : ${formInputId}`)
+    this.name = 'UnknownPeriodError'
+  }
+}
+
 export class UndefinedValueError extends Error {
   // the user didn't set a value in the form
   constructor (formInputId: string) {

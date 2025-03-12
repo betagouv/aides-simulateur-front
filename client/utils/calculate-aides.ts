@@ -95,6 +95,11 @@ export function dispatchSituationProfessionnelle(
   periodType: 'ETERNITY' | 'YEAR' | 'YEAR_ROLLING' | 'MONTH'
 ): unknown{
   const period = getPeriod(periodType)
+  if (period === UNDEFINED_PERIOD_TYPE) {
+    console.error(`Variable '${answerKey}' de période imprévue ou inconnue: ${periodType}`)
+    throw new UnknownPeriodError(answerKey)
+  }
+
   let openfiscaVariableName = undefined
   
   if (answerValue == "stage"){ 
@@ -125,6 +130,11 @@ export function dispatchSituationLogement(
   periodType: 'ETERNITY' | 'YEAR' | 'YEAR_ROLLING' | 'MONTH'
 ): unknown {
   const period = getPeriod(periodType)
+  if (period === UNDEFINED_PERIOD_TYPE) {
+    console.error(`Variable '${answerKey}' de période imprévue ou inconnue: ${periodType}`)
+    throw new UnknownPeriodError(answerKey)
+  }
+
   let openfiscaVariableName = "statut_occupation_logement"
   // possible values: https://legislation.fr.openfisca.org/statut_occupation_logement
 
@@ -157,6 +167,11 @@ export function dispatchTypeLogement(
   periodType: 'ETERNITY' | 'YEAR' | 'YEAR_ROLLING' | 'MONTH'
 ): unknown {
   const period = getPeriod(periodType)
+  if (period === UNDEFINED_PERIOD_TYPE) {
+    console.error(`Variable '${answerKey}' de période imprévue ou inconnue: ${periodType}`)
+    throw new UnknownPeriodError(answerKey)
+  }
+
   let openfiscaVariableName = "statut_occupation_logement"
   if (answerValue == "logement-non-meuble"){
     return formatSurveyAnswerToRequest(openfiscaVariableName, period, 'locataire_vide')
