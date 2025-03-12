@@ -41,8 +41,37 @@ export const useFormStore = defineStore('form', () => {
     // Track question answer in Matomo
     if (typeof window !== 'undefined' && (window as any)._paq) {
       const { question } = findQuestionById(questionId)
-      const questionTitle = question?.title || questionId
-      ;(window as any)._paq.push(['trackEvent', 'Survey', 'Answer', questionTitle, value])
+      const questionTitle = `[${questionId}]${question?.title}`
+
+      // Get the current URL to extract parameters
+      let source = 'website'
+      let simulateurId = ''
+
+      if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href)
+        // Check if in iframe
+        const isIframe = url.searchParams.get('iframe') === 'true'
+
+        // Use iframe detection and source from the composable
+        if (isIframe) {
+          // We can't directly use the composable here since we're in the store
+          // So we'll extract the source following the same logic
+          const utmSource = url.searchParams.get('utm_source')
+          if (utmSource) {
+            source = utmSource.replace('iframe@', '')
+          }
+        }
+
+        // Extract simulateurId from path
+        const pathParts = url.pathname.split('/')
+        const simulateurIndex = pathParts.findIndex(part => part === 'simulateurs')
+        if (simulateurIndex !== -1 && simulateurIndex + 1 < pathParts.length) {
+          simulateurId = pathParts[simulateurIndex + 1]
+        }
+      }
+
+      const category = `[${simulateurId}][${source}]Survey`
+      ;(window as any)._paq.push(['trackEvent', category, 'Answer', `[${simulateurId}][${source}]${questionTitle}`, 1])
     }
 
     // We no longer update history here - that happens in navigation methods

@@ -7,9 +7,11 @@ const props = defineProps<{
 const formStore = useFormStore()
 const isLoading = ref(true)
 const simulateurId = props.simulateurId
-
 // État pour afficher ou non l'écran de choix
 const showChoiceScreen = ref(false)
+
+// Get iframe display information
+const { isIframe, getIframeSource } = useIframeDisplay()
 
 // Use storeToRefs to maintain reactivity
 const {
@@ -79,6 +81,13 @@ onMounted(async () => {
     // Afficher l'écran de choix si un formulaire est en cours
     showChoiceScreen.value = hasInProgressForm.value
 
+    // Track form start in Matomo
+    if (typeof window !== 'undefined' && (window as any)._paq) {
+      const source = isIframe.value ? `iframe@${getIframeSource()}` : 'website'
+      const category = `[${simulateurId}][${source}]Survey`
+      ;(window as any)._paq.push(['trackEvent', category, 'Start'])
+    }
+
     // Add event listener for Enter key
     window.addEventListener('keydown', handleKeyDown)
   }
@@ -140,8 +149,14 @@ async function submitForm () {
 
   // Sending the data to a web API to calculate a set of 'aides'
   try {
+<<<<<<< HEAD
     const request: OpenFiscaCalculationRequest = buildRequest(answers.value, questionsToApi)
     const openfiscaResponse: OpenFiscaCalculationResponse = await fetchOpenFiscaFranceCalculation(request)
+=======
+    const request: OpenFiscaCalculationRequest = buildRequest(answers.value)
+    const results = await fetchOpenFiscaFranceCalculation(request)
+
+>>>>>>> 3f62f4e (feat(tracking): Enhance Matomo tracking for surveys and iframes)
     // eslint-disable-next-line no-console
     console.debug(openfiscaResponse)
 
@@ -149,7 +164,9 @@ async function submitForm () {
 
     // Track form submission in Matomo
     if (typeof window !== 'undefined' && (window as any)._paq) {
-      (window as any)._paq.push(['trackEvent', 'Survey', 'Submit', simulateurId])
+      const source = isIframe.value ? `iframe@${getIframeSource()}` : 'website'
+      const category = `[${simulateurId}][${source}]Survey`
+      ;(window as any)._paq.push(['trackEvent', category, 'Submit'])
     }
 
     // Store form data and results
@@ -192,7 +209,6 @@ function restartForm () {
   showChoiceScreen.value = false
 }
 
-const { isIframe } = useIframeDisplay()
 const surveyTitleTag = computed(() => isIframe.value ? 'h1' : 'h2')
 const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
 </script>
