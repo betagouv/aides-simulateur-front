@@ -74,3 +74,9 @@ npm run preview
 # pnpm
 pnpm run preview
 ```
+
+## FAQ
+
+**En mode développement, un type n'est pas reconnu, que faire ?**
+
+Regénérer la configuration, des références en prticulier, avec `pnpm nuxi prepare`.
