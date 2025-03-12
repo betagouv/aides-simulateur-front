@@ -49,7 +49,6 @@ enum Entites {
   Familles = 'familles'
 }
 
-
 function getEntityId (entity: Entites): string {
   switch (entity) {
     case Entites.Individus:
@@ -261,9 +260,9 @@ function addSurveyAnswerToRequest (
 
     let formattedVariableName = Object.keys(formattedAnswer)[0]
     if (request[entity][entityId][formattedVariableName]){
-      // MANAGING VERY SPECIFIC CASES
-      // a value already exist in the request for formattedVariableName 
-      // we expect it to ba at the same period as, for now, only one period value is set for each variable
+      // MANAGING VERY SPECIFIC CASE 🙀
+      // a value already exists in the request for formattedVariableName 
+      // we expect it to be at the same period as, for now, we set each variable once (for one period only)
       let existingValue = request[entity][entityId][formattedVariableName][period]
       if (formattedVariableName == 'statut_occupation_logement' && existingValue == 'locataire_vide') {
         // expected: one of dispatchSituationLogement or dispatchTypeLogement already updated the value once
@@ -279,6 +278,14 @@ function addSurveyAnswerToRequest (
     } else {
       // formattedVariableName value is set for the first time here
       request[entity][entityId][formattedVariableName] = { ...formattedAnswer[formattedVariableName] }
+    }
+
+    // MANAGING VERY SPECIFIC CASE 🙀
+    if(formattedVariableName == 'statut_occupation_logement' && request[entity][entityId][formattedVariableName][period] == 'locataire_foyer'){
+      // for the same entity Menage and at the same period than 'statut_occupation_logement' add 'logement_conventionne'
+      const additionalOpenFiscaVariableName = 'logement_conventionne'
+      const formattedAdditionalVariable = formatSurveyAnswerToRequest(additionalOpenFiscaVariableName, period, true)
+      request[entity][entityId][additionalOpenFiscaVariableName] = { ...formattedAdditionalVariable[additionalOpenFiscaVariableName] }
     }
   }
   return request
@@ -425,7 +432,6 @@ export async function fetchOpenFiscaFranceCalculation (
     },
     body: JSON.stringify(request),
   }
-
   
   const response = await fetch(
     config.public.apiEndpointOpenFiscaFranceCalculate,
@@ -433,7 +439,6 @@ export async function fetchOpenFiscaFranceCalculation (
   )
 
   let result = await response.json()
-
   if (!response.ok) {
     result = {
       error: response.status,

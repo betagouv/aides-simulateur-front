@@ -157,7 +157,10 @@ export const menagesVariables: { [aidesSimplifieesKey: string]: AidesSimplifiees
     // TODO: include in situation-logement?
     exclude: true
   },
-  'type-logement': { // 'logement-foyer' TODO: check what we mean by "type-logement" (foyer, chambre... or conventionne / not conventionne)
+  'type-logement': { // 'logement-foyer' 
+    // TODO: check what we mean by "type-logement" (foyer, chambre... or conventionne / not conventionne)
+    // we have : "id": "logement-foyer", "title": "Foyer (résidence CROUS, etc.) ou logement conventionné" 
+    // but other types like logement_meuble can also be conventionné (then remove calsulate-aides.ts specific code for 'logement_conventionne')
     dispatch: dispatchTypeLogement,
     period: 'MONTH'
   }
