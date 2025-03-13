@@ -345,26 +345,28 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
           />
         </p>
         <p>
-          Nous continuons à l'améliorer. Vos retours sont précieux :
-          <ul>
-            <li>
-              Par mail à l'adresse
-              <DsfrLink
-                to="mailto:aides.simplifiees@numerique.gouv.fr"
-                :icon="{ name: 'ri:mail-line', ssr: true }"
-                label="aides.simplifiees@numerique.gouv.fr"
-              />
-            </li>
-            <li>
-              Via
-              <DsfrLink
-                :icon="{ name: 'ri:external-link-line', ssr: true }"
-                to="'https://tally.so/r/w27b9D"
-                target="_blank"
-                label="le questionnaire de satisfaction"
-              />
-            </li>
-          </ul>
+          Nous continuons à l’améliorer. Vos retours sont précieux :
+        </p>
+        <ul class="fr-mt-n2w fr-mb-2w">
+          <li>
+            Par mail à l'adresse
+            <DsfrLink
+              to="mailto:aides.simplifiees@numerique.gouv.fr"
+              :icon="{ name: 'ri:mail-line', ssr: true }"
+              label="aides.simplifiees@numerique.gouv.fr"
+            />
+          </li>
+          <li>
+            Via
+            <DsfrLink
+              :icon="{ name: 'ri:external-link-line', ssr: true }"
+              to="'https://tally.so/r/w27b9D"
+              target="_blank"
+              label="le questionnaire de satisfaction"
+            />
+          </li>
+        </ul>
+        <p>
           Merci pour votre aide !
         </p>
 
