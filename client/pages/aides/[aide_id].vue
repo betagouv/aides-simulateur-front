@@ -38,16 +38,14 @@ useSeoMeta({
       v-if="aide"
       type="page-header"
     >
-      <div class="fr-grid-row fr-grid-row--gutters">
-        <div class="fr-col-9 fr-col-sm-10 fr-col-md-11">
+      <article>
+        <header class="fr-mb-4w">
           <h1>
             {{ aide?.titre }}
           </h1>
-        </div>
-        <div class="fr-col-9 fr-col-sm-10 fr-col-md-11">
-          <ContentRenderer :value="aide" />
-        </div>
-      </div>
+        </header>
+        <ContentRenderer :value="aide" />
+      </article>
     </SectionContainer>
   </BrandBackgroundContainer>
 </template>

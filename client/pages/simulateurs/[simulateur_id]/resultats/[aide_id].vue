@@ -40,18 +40,20 @@ useSeoMeta({
 </script>
 
 <template>
-  <div v-if="simulateur && aide">
-    <h1>
-      {{ aide?.titre }}
-    </h1>
-    <DsfrLink
-      icon-before
-      label="Revenir à mes résultats"
-      :to="`/simulateurs/${simulateurId}/resultats#simulateur-title`"
-      :icon="{ name: 'ri:arrow-left-line', ssr: true }"
-    />
-    <p>
-      {{ aide?.description }}
-    </p>
-  </div>
+  <article v-if="simulateur && aide">
+    <header class="fr-mb-6w">
+      <h1>
+        {{ aide?.titre }}
+      </h1>
+      <DsfrLink
+        icon-before
+        label="Revenir à ma simulation"
+        :to="`/simulateurs/${simulateurId}#simulateur-title`"
+        :icon="{ name: 'ri:arrow-left-line', ssr: true }"
+      />
+    </header>
+    <div class="fr-card fr-p-3w">
+      <ContentRenderer :value="aide" />
+    </div>
+  </article>
 </template>

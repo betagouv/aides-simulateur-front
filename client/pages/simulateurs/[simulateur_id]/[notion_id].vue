@@ -40,20 +40,22 @@ useSeoMeta({
 </script>
 
 <template>
-  <div v-if="simulateur && notion">
-    <h1>
-      {{ notion?.titre }}
-    </h1>
-    <DsfrLink
-      icon-before
-      label="Revenir à ma simulation"
-      :to="`/simulateurs/${simulateurId}#simulateur-title`"
-      :icon="{ name: 'ri:arrow-left-line', ssr: true }"
-    />
-    <p class="fr-text--lg">
-      {{ notion?.description }}
-    </p>
-  </div>
+  <article v-if="simulateur && notion">
+    <header class="fr-mb-6w">
+      <h1>
+        {{ notion?.titre }}
+      </h1>
+      <DsfrLink
+        icon-before
+        label="Revenir à ma simulation"
+        :to="`/simulateurs/${simulateurId}#simulateur-title`"
+        :icon="{ name: 'ri:arrow-left-line', ssr: true }"
+      />
+    </header>
+    <div class="fr-card fr-p-3w">
+      <ContentRenderer :value="notion" />
+    </div>
+  </article>
 </template>
 
 <style scoped lang="scss">

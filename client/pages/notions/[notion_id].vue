@@ -37,16 +37,14 @@ useSeoMeta({
       v-if="notion"
       type="page-header"
     >
-      <div class="fr-grid-row fr-grid-row--gutters">
-        <div class="fr-col-9 fr-col-sm-10 fr-col-md-11">
+      <article>
+        <header class="fr-mb-4w">
           <h1>
             {{ notion?.titre }}
           </h1>
-          <p class="fr-text--lg">
-            {{ notion?.description }}
-          </p>
-        </div>
-      </div>
+        </header>
+        <ContentRenderer :value="notion" />
+      </article>
     </SectionContainer>
   </BrandBackgroundContainer>
 </template>
