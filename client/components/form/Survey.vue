@@ -90,11 +90,15 @@ if (doResume.value) {
 }
 
 // Focus on the question container after navigation
-const formContainer = ref<HTMLElement | null>(null)
-function focusQuestionContainer () {
+const questionContainer = ref<HTMLElement | null>(null)
+function focusRenderedQuestion () {
   nextTick(() => {
-    if (formContainer.value) {
-      formContainer.value.focus()
+    if (questionContainer.value) {
+      // Focus the first focusable element inside the question container
+      const focusable = questionContainer.value.querySelector('input, button, select, textarea') as HTMLElement | null
+      if (focusable) {
+        focusable.focus()
+      }
     }
   })
 }
@@ -107,7 +111,7 @@ onKeyDown('Enter', () => {
   if (hasAnswer.value) {
     handleNext()
   }
-}, { target: formContainer })
+}, { target: questionContainer })
 
 onMounted(async () => {
   try {
@@ -148,7 +152,7 @@ function handleNext () {
   }
   else {
     goToNextQuestion()
-    focusQuestionContainer()
+    focusRenderedQuestion()
   }
 }
 
@@ -158,7 +162,7 @@ function handlePrevious () {
     // If we are at the first question, show the welcome screen
     showWelcomeScreen.value = true
   }
-  focusQuestionContainer()
+  focusRenderedQuestion()
 }
 
 const resultStore = useResultsStore()
@@ -245,7 +249,7 @@ function resumeForm () {
   showChoiceScreen.value = false
   showWelcomeScreen.value = false
   // Focus the question after resuming
-  focusQuestionContainer()
+  focusRenderedQuestion()
 }
 
 function restartForm () {
@@ -254,7 +258,7 @@ function restartForm () {
   showWelcomeScreen.value = true
   showChoiceScreen.value = false
   // Focus the question after restarting
-  focusQuestionContainer()
+  focusRenderedQuestion()
 }
 
 /**
@@ -393,9 +397,7 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
         />
         <div
           v-if="surveySchema && currentQuestion"
-          ref="formContainer"
           class="form-container fr-card fr-card--shadow fr-p-3w"
-          tabindex="-1"
         >
           <DsfrBadge
             v-if="resultsFetchState !== 'idle'"
@@ -438,48 +440,52 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
 
             <!-- Question component based on type -->
             <template v-if="currentQuestion">
-              <RadioButtonQuestion
-                v-if="currentQuestion.type === 'radio'"
-                :question="currentQuestion"
-                :model-value="(answers[currentQuestion.id] as string)"
-                @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
-              />
+              <div
+                ref="questionContainer"
+              >
+                <RadioButtonQuestion
+                  v-if="currentQuestion.type === 'radio'"
+                  :question="currentQuestion"
+                  :model-value="(answers[currentQuestion.id] as string)"
+                  @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
+                />
 
-              <BooleanQuestion
-                v-else-if="currentQuestion.type === 'boolean'"
-                :question="currentQuestion"
-                :model-value="(answers[currentQuestion.id] as boolean)"
-                @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
-              />
+                <BooleanQuestion
+                  v-else-if="currentQuestion.type === 'boolean'"
+                  :question="currentQuestion"
+                  :model-value="(answers[currentQuestion.id] as boolean)"
+                  @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
+                />
 
-              <MultiSelectQuestion
-                v-else-if="currentQuestion.type === 'checkbox'"
-                :question="currentQuestion"
-                :model-value="(answers[currentQuestion.id] as string[])"
-                @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
-              />
+                <MultiSelectQuestion
+                  v-else-if="currentQuestion.type === 'checkbox'"
+                  :question="currentQuestion"
+                  :model-value="(answers[currentQuestion.id] as string[])"
+                  @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
+                />
 
-              <NumberQuestion
-                v-else-if="currentQuestion.type === 'number'"
-                :question="currentQuestion"
-                :model-value="(answers[currentQuestion.id] as number)"
-                @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
-              />
+                <NumberQuestion
+                  v-else-if="currentQuestion.type === 'number'"
+                  :question="currentQuestion"
+                  :model-value="(answers[currentQuestion.id] as number)"
+                  @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
+                />
 
-              <DateQuestion
-                v-else-if="currentQuestion.type === 'date'"
-                :question="currentQuestion"
-                :model-value="(answers[currentQuestion.id] as string)"
-                @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
-              />
+                <DateQuestion
+                  v-else-if="currentQuestion.type === 'date'"
+                  :question="currentQuestion"
+                  :model-value="(answers[currentQuestion.id] as string)"
+                  @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
+                />
 
-              <TextQuestion
-                v-else-if="currentQuestion.type === 'text'"
-                :question="currentQuestion"
-                :model-value="(answers[currentQuestion.id] as string)"
-                :autocomplete-fn="getAutocompleteFn"
-                @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
-              />
+                <TextQuestion
+                  v-else-if="currentQuestion.type === 'text'"
+                  :question="currentQuestion"
+                  :model-value="(answers[currentQuestion.id] as string)"
+                  :autocomplete-fn="getAutocompleteFn"
+                  @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
+                />
+              </div>
             </template>
           </div>
           <div class="fr-btns-group fr-mt-3w brand-form-actions brand-form-actions__align-end">
