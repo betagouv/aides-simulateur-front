@@ -1,10 +1,11 @@
 <script lang="ts" setup>
+definePageMeta({
+  layout: 'default',
+})
+
 useSeoMeta({
   title: 'Toutes les informations sur les notions | Aides simplifiées',
   description: 'Découvrez toutes les informations sur les notions pour vous accompagner dans vos démarches.'
-})
-definePageMeta({
-  layout: 'default',
 })
 
 const { data: notions } = await useAsyncData('notions', () => {
@@ -19,7 +20,7 @@ const { data: notions } = await useAsyncData('notions', () => {
          * /!\ le champ 'titre' est défini par le rédacteur dans le fichier
          * !== du champ 'title' (qui correspond au nom dans le filesystem)
          */
-        title: notion.titre,
+        titre: notion.titre as string,
       }
     })
   }
@@ -47,6 +48,7 @@ setBreadcrumbs([
           <div class="fr-col-4">
             <DsfrCard
               :title="notion.titre"
+              description=""
               :link="`/notions/${notion.id}`"
             />
           </div>

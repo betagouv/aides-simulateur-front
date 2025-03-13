@@ -1,13 +1,9 @@
 <script lang="ts" setup>
 const route = useRoute()
 const simulateurId = computed(() => route.params.simulateur_id as string)
-
-const { data: simulateur } = await useAsyncData(`simulateur-${simulateurId.value}`, () => {
-  return queryCollection('simulateurs')
-    .where('stem', '=', `simulateurs/${simulateurId.value}`)
-    .first()
-}, {
-  watch: [route]
+const nuxtApp = useNuxtApp()
+const simulateur = computed(() => {
+  return nuxtApp.payload.data[`simulateur-${simulateurId.value}`]
 })
 </script>
 
@@ -25,8 +21,11 @@ const { data: simulateur } = await useAsyncData(`simulateur-${simulateurId.value
               :svg-path="simulateur.pictogramme"
             />
           </div>
-          <div
+          <!-- <div
             id="simulateur-title"
+            class="simulation-title-container fr-col-9 fr-col-sm-10 fr-col-lg-11"
+          > -->
+          <div
             class="simulation-title-container fr-col-9 fr-col-sm-10 fr-col-lg-11"
           >
             <h1

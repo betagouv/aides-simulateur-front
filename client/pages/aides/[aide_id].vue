@@ -1,31 +1,27 @@
 <script lang="ts" setup>
 definePageMeta({
   layout: 'default',
-  validate: getContentRouteValidator('aide_id')
+  validate: getContentRouteValidator('aide_id'),
+  middleware: [
+    'load-aide'
+  ],
 })
 
 const route = useRoute()
-
+const nuxtApp = useNuxtApp()
 const aideId = route.params.aide_id
-const { data: aide } = await useAsyncData(`aide-${aideId}`, () => {
-  return queryCollection('aides')
-    .where('stem', '=', `aides/${aideId}`)
-    .first()
-})
+const aide = nuxtApp.payload.data[`aide-${aideId}`]
+const aideTitle = aide?.titre || aideId
 
 const { setBreadcrumbs } = useBreadcrumbStore()
-// watchEffect(() => {
-if (aide.value) {
-  setBreadcrumbs([
-    { text: 'Accueil', to: '/' },
-    { text: 'Aides', to: '/aides' },
-    { text: aide.value.titre, to: `/aides/${aideId}` }
-  ])
-}
-// })
+setBreadcrumbs([
+  { text: 'Accueil', to: '/' },
+  { text: 'Aides', to: '/aides' },
+  { text: aideTitle, to: `/aides/${aideId}` }
+])
 
 useSeoMeta({
-  title: `Aide ${aide.value?.titre || aideId} | Aides simplifiées`,
+  title: `Aide "${aideTitle}" | Aides simplifiées`,
   description: `${aide.value?.resume}`
 })
 </script>
@@ -40,7 +36,7 @@ useSeoMeta({
       <article>
         <header class="fr-mb-4w">
           <h1>
-            {{ aide?.titre }}
+            {{ aideTitle }}
           </h1>
         </header>
         <ContentRenderer :value="aide" />

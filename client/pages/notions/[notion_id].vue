@@ -1,31 +1,27 @@
 <script lang="ts" setup>
 definePageMeta({
   layout: 'default',
-  validate: getContentRouteValidator('notion_id')
+  validate: getContentRouteValidator('notion_id'),
+  middleware: [
+    'load-notion'
+  ]
 })
 
 const route = useRoute()
+const nuxtApp = useNuxtApp()
 const notionId = route.params.notion_id
-
-const { data: notion } = await useAsyncData(`notion-${notionId}`, () => {
-  return queryCollection('notions')
-    .where('stem', '=', `notions/${notionId}`)
-    .first()
-})
+const notion = nuxtApp.payload.data[`notion-${notionId}`]
+const notionTitle = notion?.titre || notionId
 
 const { setBreadcrumbs } = useBreadcrumbStore()
-watchEffect(() => {
-  if (notion.value) {
-    setBreadcrumbs([
-      { text: 'Accueil', to: '/' },
-      { text: 'Aides', to: '/aides' },
-      { text: notion.value.titre, to: `/notions/${notionId}` }
-    ])
-  }
-})
+setBreadcrumbs([
+  { text: 'Accueil', to: '/' },
+  { text: 'Aides', to: '/aides' },
+  { text: notionTitle, to: `/notions/${notionId}` }
+])
 
 useSeoMeta({
-  title: `Informations sur la notion ${notion.value?.titre || notionId} | Aides simplifiées`,
+  title: `Informations sur la notion "${notionTitle}" | Aides simplifiées`,
   description: `${notion.value?.description.slice(0, 155)}...`
 })
 </script>
@@ -40,7 +36,7 @@ useSeoMeta({
       <article>
         <header class="fr-mb-4w">
           <h1>
-            {{ notion?.titre }}
+            {{ notionTitle }}
           </h1>
         </header>
         <ContentRenderer :value="notion" />
@@ -49,5 +45,4 @@ useSeoMeta({
   </BrandBackgroundContainer>
 </template>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

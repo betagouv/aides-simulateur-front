@@ -1,40 +1,33 @@
 <script lang="ts" setup>
 definePageMeta({
   layout: 'user-simulation',
-  middleware: 'check-iframe-layout',
+  middleware: [
+    'check-iframe-layout',
+    'load-simulateur',
+    'load-notion'
+  ],
   validate: getContentRouteValidator(['notion_id', 'simulateur_id'])
 })
 
 const route = useRoute()
-
+const nuxtApp = useNuxtApp()
 const simulateurId = route.params.simulateur_id as string
-const { data: simulateur } = await useAsyncData(`simulateur-${simulateurId}`, () => {
-  return queryCollection('simulateurs')
-    .where('stem', '=', `simulateurs/${simulateurId}`)
-    .first()
-})
-
+const simulateur = nuxtApp.payload.data[`simulateur-${simulateurId}`]
+const simulateurTitle = simulateur?.titre || simulateurId
 const notionId = route.params.notion_id
-const { data: notion } = await useAsyncData(`notion-${notionId}`, () => {
-  return queryCollection('notions')
-    .where('stem', '=', `notions/${notionId}`)
-    .first()
-})
+const notion = nuxtApp.payload.data[`notion-${notionId}`]
+const notionTitle = notion?.titre || notionId
 
 const { setBreadcrumbs } = useBreadcrumbStore()
-watchEffect(() => {
-  if (simulateur.value && notion.value) {
-    setBreadcrumbs([
-      { text: 'Accueil', to: '/' },
-      { text: 'Simulateurs', to: '/simulateurs' },
-      { text: simulateur.value.titre, to: `/simulateurs/${simulateurId}#simulateur-title` },
-      { text: notion.value.titre, to: `/simulateurs/${simulateurId}/${notionId}#simulateur-title` }
-    ])
-  }
-})
+setBreadcrumbs([
+  { text: 'Accueil', to: '/' },
+  { text: 'Simulateurs', to: '/simulateurs' },
+  { text: simulateurTitle, to: `/simulateurs/${simulateurId}#simulateur-title` },
+  { text: notionTitle, to: `/simulateurs/${simulateurId}/${notionId}#simulateur-title` }
+])
 
 useSeoMeta({
-  title: `Informations sur la notion ${notion.value?.titre || notionId} | Aides simplifiées`,
+  title: `Informations sur la notion "${notionTitle}" | Aides simplifiées`,
   description: `${notion.value?.description.slice(0, 155)}...`
 })
 </script>
@@ -43,7 +36,7 @@ useSeoMeta({
   <article v-if="simulateur && notion">
     <header class="fr-mb-6w">
       <h1>
-        {{ notion?.titre }}
+        {{ notionTitle }}
       </h1>
       <DsfrLink
         icon-before
@@ -58,5 +51,4 @@ useSeoMeta({
   </article>
 </template>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

@@ -1,40 +1,35 @@
 <script lang="ts" setup>
 definePageMeta({
   layout: 'user-simulation',
-  middleware: 'check-iframe-layout',
-  validate: getContentRouteValidator(['aide_id', 'simulateur_id'])
+  validate: getContentRouteValidator(['aide_id', 'simulateur_id']),
+  middleware: [
+    'check-iframe-layout',
+    'load-simulateur',
+    'load-aide'
+  ],
 })
 
 const route = useRoute()
-
+const nuxtApp = useNuxtApp()
 const simulateurId = route.params.simulateur_id as string
-const { data: simulateur } = await useAsyncData(`simulateur-${simulateurId}`, () => {
-  return queryCollection('simulateurs')
-    .where('stem', '=', `simulateurs/${simulateurId}`)
-    .first()
-})
+const simulateur = nuxtApp.payload.data[`simulateur-${simulateurId}`]
+const simulateurTitle = simulateur?.titre || simulateurId
+
 const aideId = route.params.aide_id
-const { data: aide } = await useAsyncData(`aide-${aideId}`, () => {
-  return queryCollection('aides')
-    .where('stem', '=', `aides/${aideId}`)
-    .first()
-})
+const aide = nuxtApp.payload.data[`aide-${aideId}`]
+const aideTitle = aide?.titre || aideId
 
 const { setBreadcrumbs } = useBreadcrumbStore()
-watchEffect(() => {
-  if (simulateur.value && aide.value) {
-    setBreadcrumbs([
-      { text: 'Accueil', to: '/' },
-      { text: 'Simulateurs', to: '/simulateurs' },
-      { text: simulateur.value.titre, to: `/simulateurs/${simulateurId}#simulateur-title` },
-      { text: 'Résultats', to: `/simulateurs/${simulateurId}/resultats#simulateur-title` },
-      { text: aide.value.titre, to: `/simulateurs/${simulateurId}/resultats/${aideId}#simulateur-title` }
-    ])
-  }
-})
+setBreadcrumbs([
+  { text: 'Accueil', to: '/' },
+  { text: 'Simulateurs', to: '/simulateurs' },
+  { text: simulateurTitle, to: `/simulateurs/${simulateurId}#simulateur-title` },
+  { text: 'Résultats', to: `/simulateurs/${simulateurId}/resultats#simulateur-title` },
+  { text: aideTitle, to: `/simulateurs/${simulateurId}/resultats/${aideId}#simulateur-title` }
+])
 
 useSeoMeta({
-  title: `Aide ${aide.value?.titre || aideId} | Aides simplifiées`,
+  title: `Aide "${aideTitle}" | Aides simplifiées`,
   description: `${aide.value?.resume}`
 })
 </script>
@@ -43,7 +38,7 @@ useSeoMeta({
   <article v-if="simulateur && aide">
     <header class="fr-mb-6w">
       <h1>
-        {{ aide?.titre }}
+        {{ aideTitle }}
       </h1>
       <DsfrLink
         icon-before
