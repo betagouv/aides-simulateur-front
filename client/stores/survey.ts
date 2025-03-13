@@ -105,8 +105,11 @@ export const useFormStore = defineStore('form', () => {
 
       surveySchema.value = data
 
-      // Initialize with the first category and question if available
-      if (data.steps && data.steps.length > 0) {
+      // Initialize with the first category and question if available AND we're starting fresh
+      if (
+        currentStepId.value === null
+        && data.steps && data.steps.length > 0
+      ) {
         currentStepId.value = data.steps[0].id
 
         if (data.steps[0].questions && data.steps[0].questions.length > 0) {
@@ -578,21 +581,6 @@ export const useFormStore = defineStore('form', () => {
     return index + 1
   })
 
-  const totalCategoriesNumber = computed(() => {
-    if (!surveySchema.value) {
-      return 1
-    }
-    return surveySchema.value.steps.length
-  })
-
-  /**
-   * Sauvegarde la question courante pour pouvoir y revenir plus tard
-   * (utilisé pour la navigation vers les pages d'information)
-   */
-  function saveCurrentQuestionForNavigation (questionId: string) {
-    savedQuestionId.value = questionId
-  }
-
   /**
    * Permet de naviguer directement vers une question spécifique
    * (utilisé pour revenir d'une page d'information)
@@ -634,14 +622,12 @@ export const useFormStore = defineStore('form', () => {
     formVersions,
     // For Interface display
     currentStepIndex,
-    totalCategoriesNumber,
     setAnswer,
     loadSurveySchema,
     goToNextQuestion,
     goToPreviousQuestion,
     resetForm,
     savedQuestionId: readonly(savedQuestionId),
-    saveCurrentQuestionForNavigation,
     navigateToQuestion,
     goToLastAnsweredQuestion
   }
