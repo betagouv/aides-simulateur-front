@@ -298,10 +298,8 @@ const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
           Ce simulateur vous permet d’estimer 5 aides financières pour le logement et le déménagement, en particulier
           destinées aux étudiants.
           <DsfrLink
-            :link="{
-              to: '/aides',
-              target: '__blank',
-            }"
+            to="/aides"
+            target="_blank"
             label="Consulter la liste des aides couvertes."
             :icon="{ name: 'ri:arrow-right-line', ssr: true }"
           />
@@ -311,9 +309,7 @@ const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
           <ul>
             <li>
               Par mail à l'adresse <DsfrLink
-                :link="{
-                  to: 'mailto:aides.simplifiees@numerique.gouv.fr',
-                }"
+                to="mailto:aides.simplifiees@numerique.gouv.fr"
                 :icon="{ name: 'ri:mail-line', ssr: true }"
                 label="aides.simplifiees@numerique.gouv.fr"
               />
@@ -321,10 +317,8 @@ const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
             <li>
               Via <DsfrLink
                 :icon="{ name: 'ri:external-link-line', ssr: true }"
-                :link="{
-                  target: '__blank',
-                  to: 'https://tally.so/r/w27b9D',
-                }"
+                to="'https://tally.so/r/w27b9D"
+                target="_blank"
                 label="le questionnaire de satisfaction"
               />
             </li>
