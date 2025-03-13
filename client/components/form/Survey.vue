@@ -8,6 +8,9 @@ const props = defineProps<{
 
 const formStore = useFormStore()
 const isLoading = ref(true)
+
+const resultsFetchState = ref<'idle' | 'loading' | 'loaded' | 'error'>('idle')
+
 const simulateurId = props.simulateurId
 // État pour afficher ou non l'écran de choix
 const showChoiceScreen = ref(false)
@@ -179,9 +182,10 @@ async function submitForm () {
 
   // Sending the data to a web API to calculate a set of 'aides'
   try {
+    resultsFetchState.value = 'loading'
     const request: OpenFiscaCalculationRequest = buildRequest(answers.value, questionsToApi)
     const openfiscaResponse: OpenFiscaCalculationResponse = await fetchOpenFiscaFranceCalculation(request)
-
+    resultsFetchState.value = 'loaded'
     // eslint-disable-next-line no-console
     console.debug('Réponse reçue :')
     // eslint-disable-next-line no-console
@@ -228,6 +232,7 @@ async function submitForm () {
     }
   }
   catch (error) {
+    resultsFetchState.value = 'error'
     // TODO Handle the error more professionnally and display a message to the user :)
     console.error('Erreur inattendue lors de la soumission du formulaire et de l\'appel au calcul :', error)
   }
@@ -236,6 +241,7 @@ async function submitForm () {
 // Fonctions pour le choix de l'utilisateur
 function resumeForm () {
   goToLastAnsweredQuestion()
+  resultsFetchState.value = 'idle'
   showChoiceScreen.value = false
   showWelcomeScreen.value = false
   // Focus the question after resuming
@@ -244,6 +250,7 @@ function resumeForm () {
 
 function restartForm () {
   resetForm()
+  resultsFetchState.value = 'idle'
   showWelcomeScreen.value = true
   showChoiceScreen.value = false
   // Focus the question after restarting
@@ -270,6 +277,7 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
     >
       Votre simulation
     </component>
+
     <!-- Écran de choix (reprendre ou recommencer) -->
     <div v-if="showChoiceScreen">
       <div class="fr-card fr-card--shadow fr-p-3w">
@@ -283,11 +291,15 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
           />
           Vous avez un formulaire en cours
         </component>
-        <p class="fr-text--bold">
-          Progression : {{ progress }}%
+        <DsfrBadge
+          class="fr-mt-n1w fr-mb-2w"
+          type="info"
+          :label="`Progression : ${progress}%`"
+        />
+        <p class="fr-text--lg">
+          Souhaitez-vous reprendre votre formulaire là où vous vous êtes arrêté ou recommencer à zéro ?
         </p>
-        <p>Souhaitez-vous reprendre votre formulaire là où vous vous êtes arrêté ou recommencer à zéro ?</p>
-        <div class="fr-btns-group brand-form-actions">
+        <div class="fr-btns-group brand-form-actions fr-mt-1w">
           <DsfrButton
             class="brand-form-actions__button"
             label="Reprendre"
@@ -352,7 +364,7 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
 
         <div class="fr-btns-group brand-form-actions">
           <DsfrButton
-            class="brand-form-actions__button"
+            class="brand-form-actions__button fr-mt-1w"
             label="Commencer la simulation"
             :icon="{ name: 'ri:play-line', ssr: true }"
             @click="handleStart"
@@ -382,9 +394,25 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
         <div
           v-if="surveySchema && currentQuestion"
           ref="questionContainer"
-          class="fr-card fr-card--shadow fr-p-3w"
+          class="question-container fr-card fr-card--shadow fr-p-3w"
           tabindex="-1"
         >
+          <DsfrBadge
+            v-if="resultsFetchState !== 'idle'"
+            class="survey-fetch-state-badge"
+            :type="({
+              // idle: 'info',
+              loading: 'info',
+              loaded: 'success',
+              error: 'error',
+            }[resultsFetchState] as 'info' | 'success' | 'error')"
+            :label="{
+              // idle: `progression : ${progress}%`,
+              loading: 'Estimation en cours...',
+              loaded: 'Estimation terminée',
+              error: 'Erreur lors de l\'estimation',
+            }[resultsFetchState]"
+          />
           <!-- Current Question -->
           <div class="fr-form-group">
             <hgroup>
@@ -454,12 +482,13 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
               />
             </template>
           </div>
-          <div class="fr-btns-group brand-form-actions brand-form-actions__align-end">
+          <div class="fr-btns-group fr-mt-3w brand-form-actions brand-form-actions__align-end">
             <DsfrButton
               class="brand-form-actions__button"
               label="Précédent"
               secondary
               :icon="{ name: 'ri:arrow-left-line', ssr: true }"
+              :disabled="resultsFetchState === 'loading'"
               @click="handlePrevious"
             />
             <DsfrButton
@@ -467,7 +496,7 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
               :label="isLastQuestion ? 'Terminer' : 'Suivant'"
               :icon="{ name: 'ri:arrow-right-line', ssr: true }"
               icon-right
-              :disabled="!hasAnswer"
+              :disabled="!hasAnswer || resultsFetchState === 'loading'"
               @click="handleNext"
             />
           </div>
@@ -483,12 +512,21 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
   &.brand-form-actions__align-end {
     justify-content: flex-end;
   }
-  margin-top: 2rem;
   .brand-form-actions__button {
     flex-basis: 100%;
     @media (min-width: 36em) {
       flex-basis: calc(50% - 1rem);
     }
   }
+}
+
+.question-container {
+  position: relative;
+}
+
+.survey-fetch-state-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
 }
 </style>
