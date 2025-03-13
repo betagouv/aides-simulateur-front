@@ -1,4 +1,10 @@
 # CHANGELOG
+## 0.15.0 [#67](https://github.com/betagouv/aides-simulateur-front/pull/67)
+
+* Ajout de fonctionnalités.
+* Détail : 
+  * Permet une interface admin lançant des tests sur les simulateurs : à partir de `demenagement-logement.json` et de sa clé "tests", permet à l'admin de lancer le test de son choix et de simuler le retour openfisca. L'admin peut aussi choisir de simuler les réponses de l'utlisateur en dehors d'un cas pré-défini
+  * Auto-completion améliorée dans le moteur de recherche du code inseee 
 
 ## 0.14.4 [#64](https://github.com/betagouv/aides-simulateur-front/pull/64)
 

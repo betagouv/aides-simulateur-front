@@ -26,6 +26,22 @@ function goToSubmissions () {
   // Redirection vers la page des soumissions sans le mot de passe dans l'URL
   navigateTo('/admin/submissions')
 }
+
+// Fonction de redirection vers les tests
+function goToTests () {
+  if (!password.value) {
+    error.value = 'Veuillez saisir un mot de passe'
+    return
+  }
+
+  // Stocker le mot de passe dans sessionStorage
+  if (process.client) {
+    sessionStorage.setItem('admin_password', password.value)
+  }
+
+  // Redirection vers la page des tests
+  navigateTo('/admin/tests')
+}
 </script>
 
 <template>
@@ -59,11 +75,17 @@ function goToSubmissions () {
             @keyup.enter="goToSubmissions"
           />
 
-          <DsfrButton
-            label="Accéder aux données"
-            class="fr-mt-2w"
-            @click="goToSubmissions"
-          />
+          <div class="fr-btns-group fr-mt-2w">
+            <DsfrButton
+              label="Accéder aux soumissions"
+              @click="goToSubmissions"
+            />
+            <DsfrButton
+              label="Accéder aux tests"
+              secondary
+              @click="goToTests"
+            />
+          </div>
 
           <p
             v-if="error"
