@@ -15,7 +15,7 @@ const baselineSubtitle = 'Un service simple et rapide pour savoir à quelles aid
 const simulationTiles: DsfrTileProps[] = [
   {
     title: 'Déménagement & logement',
-    to: '/simulateurs/demenagement-logement',
+    to: '/simulateurs/demenagement-logement#simulateur-title',
     titleTag: 'h2',
     svgPath: '/artworks/custom-pictograms/demenagement.svg'
   },

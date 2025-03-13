@@ -56,7 +56,7 @@ watchEffect(() => {
     setBreadcrumbs([
       { text: 'Accueil', to: '/' },
       { text: 'Simulateurs', to: '/simulateurs' },
-      { text: simulateur.value.titre, to: `/simulateurs/${simulateurId}` }
+      { text: simulateur.value.titre, to: `/simulateurs/${simulateurId}#simulateur-title` }
     ])
   }
 })

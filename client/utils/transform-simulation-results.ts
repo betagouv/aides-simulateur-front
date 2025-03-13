@@ -50,7 +50,7 @@ export async function transformSimulationResults (
       // Data from calculation response
       id: rawAide.id,
       montant: rawAide.montant || 0,
-      link: `/simulateurs/${simulateurId}/resultats/${rawAide.id}`,
+      link: `/simulateurs/${simulateurId}/resultats/${rawAide.id}#simulateur-title`,
       eligibilite: rawAide.eligibilite,
       // Data from content source
       title: aideDetails?.titre || `Aide ${rawAide.id}`,

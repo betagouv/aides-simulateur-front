@@ -20,8 +20,8 @@ watchEffect(() => {
     setBreadcrumbs([
       { text: 'Accueil', to: '/' },
       { text: 'Simulateurs', to: '/simulateurs' },
-      { text: simulateur.value.titre, to: `/simulateurs/${simulateurId}` },
-      { text: 'Résultats', to: `/simulateurs/${simulateurId}/resultats` }
+      { text: simulateur.value.titre, to: `/simulateurs/${simulateurId}#simulateur-title` },
+      { text: 'Résultats', to: `/simulateurs/${simulateurId}/resultats#simulateur-title` }
     ])
   }
 })
@@ -30,7 +30,7 @@ const resultsStore = useResultsStore()
 const results = resultsStore.getResults(simulateurId)
 
 if (!results) {
-  navigateTo(`/simulateurs/${simulateurId}`)
+  navigateTo(`/simulateurs/${simulateurId}#simulateur-title`)
 }
 useSeoMeta({
   title: `Résultats de votre simulation ${simulateur.value?.title || simulateurId} | Aides simplifiées`,

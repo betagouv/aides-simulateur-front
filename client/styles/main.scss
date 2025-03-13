@@ -16,7 +16,9 @@
     --blue-france-950-100: #21213f;
   }
 }
-
+html {
+  scroll-padding-top: 2rem;
+}
 .brand-contrast-text {
   color: var(--brand-contrast-text);
 }

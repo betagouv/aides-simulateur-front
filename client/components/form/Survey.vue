@@ -203,7 +203,7 @@ async function submitForm () {
 
     if (results) {
       resultStore.setResults(simulateurId, results)
-      navigateTo(`/simulateurs/${simulateurId}/resultats`)
+      navigateTo(`/simulateurs/${simulateurId}/resultats#simulateur-title`)
     }
     // Track form submission in Matomo
     if (typeof window !== 'undefined' && (window as any)._paq) {

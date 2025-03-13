@@ -27,8 +27,8 @@ watchEffect(() => {
     setBreadcrumbs([
       { text: 'Accueil', to: '/' },
       { text: 'Simulateurs', to: '/simulateurs' },
-      { text: simulateur.value.titre, to: `/simulateurs/${simulateurId}` },
-      { text: notion.value.titre, to: `/simulateurs/${simulateurId}/${notionId}` }
+      { text: simulateur.value.titre, to: `/simulateurs/${simulateurId}#simulateur-title` },
+      { text: notion.value.titre, to: `/simulateurs/${simulateurId}/${notionId}#simulateur-title` }
     ])
   }
 })
@@ -47,7 +47,7 @@ useSeoMeta({
     <DsfrLink
       icon-before
       label="Revenir à ma simulation"
-      :to="`/simulateurs/${simulateurId}`"
+      :to="`/simulateurs/${simulateurId}#simulateur-title`"
       :icon="{ name: 'ri:arrow-left-line', ssr: true }"
     />
     <p class="fr-text--lg">

@@ -25,7 +25,10 @@ const { data: simulateur } = useAsyncData(`simulateur-${simulateurId.value}`, ()
               :svg-path="simulateur.pictogramme"
             />
           </div>
-          <div class="simulation-title-container fr-col-9 fr-col-sm-10 fr-col-md-11">
+          <div
+            id="simulateur-title"
+            class="simulation-title-container fr-col-9 fr-col-sm-10 fr-col-lg-11"
+          >
             <h1
               v-if="simulateur?.titre"
               class="fr-h5 fr-m-0"

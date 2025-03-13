@@ -26,9 +26,9 @@ watchEffect(() => {
     setBreadcrumbs([
       { text: 'Accueil', to: '/' },
       { text: 'Simulateurs', to: '/simulateurs' },
-      { text: simulateur.value.titre, to: `/simulateurs/${simulateurId}` },
-      { text: 'Résultats', to: `/simulateurs/${simulateurId}/resultats` },
-      { text: aide.value.titre, to: `/simulateurs/${simulateurId}/resultats/${aideId}` }
+      { text: simulateur.value.titre, to: `/simulateurs/${simulateurId}#simulateur-title` },
+      { text: 'Résultats', to: `/simulateurs/${simulateurId}/resultats#simulateur-title` },
+      { text: aide.value.titre, to: `/simulateurs/${simulateurId}/resultats/${aideId}#simulateur-title` }
     ])
   }
 })
@@ -47,7 +47,7 @@ useSeoMeta({
     <DsfrLink
       icon-before
       label="Revenir à mes résultats"
-      :to="`/simulateurs/${simulateurId}/resultats`"
+      :to="`/simulateurs/${simulateurId}/resultats#simulateur-title`"
       :icon="{ name: 'ri:arrow-left-line', ssr: true }"
     />
     <p>

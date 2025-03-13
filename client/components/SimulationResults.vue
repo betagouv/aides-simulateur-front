@@ -71,7 +71,7 @@ const activeAccordion = ref<number>()
           class="results__backlink"
           icon-before
           label="Reprendre ma simulation"
-          :to="`/simulateurs/${simulateurId}`"
+          :to="`/simulateurs/${simulateurId}#simulateur-title`"
           :icon="{ name: 'ri:arrow-left-line', ssr: true }"
         />
       </div>
