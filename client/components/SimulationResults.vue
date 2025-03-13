@@ -17,7 +17,7 @@ const { data: richResults } = await useAsyncData('rich-results', async () => {
     montants: [],
     echeances: [],
     aidesNonEligibles: [],
-    textesDeLoi: []
+    textesLoi: []
   })
 })
 
@@ -25,7 +25,7 @@ const hasAides = computed(() => richResults.value.aides.length > 0)
 const hasEcheances = computed(() => richResults.value.echeances.length > 0)
 const hasMontants = computed(() => richResults.value.montants.length > 0)
 const hasAidesNonEligibles = computed(() => richResults.value.aidesNonEligibles.length > 0)
-const hasTextesDeLoi = computed(() => richResults.value.textesDeLoi.length > 0)
+const hasTextesDeLoi = computed(() => richResults.value.textesLoi.length > 0)
 
 const segmentedSetOptions = computed<DsfrSegmentedSetProps['options']>(() => {
   const options = [
@@ -210,7 +210,27 @@ const activeAccordion = ref<number>()
                       </span>
                     </template>
                     <template #default>
-                      Contenu à venir
+                      <ul>
+                        <li
+                          class="fr-mb-1w"
+                          v-for="texteItem, i in richResults.textesLoi"
+                          :key="i"
+                        >
+                          <template v-if="typeof texteItem === 'string'">
+                            {{ texteItem }}
+                          </template>
+                          <template v-else-if="texteItem && texteItem.url && texteItem.label">
+                              <span v-if="texteItem.prefixe">
+                                {{ texteItem.prefixe }} :
+                              </span>
+                            <DsfrLink
+                              :to="texteItem.url"
+                              :icon="{ name: 'ri:external-link-line', ssr: true }"
+                              :label="texteItem.label"
+                            />
+                          </template>
+                        </li>
+                      </ul>
                     </template>
                   </DsfrAccordion>
                 </DsfrAccordionsGroup>

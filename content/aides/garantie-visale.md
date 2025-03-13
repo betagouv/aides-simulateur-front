@@ -3,6 +3,7 @@ titre: Garantie Visale
 type: caution
 instructeur: Action logement
 description: Caution locative gratuite qui couvre les loyers impayés
+textesLoi: []
 ---
 
 La garantie Visale est une caution accordée par Action logement au locataire qui veut louer un logement. Elle couvre les loyers et charges impayés de la résidence principale du locataire jusqu'à 36 mensualités.

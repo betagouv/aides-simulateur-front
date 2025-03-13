@@ -37,7 +37,7 @@ export async function transformSimulationResults (
       montants: [],
       echeances: [],
       aidesNonEligibles: [],
-      textesDeLoi: []
+      textesLoi: []
     }
   }
 
@@ -130,9 +130,9 @@ export async function transformSimulationResults (
     }))
 
   // Sample texts - would come from a real data source
-  const textesDeLoi: string[] = []
+  const textesLoi: string[] = []
   richAides.forEach((aide) => {
-    textesDeLoi.push(...aide.textesLoi)
+    textesLoi.push(...aide.textesLoi)
   })
 
   return {
@@ -140,6 +140,6 @@ export async function transformSimulationResults (
     montants,
     echeances,
     aidesNonEligibles: nonEligibleAides,
-    textesDeLoi
+    textesLoi
   }
 }

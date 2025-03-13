@@ -35,7 +35,16 @@ export default defineContentConfig({
         description: z.string(),
         instructeur: z.string(),
         montant: z.number().nullable(),
-        textesLoi: z.array(z.string()).nullable(),
+        textesLoi: z.array(
+          z.union([
+            z.string().nullable(),
+            z.object({
+              prefixe: z.string(),
+              label: z.string(),
+              url: z.string(),
+            }).nullable(),
+          ]),
+        ),
         type: z.enum([
           'pret',
           'garantie',

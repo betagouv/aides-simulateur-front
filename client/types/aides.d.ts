@@ -10,13 +10,15 @@ declare global {
     montant?: number
   }
 
+  type TexteLoi = string | { prefixe: string, label: string, url: string } | null
+
   interface AideDetails {
     title: string
     description: string
     type: TypeAide
     instructeur: string
     description: string
-    textesDeLoi?: string[]
+    textesLoi?: TexteLoi[]
   }
 
   interface RichAide {
@@ -28,7 +30,7 @@ declare global {
     instructeur: string
     montant: number
     type: TypeAide
-    textesLoi: string[]
+    textesLoi: TexteLoi[]
     description: string
   }
 
@@ -51,7 +53,7 @@ declare global {
     montants: RichMontant[]
     echeances: RichEcheance[]
     aidesNonEligibles: RichAide[]
-    textesDeLoi: string[]
+    textesLoi: TexteLoi[]
   }
 }
 

@@ -3,6 +3,7 @@ titre: Avance LOCA-PASS
 type: pret
 instructeur: Action logement
 description: Prêt à 0% pour financer votre dépôt de garantie
+textesLoi: []
 ---
 
 L'avance LOCA-PASS® est une aide gratuite sous forme d'un prêt à 0 % pour financer tout ou partie de votre dépôt de garantie.

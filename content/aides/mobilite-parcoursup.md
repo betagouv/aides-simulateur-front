@@ -4,6 +4,10 @@ type: une-fois
 montant: 500
 instructeur: Crous
 description: Aide pour les bacheliers boursiers qui s'inscrivent dans un établissement hors de leur académie
+textesLoi:
+  - Circulaire n°2014-0016 du 8 octobre 2014 relative aux aides spécifiques
+  - Arrêté du 4 juillet 2024 fixant les plafonds de ressources relatifs aux bourses d'enseignement supérieur du ministère de l'enseignement supérieur et de la recherche pour l'année universitaire 2024-2025
+  - Circulaire du 16 juin 2021 relative aux aides spécifiques à certains bacheliers
 ---
 
 L'aide à la mobilité Parcoursup est destinée au bachelier qui effectue son entrée dans l'enseignement supérieur en dehors de son académie de résidence.
