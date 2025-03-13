@@ -39,9 +39,9 @@ export const individusVariables: { [aidesSimplifieesKey: string]: AidesSimplifie
     period: 'MONTH'
   },
   'complement-allocation-divers': {
-    // TODO check who needs this and if the description is right: 
-    // Compléments divers (ex. allocation logement, allocations familiales, 
-    // complément familial, allocation d'éducation de l'enfant handicapé (AEEH), 
+    // TODO check who needs this and if the description is right:
+    // Compléments divers (ex. allocation logement, allocations familiales,
+    // complément familial, allocation d'éducation de l'enfant handicapé (AEEH),
     // allocation de soutien familial, allocation journalière de présence parentale (AJPP)).
     exclude: true
   },
@@ -50,11 +50,11 @@ export const individusVariables: { [aidesSimplifieesKey: string]: AidesSimplifie
     period: 'MONTH'
   },
   'pensions-alimentaires': {
-    //TODO duplicates pensions-alimentaires-recues ; or should it be "versées"?
+    // TODO duplicates pensions-alimentaires-recues ; or should it be "versées"?
     exclude: true
   },
   'moins-values': {
-    //TODO dispatch to moins_values_court_terme_non_salaries and moins_values_long_terme_non_salaries
+    // TODO dispatch to moins_values_court_terme_non_salaries and moins_values_long_terme_non_salaries
     openfiscaVariableName: 'moins_values_court_terme_non_salaries',
     period: 'MONTH'
   },
@@ -66,7 +66,7 @@ export const individusVariables: { [aidesSimplifieesKey: string]: AidesSimplifie
     exclude: true
   },
   'revenus-independant': {
-    //TODO check if it's imposable as mapped here
+    // TODO check if it's imposable as mapped here
     openfiscaVariableName: 'rpns_imposables',
     period: 'MONTH'
   },
@@ -75,7 +75,7 @@ export const individusVariables: { [aidesSimplifieesKey: string]: AidesSimplifie
     period: 'MONTH'
   },
   'ressources-parents': {
-    //TODO add people and define the right type of revenue to set
+    // TODO add people and define the right type of revenue to set
     exclude: true
   },
   'statut-marital': { // 'celibataire'
@@ -157,9 +157,9 @@ export const menagesVariables: { [aidesSimplifieesKey: string]: AidesSimplifiees
     // TODO: include in situation-logement?
     exclude: true
   },
-  'type-logement': { // 'logement-foyer' 
+  'type-logement': { // 'logement-foyer'
     // TODO: check what we mean by "type-logement" (foyer, chambre... or conventionne / not conventionne)
-    // we have : "id": "logement-foyer", "title": "Foyer (résidence CROUS, etc.) ou logement conventionné" 
+    // we have : "id": "logement-foyer", "title": "Foyer (résidence CROUS, etc.) ou logement conventionné"
     // but other types like logement_meuble can also be conventionné (then remove calsulate-aides.ts specific code for 'logement_conventionne')
     dispatch: dispatchTypeLogement,
     period: 'MONTH'
@@ -172,7 +172,7 @@ export const famillesVariables: { [aidesSimplifieesKey: string]: AidesSimplifiee
     period: 'MONTH'
   },
   'revenus-patrimoine': {
-    openfiscaVariableName: 'revenus-patrimoine',
+    openfiscaVariableName: 'aide_logement_base_ressources_patrimoine',
     period: 'MONTH'
   }
 }
