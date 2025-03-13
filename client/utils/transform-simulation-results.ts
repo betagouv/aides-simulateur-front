@@ -53,7 +53,7 @@ export async function transformSimulationResults (
       link: `/simulateurs/${simulateurId}/resultats/${rawAide.id}#simulateur-title`,
       eligibilite: rawAide.eligibilite,
       // Data from content source
-      title: aideDetails?.titre || `Aide ${rawAide.id}`,
+      titre: aideDetails?.titre || `Aide ${rawAide.id}`,
       description: aideDetails?.description || 'Description non disponible',
       textesLoi: aideDetails?.textesLoi || [],
       instructeur: aideDetails?.instructeur || 'Instructeur non disponible',

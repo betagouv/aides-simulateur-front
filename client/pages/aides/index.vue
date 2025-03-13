@@ -1,11 +1,11 @@
 <script lang="ts" setup>
+definePageMeta({
+  layout: 'default',
+})
+
 useSeoMeta({
   title: 'Toutes les aides disponibles | Aides simplifiées',
   description: 'Découvrez toutes les aides disponibles pour vous accompagner dans vos démarches.'
-})
-
-definePageMeta({
-  layout: 'default',
 })
 
 const { data: aides } = await useAsyncData('aides', () => {
@@ -20,11 +20,11 @@ const { data: aides } = await useAsyncData('aides', () => {
          * /!\ le champ 'titre' est défini par le rédacteur dans le fichier
          * !== du champ 'title' (qui correspond au nom dans le filesystem)
          */
-        title: aide.titre,
-        type: aide.type,
-        instructeur: aide.instructeur,
-        montant: aide.montant,
-        resume: aide.resume,
+        titre: aide.titre as string,
+        type: aide.type as TypeAide,
+        instructeur: aide.instructeur as string,
+        montant: aide.montant as number,
+        resume: aide.resume as string,
       }
     })
   }
@@ -51,7 +51,7 @@ setBreadcrumbs([
         >
           <div class="fr-col-12 fr-col-sm-6 fr-col-md-4">
             <AideCard
-              :title="aide.titre"
+              :titre="aide.titre"
               :description="aide.resume"
               :link="`/aides/${aide.id}`"
               :instructeur="aide.instructeur"

@@ -3,10 +3,10 @@ import type { DsfrCardProps } from '@gouvminint/vue-dsfr'
 
 type AideCardProps = {
   link: string
-  title: string
+  titre: string
   description: string
   typeAide: TypeAide
-  montant: number
+  montant?: number
   instructeur: string
 } & Pick<DsfrCardProps, 'horizontal' | 'size' | 'titleTag'>
 
@@ -15,7 +15,7 @@ defineProps<AideCardProps>()
 
 <template>
   <DsfrCard
-    :title="title"
+    :title="titre"
     :description="description"
     :link="link"
     :detail="instructeur"

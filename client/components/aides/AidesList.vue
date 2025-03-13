@@ -9,7 +9,6 @@ type AidesListProps = {
 const props = withDefaults(defineProps<AidesListProps>(), {
   itemsPerPage: 6
 })
-
 const currentPageIndex = ref<number>(0)
 
 const totalPages = computed(() => Math.ceil(props.aides.length / props.itemsPerPage))
@@ -43,7 +42,7 @@ const currentPageAides = computed(() => {
     >
       <AideCard
         :link="aide.link"
-        :title="aide.titre"
+        :titre="aide.titre"
         :description="aide.resume"
         :instructeur="aide.instructeur"
         :type-aide="aide.type"
