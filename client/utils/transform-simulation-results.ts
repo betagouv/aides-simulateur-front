@@ -1,3 +1,15 @@
+const mockCalculationResponse = {
+  'aide-personnalisee-logement': 1212.23,
+  'aide-personnalisee-logement-eligibilite': true,
+  'garantie-visale': 317.855,
+  'garantie-visale-eligibilite': true,
+  'locapass': 300.24,
+  'locapass-eligibilite': true,
+  'mobilite-master-1': 343.34,
+  'mobilite-master-1-eligibilite': true,
+  'mobilite-parcoursup': 200,
+  'mobilite-parcoursup-eligibilite': false
+}
 /**
  * Transforms raw aides data from OpenFisca into rich content for UI display
  */
@@ -5,7 +17,11 @@ export async function transformSimulationResults (
   calculationResponse: SimulationResultsAides,
   simulateurId: string
 ): Promise<RichSimulationResults> {
-  const rawAides: RawAide[] = Object.entries(calculationResponse)
+  /**
+   * Uncomment below to use mock data for testing
+   */
+  // calculationResponse = mockCalculationResponse
+  const rawAides: RawAide[] = Object.entries(mockCalculationResponse)
     .reduce((acc, [key, value]) => {
       if (key.match('-eligibilite')) {
         const eligibilite = value
@@ -57,8 +73,7 @@ export async function transformSimulationResults (
       description: aideDetails?.description || 'Description non disponible',
       textesLoi: aideDetails?.textesLoi || [],
       instructeur: aideDetails?.instructeur || 'Instructeur non disponible',
-      type: aideDetails?.type || 'financements',
-      description: aideDetails?.description || 'Description non disponible'
+      type: aideDetails?.type || '',
     }
 
     return richAide
