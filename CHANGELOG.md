@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.14.1 [#64](https://github.com/betagouv/aides-simulateur-front/pull/64)
+
+* Mise à jour des contenus textuels de l'application (pages statiques, formulaire déménagement)
+
 ## 0.14.0 [#60](https://github.com/betagouv/aides-simulateur-front/pull/60)
 
 * Ajout de fonctionnalités.
