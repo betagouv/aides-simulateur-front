@@ -46,7 +46,7 @@ setBreadcrumbs([
         >
           <div class="fr-col-4">
             <DsfrCard
-              :title="notion.title"
+              :title="notion.titre"
               :link="`/notions/${notion.id}`"
             />
           </div>

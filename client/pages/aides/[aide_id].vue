@@ -20,13 +20,13 @@ watchEffect(() => {
     setBreadcrumbs([
       { text: 'Accueil', to: '/' },
       { text: 'Aides', to: '/aides' },
-      { text: aide.value.title, to: `/aides/${aideId}` }
+      { text: aide.value.titre, to: `/aides/${aideId}` }
     ])
   }
 })
 
 useSeoMeta({
-  title: `Aide ${aide.value?.title || aideId} | Aides simplifiées`,
+  title: `Aide ${aide.value?.titre || aideId} | Aides simplifiées`,
   description: `${aide.value?.resume}`
 })
 </script>
@@ -41,7 +41,7 @@ useSeoMeta({
       <div class="fr-grid-row fr-grid-row--gutters">
         <div class="fr-col-9 fr-col-sm-10 fr-col-md-11">
           <h1>
-            {{ aide.titre }}
+            {{ aide?.titre }}
           </h1>
         </div>
         <div class="fr-col-9 fr-col-sm-10 fr-col-md-11">

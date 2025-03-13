@@ -1,1 +1,3 @@
-# Cookies
+---
+titre: Cookies
+---

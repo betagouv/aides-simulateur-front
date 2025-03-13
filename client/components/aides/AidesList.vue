@@ -43,7 +43,7 @@ const currentPageAides = computed(() => {
     >
       <AideCard
         :link="aide.link"
-        :title="aide.title"
+        :title="aide.titre"
         :description="aide.resume"
         :instructeur="aide.instructeur"
         :type-aide="aide.type"

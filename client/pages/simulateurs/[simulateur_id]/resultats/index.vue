@@ -33,8 +33,8 @@ if (!results) {
   navigateTo(`/simulateurs/${simulateurId}#simulateur-title`)
 }
 useSeoMeta({
-  title: `Résultats de votre simulation ${simulateur.value?.title || simulateurId} | Aides simplifiées`,
-  description: `Découvrez les aides auxquelles vous êtes eligibles avec les résultats de votre simulation ${simulateur.value?.title || simulateurId}.`
+  title: `Résultats de votre simulation ${simulateur.value?.titre || simulateurId} | Aides simplifiées`,
+  description: `Découvrez les aides auxquelles vous êtes eligibles avec les résultats de votre simulation ${simulateur.value?.titre || simulateurId}.`
 })
 </script>
 

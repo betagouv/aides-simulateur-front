@@ -19,13 +19,13 @@ watchEffect(() => {
     setBreadcrumbs([
       { text: 'Accueil', to: '/' },
       { text: 'Aides', to: '/aides' },
-      { text: notion.value.title, to: `/notions/${notionId}` }
+      { text: notion.value.titre, to: `/notions/${notionId}` }
     ])
   }
 })
 
 useSeoMeta({
-  title: `Informations sur la notion ${notion.value?.title || notionId} | Aides simplifiées`,
+  title: `Informations sur la notion ${notion.value?.titre || notionId} | Aides simplifiées`,
   description: `${notion.value?.description.slice(0, 155)}...`
 })
 </script>
@@ -40,7 +40,7 @@ useSeoMeta({
       <div class="fr-grid-row fr-grid-row--gutters">
         <div class="fr-col-9 fr-col-sm-10 fr-col-md-11">
           <h1>
-            {{ notion?.title }}
+            {{ notion?.titre }}
           </h1>
           <p class="fr-text--lg">
             {{ notion?.description }}

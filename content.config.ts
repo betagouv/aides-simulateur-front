@@ -4,7 +4,10 @@ export default defineContentConfig({
   collections: {
     pages: defineCollection({
       type: 'page',
-      source: 'pages/**/*.md'
+      source: 'pages/**/*.md',
+      schema: z.object({
+        titre: z.string(),
+      }),
     }),
     simulateurs: defineCollection({
       type: 'page',

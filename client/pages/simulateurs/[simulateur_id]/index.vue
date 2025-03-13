@@ -62,8 +62,8 @@ watchEffect(() => {
 })
 
 useSeoMeta({
-  title: `Simulateur ${simulateur.value?.title || simulateurId} | Aides simplifiées`,
-  description: `En quelques clics sur le simulateur ${simulateur.value?.title || simulateurId}, découvrez si vous pouvez bénéficier d'aides financières.`
+  title: `Simulateur ${simulateur.value?.titre || simulateurId} | Aides simplifiées`,
+  description: `En quelques clics sur le simulateur ${simulateur.value?.titre || simulateurId}, découvrez si vous pouvez bénéficier d'aides financières.`
 })
 
 // Load iframe-resizer script when in iframe mode

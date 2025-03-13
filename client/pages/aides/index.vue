@@ -51,7 +51,7 @@ setBreadcrumbs([
         >
           <div class="fr-col-12 fr-col-sm-6 fr-col-md-4">
             <AideCard
-              :title="aide.title"
+              :title="aide.titre"
               :description="aide.resume"
               :link="`/aides/${aide.id}`"
               :instructeur="aide.instructeur"
