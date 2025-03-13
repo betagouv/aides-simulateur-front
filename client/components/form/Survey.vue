@@ -249,22 +249,40 @@ function restartForm () {
   // Focus the question after restarting
   focusQuestionContainer()
 }
-const surveyTitleTag = computed(() => isIframe.value ? 'h1' : 'h2')
-const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
+
+/**
+ * When this page is displayed within an iframe,
+ * we need to adjust the heading levels because the h1 is not exposed within the iframe
+ */
+const surveyH1 = computed(() => isIframe.value ? 'h1' : 'h2')
+const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
+// const surveyH3 = computed(() => isIframe.value ? 'h3' : 'h4')
+// const surveyH4 = computed(() => isIframe.value ? 'h4' : 'h5')
+// const surveyH5 = computed(() => isIframe.value ? 'h5' : 'h6')
+// const surveyH6 = computed(() => isIframe.value ? 'h6' : 'h6')
 </script>
 
 <template>
   <div>
+    <component
+      :is="surveyH1"
+      class="fr-sr-only"
+    >
+      Votre simulation
+    </component>
     <!-- Écran de choix (reprendre ou recommencer) -->
     <div v-if="showChoiceScreen">
       <div class="fr-card fr-card--shadow fr-p-3w">
-        <h2 class="fr-h4">
+        <component
+          :is="surveyH2"
+          class="fr-h4"
+        >
           <VIcon
             name="ri:information-line"
             ssr
           />
           Vous avez un formulaire en cours
-        </h2>
+        </component>
         <p class="fr-text--bold">
           Progression : {{ progress }}%
         </p>
@@ -289,13 +307,16 @@ const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
     <!-- Écran de bienvenue -->
     <div v-else-if="showWelcomeScreen">
       <div class="fr-card fr-card--shadow fr-p-3w">
-        <h2 class="fr-h4">
+        <component
+          :is="surveyH2"
+          class="fr-h4"
+        >
           <VIcon
             name="ri:information-line"
             ssr
           />
           Un simulateur en construction
-        </h2>
+        </component>
         <p>
           <span class="fr-text--bold">Bienvenue !</span>
           Ce simulateur vous permet d’estimer 5 aides financières pour le logement et le déménagement, en particulier
@@ -354,12 +375,6 @@ const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
         <p>Erreur lors du chargement du formulaire</p>
       </div>
       <template v-else-if="surveySchema">
-        <!-- <component
-          :is="surveyTitleTag"
-          class="fr-h3"
-        >
-          Votre simulation « {{ surveySchema?.title }} »
-        </component> -->
         <DsfrStepper
           :steps="surveySchema?.steps.map(step => step.title).filter(Boolean) || []"
           :current-step="currentStepIndex"
@@ -374,7 +389,7 @@ const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
           <div class="fr-form-group">
             <hgroup>
               <component
-                :is="surveyQuestionTitleTag"
+                :is="surveyH2"
                 class="fr-h5"
               >
                 {{ currentQuestion?.title }}
