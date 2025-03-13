@@ -90,11 +90,11 @@ if (doResume.value) {
 }
 
 // Focus on the question container after navigation
-const questionContainer = ref<HTMLElement | null>(null)
+const formContainer = ref<HTMLElement | null>(null)
 function focusQuestionContainer () {
   nextTick(() => {
-    if (questionContainer.value) {
-      questionContainer.value.focus()
+    if (formContainer.value) {
+      formContainer.value.focus()
     }
   })
 }
@@ -107,7 +107,7 @@ onKeyDown('Enter', () => {
   if (hasAnswer.value) {
     handleNext()
   }
-}, { target: questionContainer })
+}, { target: formContainer })
 
 onMounted(async () => {
   try {
@@ -393,8 +393,8 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
         />
         <div
           v-if="surveySchema && currentQuestion"
-          ref="questionContainer"
-          class="question-container fr-card fr-card--shadow fr-p-3w"
+          ref="formContainer"
+          class="form-container fr-card fr-card--shadow fr-p-3w"
           tabindex="-1"
         >
           <DsfrBadge
@@ -520,7 +520,7 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
   }
 }
 
-.question-container {
+.form-container {
   position: relative;
 }
 

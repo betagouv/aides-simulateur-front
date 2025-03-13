@@ -34,7 +34,7 @@ function toggleOption (choiceId: string) {
 </script>
 
 <template>
-  <div class="">
+  <div class="question-container">
     <div
       v-for="choice in question.choices"
       :key="choice.id"

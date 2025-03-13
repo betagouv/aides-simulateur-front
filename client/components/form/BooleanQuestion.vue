@@ -40,6 +40,7 @@ function handleChange (value: string | number | boolean) {
     />
   </div>
 </template>
+
 <style scoped lang="scss">
 .question-container:deep(.fr-radio-rich__pictogram) {
   display: none;
