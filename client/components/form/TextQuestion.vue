@@ -1,7 +1,4 @@
 <script lang="ts" setup>
-import type { SurveyQuestion } from '@/stores/survey'
-import { onMounted, onUnmounted, ref, watch } from 'vue'
-
 const props = defineProps<{
   question: SurveyQuestion
   modelValue: string | undefined
@@ -133,7 +130,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="question-container">
+  <div class="question-container fr-mb-4w">
     <div class="autocomplete-container">
       <DsfrInputGroup
         :model-value="inputValue"

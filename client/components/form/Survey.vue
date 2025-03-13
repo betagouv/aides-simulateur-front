@@ -417,14 +417,17 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
           />
           <!-- Current Question -->
           <div class="fr-form-group">
-            <hgroup>
+            <hgroup class="fr-mb-3w">
               <component
                 :is="surveyH2"
-                class="fr-h5"
+                class="fr-h5 fr-mb-1w"
               >
                 {{ currentQuestion?.title }}
               </component>
-              <p v-if="currentQuestion?.description">
+              <p
+                v-if="currentQuestion?.description"
+                class="fr-hint-text fr-text--sm"
+              >
                 {{ currentQuestion?.description }}
               </p>
             </hgroup>
@@ -488,7 +491,7 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
               </div>
             </template>
           </div>
-          <div class="fr-btns-group fr-mt-3w brand-form-actions brand-form-actions__align-end">
+          <div class="fr-btns-group fr-mt-2w brand-form-actions brand-form-actions__align-end">
             <DsfrButton
               class="brand-form-actions__button"
               label="Précédent"
