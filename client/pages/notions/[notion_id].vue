@@ -7,7 +7,7 @@ definePageMeta({
 const route = useRoute()
 const notionId = route.params.notion_id
 
-const { data: notion } = useAsyncData(`notion-${notionId}`, () => {
+const { data: notion } = await useAsyncData(`notion-${notionId}`, () => {
   return queryCollection('notions')
     .where('stem', '=', `notions/${notionId}`)
     .first()

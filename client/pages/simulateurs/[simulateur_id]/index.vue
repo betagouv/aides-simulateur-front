@@ -44,7 +44,7 @@ definePageMeta({
 const route = useRoute()
 const simulateurId = route.params.simulateur_id as string
 
-const { data: simulateur } = useAsyncData(`simulateur-${simulateurId}`, () => {
+const { data: simulateur } = await useAsyncData(`simulateur-${simulateurId}`, () => {
   return queryCollection('simulateurs')
     .where('stem', '=', `simulateurs/${simulateurId}`)
     .first()

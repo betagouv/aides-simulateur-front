@@ -2,7 +2,7 @@
 const route = useRoute()
 const simulateurId = computed(() => route.params.simulateur_id as string)
 
-const { data: simulateur } = useAsyncData(`simulateur-${simulateurId.value}`, () => {
+const { data: simulateur } = await useAsyncData(`simulateur-${simulateurId.value}`, () => {
   return queryCollection('simulateurs')
     .where('stem', '=', `simulateurs/${simulateurId.value}`)
     .first()

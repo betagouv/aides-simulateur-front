@@ -8,13 +8,13 @@ definePageMeta({
 const route = useRoute()
 
 const simulateurId = route.params.simulateur_id as string
-const { data: simulateur } = useAsyncData(`simulateur-${simulateurId}`, () => {
+const { data: simulateur } = await useAsyncData(`simulateur-${simulateurId}`, () => {
   return queryCollection('simulateurs')
     .where('stem', '=', `simulateurs/${simulateurId}`)
     .first()
 })
 const aideId = route.params.aide_id
-const { data: aide } = useAsyncData(`aide-${aideId}`, () => {
+const { data: aide } = await useAsyncData(`aide-${aideId}`, () => {
   return queryCollection('aides')
     .where('stem', '=', `aides/${aideId}`)
     .first()

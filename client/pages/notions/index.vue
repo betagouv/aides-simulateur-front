@@ -7,7 +7,7 @@ definePageMeta({
   layout: 'default',
 })
 
-const { data: notions } = useAsyncData('notions', () => {
+const { data: notions } = await useAsyncData('notions', () => {
   return queryCollectionNavigation('notions', ['titre'])
 }, {
   transform: (data) => {

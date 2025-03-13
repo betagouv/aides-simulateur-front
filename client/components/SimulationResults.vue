@@ -9,7 +9,7 @@ const props = defineProps<{
 
 const simulationDateTime = formatDateTime(new Date(props.results.meta.createdAt))
 
-const { data: richResults } = useAsyncData('rich-results', async () => {
+const { data: richResults } = await useAsyncData('rich-results', async () => {
   return transformSimulationResults(props.results.data, props.simulateurId)
 }, {
   default: () => ({

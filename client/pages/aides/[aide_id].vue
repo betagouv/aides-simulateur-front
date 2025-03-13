@@ -2,28 +2,27 @@
 definePageMeta({
   layout: 'default',
   validate: getContentRouteValidator('aide_id')
-
 })
 
 const route = useRoute()
 
 const aideId = route.params.aide_id
-const { data: aide } = useAsyncData(`aide-${aideId}`, () => {
+const { data: aide } = await useAsyncData(`aide-${aideId}`, () => {
   return queryCollection('aides')
     .where('stem', '=', `aides/${aideId}`)
     .first()
 })
 
 const { setBreadcrumbs } = useBreadcrumbStore()
-watchEffect(() => {
-  if (aide.value) {
-    setBreadcrumbs([
-      { text: 'Accueil', to: '/' },
-      { text: 'Aides', to: '/aides' },
-      { text: aide.value.titre, to: `/aides/${aideId}` }
-    ])
-  }
-})
+// watchEffect(() => {
+if (aide.value) {
+  setBreadcrumbs([
+    { text: 'Accueil', to: '/' },
+    { text: 'Aides', to: '/aides' },
+    { text: aide.value.titre, to: `/aides/${aideId}` }
+  ])
+}
+// })
 
 useSeoMeta({
   title: `Aide ${aide.value?.titre || aideId} | Aides simplifiées`,

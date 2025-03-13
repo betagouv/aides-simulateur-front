@@ -8,7 +8,7 @@ definePageMeta({
   layout: 'default',
 })
 
-const { data: aides } = useAsyncData('aides', () => {
+const { data: aides } = await useAsyncData('aides', () => {
   return queryCollectionNavigation('aides', ['titre', 'type', 'montant', 'resume', 'instructeur'])
 }, {
   transform: (data) => {

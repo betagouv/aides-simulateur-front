@@ -3,7 +3,7 @@ definePageMeta({
   layout: 'default',
 })
 
-const { data: simulateurs } = useAsyncData('simulateurs', () => {
+const { data: simulateurs } = await useAsyncData('simulateurs', () => {
   return queryCollectionNavigation('simulateurs', ['titre'])
 }, {
   transform: (data) => {
