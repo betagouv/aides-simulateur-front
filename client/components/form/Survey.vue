@@ -348,14 +348,16 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
           Nous continuons à l'améliorer. Vos retours sont précieux :
           <ul>
             <li>
-              Par mail à l'adresse <DsfrLink
+              Par mail à l'adresse
+              <DsfrLink
                 to="mailto:aides.simplifiees@numerique.gouv.fr"
                 :icon="{ name: 'ri:mail-line', ssr: true }"
                 label="aides.simplifiees@numerique.gouv.fr"
               />
             </li>
             <li>
-              Via <DsfrLink
+              Via
+              <DsfrLink
                 :icon="{ name: 'ri:external-link-line', ssr: true }"
                 to="'https://tally.so/r/w27b9D"
                 target="_blank"
@@ -436,21 +438,23 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
                 {{ currentQuestion?.description }}
               </p>
             </hgroup>
-            <DsfrButton
-              v-if="currentQuestion?.notion"
-              :label="currentQuestion?.notion.buttonLabel"
-              icon="ri:information-line"
-              secondary
-              icon-right
-              class="fr-mb-2w"
-              @click="() => navigateTo(`/simulateurs/${simulateurId}/${currentQuestion?.notion.id}`)"
-            />
-
             <!-- Question component based on type -->
             <template v-if="currentQuestion">
               <div
                 ref="questionContainer"
+                class="question-actual-container"
               >
+                <DsfrButton
+                  v-if="currentQuestion?.notion"
+                  :label="currentQuestion?.notion.buttonLabel"
+                  icon="ri:information-line"
+                  secondary
+                  icon-right
+                  class="fr-mb-2w"
+                  @click="() => {
+                    navigateTo(`/simulateurs/${simulateurId}/${currentQuestion?.notion.id}#simulateur-title`)
+                  }"
+                />
                 <RadioButtonQuestion
                   v-if="currentQuestion.type === 'radio'"
                   :question="currentQuestion"
@@ -523,11 +527,14 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
 <style scoped lang="scss">
 .brand-form-actions {
   display: flex;
+
   &.brand-form-actions__align-end {
     justify-content: flex-end;
   }
+
   .brand-form-actions__button {
     flex-basis: 100%;
+
     @media (min-width: 36em) {
       flex-basis: calc(50% - 1rem);
     }
@@ -537,10 +544,40 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
 .form-container {
   position: relative;
 }
+.fr-form-group {
+  padding: .5rem .25rem;
+  height: max(24em, 40vh);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
 
 .survey-fetch-state-badge {
   position: absolute;
   top: 1rem;
   right: 1rem;
+}
+
+.loading-indicator {
+  color: var(--text-mention-grey);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  min-height: 10em;
+}
+
+.loading-indicator .fr-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>

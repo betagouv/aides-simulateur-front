@@ -19,7 +19,7 @@ const { data: simulateur } = useAsyncData(`simulateur-${simulateurId.value}`, ()
         type="page-header"
       >
         <div class="fr-grid-row fr-grid-row--gutters">
-          <div class="fr-col-3 fr-col-sm-2 fr-col-md-1">
+          <div class="pictogram-container fr-col-3 fr-col-sm-2 fr-col-lg-1">
             <DsfrPictogram
               v-if="simulateur?.pictogramme"
               :svg-path="simulateur.pictogramme"
@@ -44,7 +44,10 @@ const { data: simulateur } = useAsyncData(`simulateur-${simulateurId.value}`, ()
       blue
       subtle
     >
-      <SectionContainer type="page-footer">
+      <SectionContainer
+        type="page-footer"
+        class="simulateur-container"
+      >
         <div class="fr-grid-row fr-grid-row--gutters">
           <div class="fr-col-12 fr-col-offset-md-1 fr-col-md-10 fr-col-offset-lg-2 fr-col-lg-8">
             <slot />
@@ -59,5 +62,14 @@ const { data: simulateur } = useAsyncData(`simulateur-${simulateurId.value}`, ()
 .simulation-title-container {
   display: flex;
   align-items: center;
+  min-height: 6rem;
+}
+
+.simulateur-container {
+  min-height: 80vh;
+}
+
+.pictogram-container:deep(svg) {
+  width: 100%;
 }
 </style>
