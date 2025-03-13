@@ -380,9 +380,14 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
     <!-- Formulaire -->
     <template v-else>
       <template v-if="isLoading">
-        <p>
-          Chargement...
-        </p>
+        <div class="fr-card fr-card--shadow fr-p-3w">
+          <p class="loading-indicator fr-text--xl fr-mt-3w">
+            <span
+              class="fr-icon-refresh-line fr-icon fr-icon--md fr-mr-2w"
+              aria-hidden="true"
+            />Chargement du formulaire...
+          </p>
+        </div>
       </template>
       <div
         v-else-if="!surveySchema"
