@@ -1,52 +1,28 @@
 <script lang="ts" setup>
 const props = defineProps<{
   question: SurveyQuestion
-  modelValue: string[] | undefined
 }>()
 
-const emit = defineEmits<{
-  'update:modelValue': [value: string[]]
-}>()
+const model = defineModel<string[]>('modelValue', { default: () => [] })
 
-// Implement a checkbox group with DsfrCheckbox
-const selectedValues = ref<string[]>(props.modelValue || [])
-
-// Watch for external changes
-watch(() => props.modelValue, (newValue) => {
-  selectedValues.value = newValue || []
+// Convert question choices to DsfrCheckboxSet options format
+const checkboxOptions = computed(() => {
+  return props.question.choices
+    ?.map(choice => ({
+      id: `${props.question.id}-${choice.id}`,
+      name: `${props.question.id}-${choice.id}`,
+      value: choice.id,
+      label: choice.title,
+    }))
+    ?? []
 })
-
-// Update parent when selection changes
-function toggleOption (choiceId: string) {
-  const values = [...selectedValues.value]
-  const index = values.indexOf(choiceId)
-
-  if (index === -1) {
-    values.push(choiceId)
-  }
-  else {
-    values.splice(index, 1)
-  }
-
-  selectedValues.value = values
-  emit('update:modelValue', values)
-}
 </script>
 
 <template>
   <div class="question-container">
-    <div
-      v-for="choice in question.choices"
-      :key="choice.id"
-      class="fr-my-4v"
-    >
-      <DsfrCheckbox
-        :id="`${question.id}-${choice.id}`"
-        :name="`${question.id}-${choice.id}`"
-        :label="choice.title"
-        :model-value="selectedValues.includes(choice.id)"
-        @update:model-value="() => toggleOption(choice.id)"
-      />
-    </div>
+    <DsfrCheckboxSet
+      v-model="model"
+      :options="checkboxOptions"
+    />
   </div>
 </template>
