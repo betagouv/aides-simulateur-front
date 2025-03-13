@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.14.2 [#65](https://github.com/betagouv/aides-simulateur-front/pull/65)
+
+* Ajout de fonctionnalités.
+  * Détail : 
+    * Ajout des clés : mobilite-master-1-eligibilite, mobilite-parcoursup-eligibilite, locapass-eligibilite dans beautify-results.ts
+
 ## 0.14.1 [#64](https://github.com/betagouv/aides-simulateur-front/pull/64)
 
 * Mise à jour des contenus textuels de l'application (pages statiques, formulaire déménagement)
