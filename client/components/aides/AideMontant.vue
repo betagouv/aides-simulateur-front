@@ -15,7 +15,7 @@ withDefaults(defineProps<{
     ]"
   >
     <div class="brand-montant__label">
-      {{ montant }}€
+      {{ montant.toFixed(0) }}€
     </div>
   </div>
 </template>

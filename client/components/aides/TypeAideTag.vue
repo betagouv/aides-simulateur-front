@@ -18,7 +18,7 @@ const typeAideTags: TypeAideTag[] = [
   { type: 'garantie', label: 'Garantie', iconName: 'ri:chat-check-line' },
   { type: 'caution', label: 'Caution', iconName: 'ri:chat-check-line' },
   { type: 'periode', label: '{Période}', iconName: 'ri:calendar-event-line' },
-  { type: 'mensuelle', label: 'Mensuelle', iconName: 'ri:calendar-event-line' },
+  { type: 'mensuelle', label: 'Tous les mois', iconName: 'ri:calendar-event-line' },
   { type: 'une-fois', label: 'Une seule fois', iconName: 'ri:flashlight-line' },
   { type: 'reduction-impots', label: 'Réduction d’impôts', iconName: 'ri:arrow-right-down-line' },
   { type: 'aide-materielle', label: 'Aide matérielle', iconName: 'ri:shopping-bag-line' },

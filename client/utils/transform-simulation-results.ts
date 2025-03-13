@@ -98,16 +98,27 @@ export async function transformSimulationResults (
       }
 
       // Add specific formatting based on aide type
-      if (type === 'reduction-impots') {
-        montantInfo.prefix = 'Jusqu\'à'
-      }
-      else if (type === 'pret') {
-        montantInfo.suffix = 'disponible'
+      switch (type) {
+        case 'mensuelle':
+          montantInfo.prefix = 'Jusqu\'à'
+          montantInfo.suffix = 'par mois pour vous aider à payer votre loyer'
+          break
+        case 'pret':
+          montantInfo.prefix = 'Jusqu\'à'
+          montantInfo.suffix = 'prétés'
+          break
+        case 'caution':
+          montantInfo.prefix = 'Jusqu\'à'
+          montantInfo.suffix = 'de caution à rembourser en cas de dégâts'
+          break
+        case 'une-fois':
+          montantInfo.prefix = 'Jusqu\'à'
+          montantInfo.suffix = 'pour financer votre installation'
+          break
       }
 
       return montantInfo
     })
-
   // Mock echeances - in real implementation, this would be derived from data
   const echeances: RichEcheance[] = eligibleAides
     .filter(aide => aide.type === 'periode')
