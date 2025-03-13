@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import lightThemeSvg from '@gouvfr/dsfr/dist/artwork/pictograms/environment/sun.svg'
+
 const props = defineProps<{
   question: SurveyQuestion
   modelValue: string | number | boolean | undefined
@@ -22,6 +24,7 @@ console.log('--- RadioButton: modelValue = ', props.modelValue)
       :options="question.choices?.map(choice => ({
         label: choice.title,
         value: choice.id,
+        svgPath: true,
       })) || []"
       :name="question.id"
       :model-value="modelValue"
@@ -29,3 +32,9 @@ console.log('--- RadioButton: modelValue = ', props.modelValue)
     />
   </div>
 </template>
+
+<style scoped lang="scss">
+.question-container:deep(.fr-radio-rich__pictogram) {
+  display: none;
+}
+</style>

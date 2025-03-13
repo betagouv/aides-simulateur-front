@@ -29,10 +29,20 @@ function handleChange (value: string | number | boolean) {
       :options="[
         { label: 'Oui', value: 'true' },
         { label: 'Non', value: 'false' },
-      ]"
+      ].map(choice => ({
+        label: choice.label,
+        value: choice.value,
+        svgPath: true,
+      }))"
       :name="question.id"
       :model-value="modelValue?.toString()"
       @update:model-value="handleChange"
     />
   </div>
 </template>
+
+<style scoped lang="scss">
+.question-container:deep(.fr-radio-rich__pictogram) {
+  display: none;
+}
+</style>

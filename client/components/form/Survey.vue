@@ -8,6 +8,9 @@ const props = defineProps<{
 
 const formStore = useFormStore()
 const isLoading = ref(true)
+
+const resultsFetchState = ref<'idle' | 'loading' | 'loaded' | 'error'>('idle')
+
 const simulateurId = props.simulateurId
 // État pour afficher ou non l'écran de choix
 const showChoiceScreen = ref(false)
@@ -88,10 +91,14 @@ if (doResume.value) {
 
 // Focus on the question container after navigation
 const questionContainer = ref<HTMLElement | null>(null)
-function focusQuestionContainer () {
+function focusRenderedQuestion () {
   nextTick(() => {
     if (questionContainer.value) {
-      questionContainer.value.focus()
+      // Focus the first focusable element inside the question container
+      const focusable = questionContainer.value.querySelector('input, button, select, textarea') as HTMLElement | null
+      if (focusable) {
+        focusable.focus()
+      }
     }
   })
 }
@@ -145,13 +152,17 @@ function handleNext () {
   }
   else {
     goToNextQuestion()
-    focusQuestionContainer()
+    focusRenderedQuestion()
   }
 }
 
 function handlePrevious () {
-  goToPreviousQuestion()
-  focusQuestionContainer()
+  const prevQuestion = goToPreviousQuestion()
+  if (prevQuestion === false) {
+    // If we are at the first question, show the welcome screen
+    showWelcomeScreen.value = true
+  }
+  focusRenderedQuestion()
 }
 
 const resultStore = useResultsStore()
@@ -175,9 +186,10 @@ async function submitForm () {
 
   // Sending the data to a web API to calculate a set of 'aides'
   try {
+    resultsFetchState.value = 'loading'
     const request: OpenFiscaCalculationRequest = buildRequest(answers.value, questionsToApi)
     const openfiscaResponse: OpenFiscaCalculationResponse = await fetchOpenFiscaFranceCalculation(request)
-    
+    resultsFetchState.value = 'loaded'
     // eslint-disable-next-line no-console
     console.debug('Réponse reçue :')
     // eslint-disable-next-line no-console
@@ -224,6 +236,7 @@ async function submitForm () {
     }
   }
   catch (error) {
+    resultsFetchState.value = 'error'
     // TODO Handle the error more professionnally and display a message to the user :)
     console.error('Erreur inattendue lors de la soumission du formulaire et de l\'appel au calcul :', error)
   }
@@ -232,76 +245,101 @@ async function submitForm () {
 // Fonctions pour le choix de l'utilisateur
 function resumeForm () {
   goToLastAnsweredQuestion()
+  resultsFetchState.value = 'idle'
   showChoiceScreen.value = false
   showWelcomeScreen.value = false
   // Focus the question after resuming
-  focusQuestionContainer()
+  focusRenderedQuestion()
 }
 
 function restartForm () {
   resetForm()
+  resultsFetchState.value = 'idle'
   showWelcomeScreen.value = true
   showChoiceScreen.value = false
   // Focus the question after restarting
-  focusQuestionContainer()
+  focusRenderedQuestion()
 }
-const surveyTitleTag = computed(() => isIframe.value ? 'h1' : 'h2')
-const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
+
+/**
+ * When this page is displayed within an iframe,
+ * we need to adjust the heading levels because the h1 is not exposed within the iframe
+ */
+const surveyH1 = computed(() => isIframe.value ? 'h1' : 'h2')
+const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
+// const surveyH3 = computed(() => isIframe.value ? 'h3' : 'h4')
+// const surveyH4 = computed(() => isIframe.value ? 'h4' : 'h5')
+// const surveyH5 = computed(() => isIframe.value ? 'h5' : 'h6')
+// const surveyH6 = computed(() => isIframe.value ? 'h6' : 'h6')
 </script>
 
 <template>
   <div>
+    <component
+      :is="surveyH1"
+      class="fr-sr-only"
+    >
+      Votre simulation
+    </component>
+
     <!-- Écran de choix (reprendre ou recommencer) -->
     <div v-if="showChoiceScreen">
       <div class="fr-card fr-card--shadow fr-p-3w">
-        <h2 class="fr-h4">
+        <component
+          :is="surveyH2"
+          class="fr-h4"
+        >
           <VIcon
             name="ri:information-line"
             ssr
           />
           Vous avez un formulaire en cours
-        </h2>
-        <p class="fr-text--bold">
-          Progression : {{ progress }}%
-        </p>
-        <p>Souhaitez-vous reprendre votre formulaire là où vous vous êtes arrêté ou recommencer à zéro ?</p>
-        <DsfrButtonGroup
-          inline-layout-when="md"
-          :buttons="[
-            {
-              label: 'Reprendre',
-              icon: { name: 'ri:play-line', ssr: true },
-              onClick: resumeForm,
-            },
-            {
-              label: 'Recommencer',
-              secondary: true,
-              icon: { name: 'ri:restart-line', ssr: true },
-              onClick: restartForm,
-            },
-          ]"
+        </component>
+        <DsfrBadge
+          class="fr-mt-n1w fr-mb-2w"
+          type="info"
+          :label="`Progression : ${progress}%`"
         />
+        <p class="fr-text--lg">
+          Souhaitez-vous reprendre votre formulaire là où vous vous êtes arrêté ou recommencer à zéro ?
+        </p>
+        <div class="fr-btns-group brand-form-actions fr-mt-1w">
+          <DsfrButton
+            class="brand-form-actions__button"
+            label="Reprendre"
+            :icon="{ name: 'ri:play-line', ssr: true }"
+            @click="resumeForm"
+          />
+          <DsfrButton
+            class="brand-form-actions__button"
+            label="Recommencer"
+            secondary
+            :icon="{ name: 'ri:restart-line', ssr: true }"
+            @click="restartForm"
+          />
+        </div>
       </div>
     </div>
     <!-- Écran de bienvenue -->
     <div v-else-if="showWelcomeScreen">
       <div class="fr-card fr-card--shadow fr-p-3w">
-        <h2 class="fr-h4">
+        <component
+          :is="surveyH2"
+          class="fr-h4"
+        >
           <VIcon
             name="ri:information-line"
             ssr
           />
           Un simulateur en construction
-        </h2>
+        </component>
         <p>
           <span class="fr-text--bold">Bienvenue !</span>
           Ce simulateur vous permet d’estimer 5 aides financières pour le logement et le déménagement, en particulier
           destinées aux étudiants.
           <DsfrLink
-            :link="{
-              to: '/aides',
-              target: '__blank',
-            }"
+            to="/aides"
+            target="_blank"
             label="Consulter la liste des aides couvertes."
             :icon="{ name: 'ri:arrow-right-line', ssr: true }"
           />
@@ -311,9 +349,7 @@ const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
           <ul>
             <li>
               Par mail à l'adresse <DsfrLink
-                :link="{
-                  to: 'mailto:aides.simplifiees@numerique.gouv.fr',
-                }"
+                to="mailto:aides.simplifiees@numerique.gouv.fr"
                 :icon="{ name: 'ri:mail-line', ssr: true }"
                 label="aides.simplifiees@numerique.gouv.fr"
               />
@@ -321,10 +357,8 @@ const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
             <li>
               Via <DsfrLink
                 :icon="{ name: 'ri:external-link-line', ssr: true }"
-                :link="{
-                  target: '__blank',
-                  to: 'https://tally.so/r/w27b9D',
-                }"
+                to="'https://tally.so/r/w27b9D"
+                target="_blank"
                 label="le questionnaire de satisfaction"
               />
             </li>
@@ -332,16 +366,14 @@ const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
           Merci pour votre aide !
         </p>
 
-        <DsfrButtonGroup
-          inline-layout-when="md"
-          :buttons="[
-            {
-              label: 'Commencer la simulation',
-              icon: { name: 'ri:play-line', ssr: true },
-              onClick: handleStart,
-            },
-          ]"
-        />
+        <div class="fr-btns-group brand-form-actions">
+          <DsfrButton
+            class="brand-form-actions__button fr-mt-1w"
+            label="Commencer la simulation"
+            :icon="{ name: 'ri:play-line', ssr: true }"
+            @click="handleStart"
+          />
+        </div>
       </div>
     </div>
 
@@ -359,39 +391,50 @@ const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
         <p>Erreur lors du chargement du formulaire</p>
       </div>
       <template v-else-if="surveySchema">
-        <component
-          :is="surveyTitleTag"
-          class="fr-h3"
-        >
-          Votre simulation « {{ surveySchema?.title }} »
-        </component>
         <DsfrStepper
           :steps="surveySchema?.steps.map(step => step.title).filter(Boolean) || []"
           :current-step="currentStepIndex"
         />
         <div
           v-if="surveySchema && currentQuestion"
-          ref="questionContainer"
-          class="fr-card fr-card--shadow fr-p-3w"
-          tabindex="-1"
+          class="form-container fr-card fr-card--shadow fr-p-3w"
         >
+          <DsfrBadge
+            v-if="resultsFetchState !== 'idle'"
+            class="survey-fetch-state-badge"
+            :type="({
+              // idle: 'info',
+              loading: 'info',
+              loaded: 'success',
+              error: 'error',
+            }[resultsFetchState] as 'info' | 'success' | 'error')"
+            :label="{
+              // idle: `progression : ${progress}%`,
+              loading: 'Estimation en cours...',
+              loaded: 'Estimation terminée',
+              error: 'Erreur lors de l\'estimation',
+            }[resultsFetchState]"
+          />
           <!-- Current Question -->
           <div class="fr-form-group">
-            <hgroup>
+            <hgroup class="fr-mb-3w">
               <component
-                :is="surveyQuestionTitleTag"
-                class="fr-h5"
+                :is="surveyH2"
+                class="fr-h5 fr-mb-1w"
               >
                 {{ currentQuestion?.title }}
               </component>
-              <p v-if="currentQuestion?.description">
+              <p
+                v-if="currentQuestion?.description"
+                class="fr-hint-text fr-text--sm"
+              >
                 {{ currentQuestion?.description }}
               </p>
             </hgroup>
             <DsfrButton
               v-if="currentQuestion?.notion"
               :label="currentQuestion?.notion.buttonLabel"
-              icon="ri-information-line"
+              icon="ri:information-line"
               secondary
               icon-right
               class="fr-mb-2w"
@@ -400,73 +443,99 @@ const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
 
             <!-- Question component based on type -->
             <template v-if="currentQuestion">
-              <RadioButtonQuestion
-                v-if="currentQuestion.type === 'radio'"
-                :question="currentQuestion"
-                :model-value="(answers[currentQuestion.id] as string)"
-                @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
-              />
+              <div
+                ref="questionContainer"
+              >
+                <RadioButtonQuestion
+                  v-if="currentQuestion.type === 'radio'"
+                  :question="currentQuestion"
+                  :model-value="(answers[currentQuestion.id] as string)"
+                  @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
+                />
 
-              <BooleanQuestion
-                v-else-if="currentQuestion.type === 'boolean'"
-                :question="currentQuestion"
-                :model-value="(answers[currentQuestion.id] as boolean)"
-                @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
-              />
+                <BooleanQuestion
+                  v-else-if="currentQuestion.type === 'boolean'"
+                  :question="currentQuestion"
+                  :model-value="(answers[currentQuestion.id] as boolean)"
+                  @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
+                />
 
-              <MultiSelectQuestion
-                v-else-if="currentQuestion.type === 'checkbox'"
-                :question="currentQuestion"
-                :model-value="(answers[currentQuestion.id] as string[])"
-                @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
-              />
+                <MultiSelectQuestion
+                  v-else-if="currentQuestion.type === 'checkbox'"
+                  :question="currentQuestion"
+                  :model-value="(answers[currentQuestion.id] as string[])"
+                  @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
+                />
 
-              <NumberQuestion
-                v-else-if="currentQuestion.type === 'number'"
-                :question="currentQuestion"
-                :model-value="(answers[currentQuestion.id] as number)"
-                @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
-              />
+                <NumberQuestion
+                  v-else-if="currentQuestion.type === 'number'"
+                  :question="currentQuestion"
+                  :model-value="(answers[currentQuestion.id] as number)"
+                  @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
+                />
 
-              <DateQuestion
-                v-else-if="currentQuestion.type === 'date'"
-                :question="currentQuestion"
-                :model-value="(answers[currentQuestion.id] as string)"
-                @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
-              />
+                <DateQuestion
+                  v-else-if="currentQuestion.type === 'date'"
+                  :question="currentQuestion"
+                  :model-value="(answers[currentQuestion.id] as string)"
+                  @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
+                />
 
-              <TextQuestion
-                v-else-if="currentQuestion.type === 'text'"
-                :question="currentQuestion"
-                :model-value="(answers[currentQuestion.id] as string)"
-                :autocomplete-fn="getAutocompleteFn"
-                @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
-              />
+                <TextQuestion
+                  v-else-if="currentQuestion.type === 'text'"
+                  :question="currentQuestion"
+                  :model-value="(answers[currentQuestion.id] as string)"
+                  :autocomplete-fn="getAutocompleteFn"
+                  @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
+                />
+              </div>
             </template>
           </div>
-
-          <DsfrButtonGroup
-            class="fr-mt-3w"
-            align="right"
-            inline-layout-when="md"
-            :buttons="[
-              {
-                label: 'Précédent',
-                secondary: true,
-                icon: { name: 'ri-arrow-left-line', ssr: true },
-                onClick: handlePrevious,
-              },
-              {
-                label: isLastQuestion ? 'Terminer' : 'Suivant',
-                icon: { name: 'ri-arrow-right-line', ssr: true },
-                iconRight: true,
-                disabled: !hasAnswer,
-                onClick: handleNext,
-              },
-            ]"
-          />
+          <div class="fr-btns-group fr-mt-2w brand-form-actions brand-form-actions__align-end">
+            <DsfrButton
+              class="brand-form-actions__button"
+              label="Précédent"
+              secondary
+              :icon="{ name: 'ri:arrow-left-line', ssr: true }"
+              :disabled="resultsFetchState === 'loading'"
+              @click="handlePrevious"
+            />
+            <DsfrButton
+              class="brand-form-actions__button"
+              :label="isLastQuestion ? 'Terminer' : 'Suivant'"
+              :icon="{ name: 'ri:arrow-right-line', ssr: true }"
+              icon-right
+              :disabled="!hasAnswer || resultsFetchState === 'loading'"
+              @click="handleNext"
+            />
+          </div>
         </div>
       </template>
     </template>
   </div>
 </template>
+
+<style scoped lang="scss">
+.brand-form-actions {
+  display: flex;
+  &.brand-form-actions__align-end {
+    justify-content: flex-end;
+  }
+  .brand-form-actions__button {
+    flex-basis: 100%;
+    @media (min-width: 36em) {
+      flex-basis: calc(50% - 1rem);
+    }
+  }
+}
+
+.form-container {
+  position: relative;
+}
+
+.survey-fetch-state-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+</style>

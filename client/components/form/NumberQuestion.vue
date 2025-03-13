@@ -29,7 +29,7 @@ function handleChange (value: number | string) {
 </script>
 
 <template>
-  <div class="question-container">
+  <div class="question-container fr-mb-4w">
     <DsfrInputGroup
       :model-value="modelValue"
       type="number"
