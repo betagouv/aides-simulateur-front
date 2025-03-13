@@ -47,6 +47,7 @@ const nuxtApp = useNuxtApp()
 const simulateurId = route.params.simulateur_id as string
 const simulateur = nuxtApp.payload.data[`simulateur-${simulateurId}`]
 const simulateurTitle = simulateur?.titre || simulateurId
+
 const { setBreadcrumbs } = useBreadcrumbStore()
 setBreadcrumbs([
   { text: 'Accueil', to: '/' },
@@ -56,7 +57,7 @@ setBreadcrumbs([
 
 useSeoMeta({
   title: `Simulateur "${simulateurTitle}" | Aides simplifiées`,
-  description: `En quelques clics sur le simulateur "${simulateurTitle}", découvrez si vous pouvez bénéficier d'aides financières.`
+  description: simulateur?.description || `En quelques clics sur le simulateur "${simulateurTitle}", découvrez si vous pouvez bénéficier d'aides financières.`
 })
 
 // Load iframe-resizer script when in iframe mode

@@ -9,7 +9,7 @@ useSeoMeta({
 })
 
 const { data: aides } = await useAsyncData('aides', () => {
-  return queryCollectionNavigation('aides', ['titre', 'type', 'montant', 'resume', 'instructeur'])
+  return queryCollectionNavigation('aides', ['titre', 'type', 'montant', 'description', 'instructeur'])
 }, {
   transform: (data) => {
     const aides = data?.[0]?.children || []
@@ -24,7 +24,7 @@ const { data: aides } = await useAsyncData('aides', () => {
         type: aide.type as TypeAide,
         instructeur: aide.instructeur as string,
         montant: aide.montant as number,
-        resume: aide.resume as string,
+        description: aide.description as string,
       }
     })
   }
@@ -52,7 +52,7 @@ setBreadcrumbs([
           <div class="fr-col-12 fr-col-sm-6 fr-col-md-4">
             <AideCard
               :titre="aide.titre"
-              :description="aide.resume"
+              :description="aide.description"
               :link="`/aides/${aide.id}`"
               :instructeur="aide.instructeur"
               :type-aide="aide.type"

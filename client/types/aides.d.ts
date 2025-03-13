@@ -15,7 +15,7 @@ declare global {
     description: string
     type: TypeAide
     instructeur: string
-    resume: string
+    description: string
     textesDeLoi?: string[]
   }
 
@@ -29,7 +29,7 @@ declare global {
     montant: number
     type: TypeAide
     textesLoi: string[]
-    resume: string
+    description: string
   }
 
   interface RichMontant {

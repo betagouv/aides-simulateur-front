@@ -13,6 +13,7 @@ const nuxtApp = useNuxtApp()
 const simulateurId = route.params.simulateur_id as string
 const simulateur = nuxtApp.payload.data[`simulateur-${simulateurId}`]
 const simulateurTitle = simulateur?.titre || simulateurId
+
 const { setBreadcrumbs } = useBreadcrumbStore()
 setBreadcrumbs([
   { text: 'Accueil', to: '/' },
@@ -20,6 +21,7 @@ setBreadcrumbs([
   { text: simulateurTitle, to: `/simulateurs/${simulateurId}#simulateur-title` },
   { text: 'Résultats', to: `/simulateurs/${simulateurId}/resultats#simulateur-title` }
 ])
+
 useSeoMeta({
   title: `Résultats de votre simulation "${simulateurTitle}" | Aides simplifiées`,
   description: `Découvrez les aides auxquelles vous êtes eligibles avec les résultats de votre simulation "${simulateurTitle}".`

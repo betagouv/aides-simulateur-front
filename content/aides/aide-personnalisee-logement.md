@@ -2,7 +2,7 @@
 titre: Aide Personnalisée au Logement (APL)
 type: mensuelle
 instructeur: CAF ou MSA
-resume: Aide financière pour réduire le montant du loyer ou des mensualités d'emprunt
+description: Aide financière pour réduire le montant du loyer ou des mensualités d'emprunt
 ---
 
 L'Aide Personnalisée au Logement (APL) est une aide financière pour réduire le montant du loyer ou de la mensualité d'un prêt immobilier. Versée chaque mois par la CAF ou la MSA, elle est souvent directement envoyée à votre bailleur ou votre banque.

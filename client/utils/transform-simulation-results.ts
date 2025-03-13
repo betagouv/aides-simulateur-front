@@ -58,7 +58,7 @@ export async function transformSimulationResults (
       textesLoi: aideDetails?.textesLoi || [],
       instructeur: aideDetails?.instructeur || 'Instructeur non disponible',
       type: aideDetails?.type || 'financements',
-      resume: aideDetails?.resume || 'Résumé non disponible'
+      description: aideDetails?.description || 'Description non disponible'
     }
 
     return richAide

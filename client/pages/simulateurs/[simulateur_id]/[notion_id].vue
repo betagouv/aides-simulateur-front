@@ -28,7 +28,7 @@ setBreadcrumbs([
 
 useSeoMeta({
   title: `Informations sur la notion "${notionTitle}" | Aides simplifiées`,
-  description: `${notion.value?.description.slice(0, 155)}...`
+  description: notion.description || `Découvrez toutes les informations sur la notion "${notionTitle}" pour vous accompagner dans vos démarches.`
 })
 </script>
 

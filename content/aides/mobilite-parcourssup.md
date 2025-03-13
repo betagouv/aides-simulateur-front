@@ -3,7 +3,7 @@ titre: Aide à la mobilité Parcoursup
 type: une-fois
 montant: 500
 instructeur: Crous
-resume: Aide pour les bacheliers boursiers qui s'inscrivent dans un établissement hors de leur académie
+description: Aide pour les bacheliers boursiers qui s'inscrivent dans un établissement hors de leur académie
 ---
 
 L'aide à la mobilité Parcoursup est destinée au bachelier qui effectue son entrée dans l'enseignement supérieur en dehors de son académie de résidence.

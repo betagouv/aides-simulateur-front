@@ -1,5 +1,6 @@
 ---
 titre: Précisions sur le calcul du montant des charges locatives
+description: Les charges locatives sont des dépenses liées à l'entretien et au fonctionnement de votre logement.
 ---
 
 Où trouver le montant des charges locatives ?
