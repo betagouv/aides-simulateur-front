@@ -17,13 +17,6 @@ Le locataire entrant dans un logement du parc locatif privé peut :
   - Être salarié du secteur privé en mutation professionnelle : CDI en période d'essai ou CDD depuis moins de 6 mois, en promesse d'embauche ou en mutation.
 - Quel que soit l'âge du locataire, faire l'objet d'une signature d'un bail mobilité : Le bail mobilité est un nouveau contrat de location allant de 1 à 10 mois, signé entre le propriétaire d'un logement meublé et certains locataires (étudiants, salariés en mission temporaire ou formation professionnelle).
 
-## Périmètre géographique
-La règle est nationale, avec des spécificités sur 3 groupes : Outre-mers, autres Régions et IDF.
-
-## Impact pour l'usager
-Caution locative, dispense de toute autre garant/caution.
-Le petit - : certain·es propriétaires pourraient être frileux·ses ? [vérifier réputation / usager]
-
 ## En savoir plus
 - [Service-public.fr](https://www.service-public.fr/particuliers/vosdroits/F33453)
 

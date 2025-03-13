@@ -26,9 +26,6 @@ Pour en bénéficier, vous devez également :
 
 Si vous êtes salarié ou préretraité d'une entreprise du secteur privé agricole, vous pouvez demander l'avance [Agri-Loca-Pass](https://www.actionlogement.fr/le-secteur-agricole).
 
-## Impact pour l'usager
-Pas besoin de donner de garantie de dépôt (avance)
-
 ## En savoir plus
 - [Service-public.fr](https://www.service-public.fr/particuliers/vosdroits/F18490)
 
