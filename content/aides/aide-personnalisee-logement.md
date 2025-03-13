@@ -2,13 +2,32 @@
 titre: Aide Personnalisée au Logement (APL)
 type: mensuelle
 instructeur: CAF ou MSA
-resume: Aide financière pour réduire le montant du loyer ou des mensualités d'emprunt
+description: Aide financière pour réduire le montant du loyer ou des mensualités d'emprunt
+textesLoi:
+  - prefixe: Conditions générales d'attribution
+    label: "Code de la construction et de l'habitation : articles R831-1 à R831-3"
+    url: https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006074096/LEGISCTA000038850380/#LEGISCTA000038878778
+  - prefixe: Foyer
+    label: "Code de la construction et de l'habitation : articles R832-23 à D832-28"
+    url: https://www.legifrance.gouv.fr/codes/id/LEGISCTA000038878716
+  - prefixe: Conditions de ressources
+    label: "Code de la construction et de l'habitation : articles R822-3 à R822-17"
+    url: https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006074096/LEGISCTA000038850156/#LEGISCTA000038879003
+  - prefixe: Versement en tiers payant
+    label: "Code de la construction et de l'habitation : articles D832-1 à D832-4"
+    url: https://www.legifrance.gouv.fr/codes/id/LEGISCTA000038878768
+  - prefixe: Conditions liées au logement
+    label: "Code de la construction et de l'habitation : articles R822-23 à R822-25"
+    url: https://www.legifrance.gouv.fr/codes/id/LEGISCTA000038878951/
+  - prefixe: Calcul et versement des aides
+    label: "Code de la construction et de l'habitation : articles R823-1 à D823-9"
+    url: https://www.legifrance.gouv.fr/codes/id/LEGISCTA000038878941
+  - prefixe: Ouverture et extinction des droits
+    label: "Code de la construction et de l'habitation : articles R823-10 à D823-15"
+    url: https://www.legifrance.gouv.fr/codes/id/LEGISCTA000038878921
 ---
 
 L'Aide Personnalisée au Logement (APL) est une aide financière pour réduire le montant du loyer ou de la mensualité d'un prêt immobilier. Versée chaque mois par la CAF ou la MSA, elle est souvent directement envoyée à votre bailleur ou votre banque.
-
-## Simulateurs existants
-CAF, PNDS
 
 ## Faire une demande
 - [Plateforme de la CAF](https://connect.caf.fr/connexionappli/dist/?forceReload=20241220&contexteAppel=caffr&urlredirect=%2Fwps%2Fmyportal%2Fcaffr#/login)

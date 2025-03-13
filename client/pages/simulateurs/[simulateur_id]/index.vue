@@ -5,6 +5,7 @@ definePageMeta({
   layout: 'user-simulation',
   middleware: [
     'check-iframe-layout',
+    'load-simulateur',
     function (to, from) {
       const resume = to.query.resume
       const fromName = from.matched[0].name as string
@@ -21,15 +22,20 @@ definePageMeta({
        * We want to force the resume by adding the query param resume=true.
        */
       if (!resume && shouldForceResume) {
-        return navigateTo(`${to.fullPath}?resume=true`)
+        // Create a new query object with all existing params
+        const query = { ...to.query, resume: 'true' }
+        return navigateTo({ path: to.path, query, hash: to.hash })
       }
       /**
        * If the query param resume=true is present,
        * and we are not coming from certain pages,
-       * we want to remove the query param *resume=true
+       * we want to remove the query param resume
        */
       if (resume && !shouldForceResume) {
-        return navigateTo(to.fullPath.replace('?resume=true', ''))
+        // Create a new query object without the resume param
+        const query = { ...to.query }
+        delete query.resume
+        return navigateTo({ path: to.path, query, hash: to.hash })
       }
     }
   ],
@@ -37,28 +43,21 @@ definePageMeta({
 })
 
 const route = useRoute()
+const nuxtApp = useNuxtApp()
 const simulateurId = route.params.simulateur_id as string
-
-const { data: simulateur } = useAsyncData(`simulateur-${simulateurId}`, () => {
-  return queryCollection('simulateurs')
-    .where('stem', '=', `simulateurs/${simulateurId}`)
-    .first()
-})
+const simulateur = nuxtApp.payload.data[`simulateur-${simulateurId}`]
+const simulateurTitle = simulateur?.titre || simulateurId
 
 const { setBreadcrumbs } = useBreadcrumbStore()
-watchEffect(() => {
-  if (simulateur.value) {
-    setBreadcrumbs([
-      { text: 'Accueil', to: '/' },
-      { text: 'Simulateurs', to: '/simulateurs' },
-      { text: simulateur.value.titre, to: `/simulateurs/${simulateurId}` }
-    ])
-  }
-})
+setBreadcrumbs([
+  { text: 'Accueil', to: '/' },
+  { text: 'Simulateurs', to: '/simulateurs' },
+  { text: simulateurTitle, to: `/simulateurs/${simulateurId}#simulateur-title` }
+])
 
 useSeoMeta({
-  title: `Simulateur ${simulateur.value?.title || simulateurId} | Aides simplifiées`,
-  description: `En quelques clics sur le simulateur ${simulateur.value?.title || simulateurId}, découvrez si vous pouvez bénéficier d'aides financières.`
+  title: `Simulateur "${simulateurTitle}" | Aides simplifiées`,
+  description: simulateur?.description || `En quelques clics sur le simulateur "${simulateurTitle}", découvrez si vous pouvez bénéficier d'aides financières.`
 })
 
 // Load iframe-resizer script when in iframe mode

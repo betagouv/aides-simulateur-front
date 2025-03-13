@@ -3,7 +3,9 @@ titre: Aide à la mobilité master
 type: une-fois
 montant: 1000
 instructeur: Ministère chargé de l'enseignement supérieur, de la recherche et de l'innovation
-resume: Aide financière pour les étudiants boursiers qui changent de région pour leur première année de master
+description: Aide financière pour les étudiants boursiers qui changent de région pour leur première année de master
+textesLoi: 
+  - Décret n° 2017-969 du 10 mai 2017 relatif à l'aide à la mobilité accordée aux étudiants inscrits en première année du diplôme national de master
 ---
 
 Cette aide facilite la mobilité géographique des étudiants titulaires d'un diplôme national de licence qui s'inscrivent pour la première fois en première année de diplôme national de master qui fait suite à l'année d'obtention de la licence dans une région académique différente.

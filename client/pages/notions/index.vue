@@ -1,14 +1,10 @@
 <script lang="ts" setup>
-useSeoMeta({
-  title: 'Toutes les informations sur les notions | Aides simplifiées',
-  description: 'Découvrez toutes les informations sur les notions pour vous accompagner dans vos démarches.'
-})
 definePageMeta({
   layout: 'default',
 })
 
-const { data: notions } = useAsyncData('notions', () => {
-  return queryCollectionNavigation('notions', ['titre'])
+const { data: notions } = await useAsyncData('notions', () => {
+  return queryCollectionNavigation('notions', ['titre', 'description'])
 }, {
   transform: (data) => {
     const notions = data?.[0]?.children || []
@@ -19,7 +15,8 @@ const { data: notions } = useAsyncData('notions', () => {
          * /!\ le champ 'titre' est défini par le rédacteur dans le fichier
          * !== du champ 'title' (qui correspond au nom dans le filesystem)
          */
-        title: notion.titre,
+        titre: notion.titre as string,
+        description: notion.description as string,
       }
     })
   }
@@ -30,6 +27,11 @@ setBreadcrumbs([
   { text: 'Accueil', to: '/' },
   { text: 'Notions', to: '/notions' },
 ])
+
+useSeoMeta({
+  title: 'Toutes les informations sur les notions | Aides simplifiées',
+  description: 'Découvrez toutes les informations sur les notions pour vous accompagner dans vos démarches.'
+})
 </script>
 
 <template>
@@ -46,7 +48,8 @@ setBreadcrumbs([
         >
           <div class="fr-col-4">
             <DsfrCard
-              :title="notion.title"
+              :title="notion.titre"
+              :description="notion.description"
               :link="`/notions/${notion.id}`"
             />
           </div>

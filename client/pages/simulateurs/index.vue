@@ -3,8 +3,8 @@ definePageMeta({
   layout: 'default',
 })
 
-const { data: simulateurs } = useAsyncData('simulateurs', () => {
-  return queryCollectionNavigation('simulateurs', ['titre'])
+const { data: simulateurs } = await useAsyncData('simulateurs', () => {
+  return queryCollectionNavigation('simulateurs', ['titre', 'description'])
 }, {
   transform: (data) => {
     const simulateurs = data?.[0]?.children || []
@@ -12,6 +12,7 @@ const { data: simulateurs } = useAsyncData('simulateurs', () => {
       return {
         id: simulateur.path.split('/').pop(),
         titre: simulateur.titre as string,
+        description: simulateur.description as string
       }
     })
   }
@@ -44,7 +45,7 @@ useSeoMeta({
           <div class="fr-col-12 fr-col-sm-6 fr-col-md-4">
             <DsfrCard
               :title="simulateur.titre"
-              description=""
+              :description="simulateur.description"
               :link="`/simulateurs/${simulateur.id}`"
             />
           </div>

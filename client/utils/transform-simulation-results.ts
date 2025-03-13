@@ -1,3 +1,15 @@
+const mockCalculationResponse = {
+  'aide-personnalisee-logement': 1212.23,
+  'aide-personnalisee-logement-eligibilite': true,
+  'garantie-visale': 317.855,
+  'garantie-visale-eligibilite': true,
+  'locapass': 300.24,
+  'locapass-eligibilite': true,
+  'mobilite-master-1': 343.34,
+  'mobilite-master-1-eligibilite': true,
+  'mobilite-parcoursup': 200,
+  'mobilite-parcoursup-eligibilite': false
+}
 /**
  * Transforms raw aides data from OpenFisca into rich content for UI display
  */
@@ -5,7 +17,11 @@ export async function transformSimulationResults (
   calculationResponse: SimulationResultsAides,
   simulateurId: string
 ): Promise<RichSimulationResults> {
-  const rawAides: RawAide[] = Object.entries(calculationResponse)
+  /**
+   * Uncomment below to use mock data for testing
+   */
+  // calculationResponse = mockCalculationResponse
+  const rawAides: RawAide[] = Object.entries(mockCalculationResponse)
     .reduce((acc, [key, value]) => {
       if (key.match('-eligibilite')) {
         const eligibilite = value
@@ -37,7 +53,7 @@ export async function transformSimulationResults (
       montants: [],
       echeances: [],
       aidesNonEligibles: [],
-      textesDeLoi: []
+      textesLoi: []
     }
   }
 
@@ -50,15 +66,14 @@ export async function transformSimulationResults (
       // Data from calculation response
       id: rawAide.id,
       montant: rawAide.montant || 0,
-      link: `/simulateurs/${simulateurId}/resultats/${rawAide.id}`,
+      link: `/simulateurs/${simulateurId}/resultats/${rawAide.id}#simulateur-title`,
       eligibilite: rawAide.eligibilite,
       // Data from content source
-      title: aideDetails?.titre || `Aide ${rawAide.id}`,
+      titre: aideDetails?.titre || `Aide ${rawAide.id}`,
       description: aideDetails?.description || 'Description non disponible',
       textesLoi: aideDetails?.textesLoi || [],
       instructeur: aideDetails?.instructeur || 'Instructeur non disponible',
-      type: aideDetails?.type || 'financements',
-      resume: aideDetails?.resume || 'Résumé non disponible'
+      type: aideDetails?.type || '',
     }
 
     return richAide
@@ -98,16 +113,27 @@ export async function transformSimulationResults (
       }
 
       // Add specific formatting based on aide type
-      if (type === 'reduction-impots') {
-        montantInfo.prefix = 'Jusqu\'à'
-      }
-      else if (type === 'pret') {
-        montantInfo.suffix = 'disponible'
+      switch (type) {
+        case 'mensuelle':
+          montantInfo.prefix = 'Jusqu\'à'
+          montantInfo.suffix = 'par mois pour vous aider à payer votre loyer'
+          break
+        case 'pret':
+          montantInfo.prefix = 'Jusqu\'à'
+          montantInfo.suffix = 'prétés'
+          break
+        case 'caution':
+          montantInfo.prefix = 'Jusqu\'à'
+          montantInfo.suffix = 'de caution à rembourser en cas de dégâts'
+          break
+        case 'une-fois':
+          montantInfo.prefix = 'Jusqu\'à'
+          montantInfo.suffix = 'pour financer votre installation'
+          break
       }
 
       return montantInfo
     })
-
   // Mock echeances - in real implementation, this would be derived from data
   const echeances: RichEcheance[] = eligibleAides
     .filter(aide => aide.type === 'periode')
@@ -119,9 +145,9 @@ export async function transformSimulationResults (
     }))
 
   // Sample texts - would come from a real data source
-  const textesDeLoi: string[] = []
+  const textesLoi: string[] = []
   richAides.forEach((aide) => {
-    textesDeLoi.push(...aide.textesLoi)
+    textesLoi.push(...aide.textesLoi)
   })
 
   return {
@@ -129,6 +155,6 @@ export async function transformSimulationResults (
     montants,
     echeances,
     aidesNonEligibles: nonEligibleAides,
-    textesDeLoi
+    textesLoi
   }
 }

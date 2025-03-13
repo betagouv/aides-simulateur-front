@@ -1,4 +1,15 @@
 # CHANGELOG
+
+# CHANGELOG
+## 0.16.0 [#68](https://github.com/betagouv/aides-simulateur-front/pull/68)
+
+* Ajout de fonctionnalités.
+* Détail :
+  * Minimise différents layout-shift
+  * Optimise le chargement des pages de contenu
+  * Permet d'afficher des textes de lois à l'utilisateur
+  * Améliorations de styles
+
 ## 0.15.0 [#67](https://github.com/betagouv/aides-simulateur-front/pull/67)
 
 * Ajout de fonctionnalités.

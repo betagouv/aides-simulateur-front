@@ -203,7 +203,7 @@ async function submitForm () {
 
     if (results) {
       resultStore.setResults(simulateurId, results)
-      navigateTo(`/simulateurs/${simulateurId}/resultats`)
+      navigateTo(`/simulateurs/${simulateurId}/resultats#simulateur-title`)
     }
     // Track form submission in Matomo
     if (typeof window !== 'undefined' && (window as any)._paq) {
@@ -345,24 +345,28 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
           />
         </p>
         <p>
-          Nous continuons à l'améliorer. Vos retours sont précieux :
-          <ul>
-            <li>
-              Par mail à l'adresse <DsfrLink
-                to="mailto:aides.simplifiees@numerique.gouv.fr"
-                :icon="{ name: 'ri:mail-line', ssr: true }"
-                label="aides.simplifiees@numerique.gouv.fr"
-              />
-            </li>
-            <li>
-              Via <DsfrLink
-                :icon="{ name: 'ri:external-link-line', ssr: true }"
-                to="'https://tally.so/r/w27b9D"
-                target="_blank"
-                label="le questionnaire de satisfaction"
-              />
-            </li>
-          </ul>
+          Nous continuons à l’améliorer. Vos retours sont précieux :
+        </p>
+        <ul class="fr-mt-n2w fr-mb-2w">
+          <li>
+            Par mail à l'adresse
+            <DsfrLink
+              to="mailto:aides.simplifiees@numerique.gouv.fr"
+              :icon="{ name: 'ri:mail-line', ssr: true }"
+              label="aides.simplifiees@numerique.gouv.fr"
+            />
+          </li>
+          <li>
+            Via
+            <DsfrLink
+              :icon="{ name: 'ri:external-link-line', ssr: true }"
+              to="'https://tally.so/r/w27b9D"
+              target="_blank"
+              label="le questionnaire de satisfaction"
+            />
+          </li>
+        </ul>
+        <p>
           Merci pour votre aide !
         </p>
 
@@ -380,13 +384,18 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
     <!-- Formulaire -->
     <template v-else>
       <template v-if="isLoading">
-        <p>
-          Chargement...
-        </p>
+        <div class="fr-card fr-card--shadow fr-p-3w">
+          <p class="loading-indicator fr-text--xl fr-mt-3w">
+            <span
+              class="fr-icon-refresh-line fr-icon fr-icon--md fr-mr-2w"
+              aria-hidden="true"
+            />Chargement du formulaire...
+          </p>
+        </div>
       </template>
       <div
         v-else-if="!surveySchema"
-        class="fr-py-5w fr-text--center"
+        class="fr-card fr-card--shadow fr-py-5w fr-text--center"
       >
         <p>Erreur lors du chargement du formulaire</p>
       </div>
@@ -397,7 +406,7 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
         />
         <div
           v-if="surveySchema && currentQuestion"
-          class="form-container fr-card fr-card--shadow fr-p-3w"
+          class="form-container fr-card fr-p-3w"
         >
           <DsfrBadge
             v-if="resultsFetchState !== 'idle'"
@@ -431,21 +440,23 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
                 {{ currentQuestion?.description }}
               </p>
             </hgroup>
-            <DsfrButton
-              v-if="currentQuestion?.notion"
-              :label="currentQuestion?.notion.buttonLabel"
-              icon="ri:information-line"
-              secondary
-              icon-right
-              class="fr-mb-2w"
-              @click="() => navigateTo(`/simulateurs/${simulateurId}/${currentQuestion?.notion.id}`)"
-            />
-
             <!-- Question component based on type -->
             <template v-if="currentQuestion">
               <div
                 ref="questionContainer"
+                class="question-actual-container"
               >
+                <DsfrButton
+                  v-if="currentQuestion?.notion"
+                  :label="currentQuestion?.notion.buttonLabel"
+                  icon="ri:information-line"
+                  secondary
+                  icon-right
+                  class="fr-mb-2w"
+                  @click="() => {
+                    navigateTo(`/simulateurs/${simulateurId}/${currentQuestion?.notion.id}#simulateur-title`)
+                  }"
+                />
                 <RadioButtonQuestion
                   v-if="currentQuestion.type === 'radio'"
                   :question="currentQuestion"
@@ -491,24 +502,26 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
               </div>
             </template>
           </div>
-          <div class="fr-btns-group fr-mt-2w brand-form-actions brand-form-actions__align-end">
-            <DsfrButton
-              class="brand-form-actions__button"
-              label="Précédent"
-              secondary
-              :icon="{ name: 'ri:arrow-left-line', ssr: true }"
-              :disabled="resultsFetchState === 'loading'"
-              @click="handlePrevious"
-            />
-            <DsfrButton
-              class="brand-form-actions__button"
-              :label="isLastQuestion ? 'Terminer' : 'Suivant'"
-              :icon="{ name: 'ri:arrow-right-line', ssr: true }"
-              icon-right
-              :disabled="!hasAnswer || resultsFetchState === 'loading'"
-              @click="handleNext"
-            />
-          </div>
+        </div>
+        <div class="fr-btns-group fr-btns-group--lg fr-mt-4w brand-form-actions brand-form-actions__align-end">
+          <DsfrButton
+            class="brand-form-actions__button"
+            label="Précédent"
+            secondary
+            size="lg"
+            :icon="{ name: 'ri:arrow-left-line', ssr: true }"
+            :disabled="resultsFetchState === 'loading'"
+            @click="handlePrevious"
+          />
+          <DsfrButton
+            size="lg"
+            class="brand-form-actions__button"
+            :label="isLastQuestion ? 'Terminer' : 'Suivant'"
+            :icon="{ name: 'ri:arrow-right-line', ssr: true }"
+            icon-right
+            :disabled="!hasAnswer || resultsFetchState === 'loading'"
+            @click="handleNext"
+          />
         </div>
       </template>
     </template>
@@ -518,11 +531,14 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
 <style scoped lang="scss">
 .brand-form-actions {
   display: flex;
+
   &.brand-form-actions__align-end {
     justify-content: flex-end;
   }
+
   .brand-form-actions__button {
     flex-basis: 100%;
+
     @media (min-width: 36em) {
       flex-basis: calc(50% - 1rem);
     }
@@ -532,10 +548,40 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
 .form-container {
   position: relative;
 }
+.fr-form-group {
+  padding: .5rem .25rem;
+  height: max(20em, 36vh);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
 
 .survey-fetch-state-badge {
   position: absolute;
   top: 1rem;
   right: 1rem;
+}
+
+.loading-indicator {
+  color: var(--text-mention-grey);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  min-height: 10em;
+}
+
+.loading-indicator .fr-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>

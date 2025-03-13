@@ -1,1 +1,3 @@
-# Mentions légales
+---
+titre: Mentions légales
+---

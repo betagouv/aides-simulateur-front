@@ -1,33 +1,28 @@
 <script lang="ts" setup>
 definePageMeta({
   layout: 'default',
-  validate: getContentRouteValidator('aide_id')
-
+  validate: getContentRouteValidator('aide_id'),
+  middleware: [
+    'load-aide'
+  ],
 })
 
 const route = useRoute()
-
+const nuxtApp = useNuxtApp()
 const aideId = route.params.aide_id
-const { data: aide } = useAsyncData(`aide-${aideId}`, () => {
-  return queryCollection('aides')
-    .where('stem', '=', `aides/${aideId}`)
-    .first()
-})
+const aide = nuxtApp.payload.data[`aide-${aideId}`]
+const aideTitle = aide?.titre || aideId
 
 const { setBreadcrumbs } = useBreadcrumbStore()
-watchEffect(() => {
-  if (aide.value) {
-    setBreadcrumbs([
-      { text: 'Accueil', to: '/' },
-      { text: 'Aides', to: '/aides' },
-      { text: aide.value.title, to: `/aides/${aideId}` }
-    ])
-  }
-})
+setBreadcrumbs([
+  { text: 'Accueil', to: '/' },
+  { text: 'Aides', to: '/aides' },
+  { text: aideTitle, to: `/aides/${aideId}` }
+])
 
 useSeoMeta({
-  title: `Aide ${aide.value?.title || aideId} | Aides simplifiées`,
-  description: `${aide.value?.resume}`
+  title: `Aide "${aideTitle}" | Aides simplifiées`,
+  description: aide.description || `Découvrez toutes les informations sur l'aide "${aideTitle}" pour vous accompagner dans vos démarches.`
 })
 </script>
 
@@ -38,16 +33,14 @@ useSeoMeta({
       v-if="aide"
       type="page-header"
     >
-      <div class="fr-grid-row fr-grid-row--gutters">
-        <div class="fr-col-9 fr-col-sm-10 fr-col-md-11">
+      <article>
+        <header class="fr-mb-4w">
           <h1>
-            {{ aide.titre }}
+            {{ aideTitle }}
           </h1>
-        </div>
-        <div class="fr-col-9 fr-col-sm-10 fr-col-md-11">
-          <ContentRenderer :value="aide" />
-        </div>
-      </div>
+        </header>
+        <ContentRenderer :value="aide" />
+      </article>
     </SectionContainer>
   </BrandBackgroundContainer>
 </template>

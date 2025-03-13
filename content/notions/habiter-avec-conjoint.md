@@ -1,5 +1,6 @@
 ---
 titre: Habiterez-vous avec votre conjoint ?
+description: Pour bénéficier de certaines aides financières, il est nécessaire de déclarer si vous habitez avec votre conjoint.
 ---
 
 Un(e) conjoint(e) peut désigner :

@@ -4,7 +4,10 @@ export default defineContentConfig({
   collections: {
     pages: defineCollection({
       type: 'page',
-      source: 'pages/**/*.md'
+      source: 'pages/**/*.md',
+      schema: z.object({
+        titre: z.string(),
+      }),
     }),
     simulateurs: defineCollection({
       type: 'page',
@@ -12,6 +15,7 @@ export default defineContentConfig({
       schema: z.object({
         titre: z.string(),
         titreCourt: z.string(),
+        description: z.string(),
         pictogramme: z.string(),
       }),
     }),
@@ -20,6 +24,7 @@ export default defineContentConfig({
       source: 'notions/**/*.md',
       schema: z.object({
         titre: z.string(),
+        description: z.string(),
       }),
     }),
     aides: defineCollection({
@@ -27,10 +32,19 @@ export default defineContentConfig({
       source: 'aides/**/*.md',
       schema: z.object({
         titre: z.string(),
-        resume: z.string(),
+        description: z.string(),
         instructeur: z.string(),
         montant: z.number().nullable(),
-        textesLoi: z.array(z.string()).nullable(),
+        textesLoi: z.array(
+          z.union([
+            z.string().nullable(),
+            z.object({
+              prefixe: z.string(),
+              label: z.string(),
+              url: z.string(),
+            }).nullable(),
+          ]),
+        ),
         type: z.enum([
           'pret',
           'garantie',

@@ -1,5 +1,6 @@
 ---
 titre: Quel est votre revenu imposable sur les 12 derniers mois ?
+description: Pour bénéficier de certaines aides financières, il est nécessaire de déclarer votre revenu imposable sur les 12 derniers mois.
 ---
 
 Indiquez le montant total de vos revenus imposables perçus au cours des 12 derniers mois, avant impôts et après déductions éventuelles (abattements, exonérations).

@@ -1,32 +1,28 @@
 <script lang="ts" setup>
 definePageMeta({
   layout: 'default',
-  validate: getContentRouteValidator('notion_id')
+  validate: getContentRouteValidator('notion_id'),
+  middleware: [
+    'load-notion'
+  ]
 })
 
 const route = useRoute()
+const nuxtApp = useNuxtApp()
 const notionId = route.params.notion_id
-
-const { data: notion } = useAsyncData(`notion-${notionId}`, () => {
-  return queryCollection('notions')
-    .where('stem', '=', `notions/${notionId}`)
-    .first()
-})
+const notion = nuxtApp.payload.data[`notion-${notionId}`]
+const notionTitle = notion?.titre || notionId
 
 const { setBreadcrumbs } = useBreadcrumbStore()
-watchEffect(() => {
-  if (notion.value) {
-    setBreadcrumbs([
-      { text: 'Accueil', to: '/' },
-      { text: 'Aides', to: '/aides' },
-      { text: notion.value.title, to: `/notions/${notionId}` }
-    ])
-  }
-})
+setBreadcrumbs([
+  { text: 'Accueil', to: '/' },
+  { text: 'Aides', to: '/aides' },
+  { text: notionTitle, to: `/notions/${notionId}` }
+])
 
 useSeoMeta({
-  title: `Informations sur la notion ${notion.value?.title || notionId} | Aides simplifiées`,
-  description: `${notion.value?.description.slice(0, 155)}...`
+  title: `Informations sur la notion "${notionTitle}" | Aides simplifiées`,
+  description: notion.description || `Découvrez toutes les informations sur la notion "${notionTitle}" pour vous accompagner dans vos démarches.`
 })
 </script>
 
@@ -37,19 +33,16 @@ useSeoMeta({
       v-if="notion"
       type="page-header"
     >
-      <div class="fr-grid-row fr-grid-row--gutters">
-        <div class="fr-col-9 fr-col-sm-10 fr-col-md-11">
+      <article>
+        <header class="fr-mb-4w">
           <h1>
-            {{ notion?.title }}
+            {{ notionTitle }}
           </h1>
-          <p class="fr-text--lg">
-            {{ notion?.description }}
-          </p>
-        </div>
-      </div>
+        </header>
+        <ContentRenderer :value="notion" />
+      </article>
     </SectionContainer>
   </BrandBackgroundContainer>
 </template>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

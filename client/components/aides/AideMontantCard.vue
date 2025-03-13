@@ -11,7 +11,7 @@ defineProps<{
   <div class="fr-card fr-card--sm brand-rich-aide-montant">
     <div class="fr-card__body">
       <div class="fr-card__content">
-        <div class="fr-card__start brand-rich-aide-montant__type">
+        <div class="fr-card__start brand-rich-aide-montant__type fr-mb-n1w">
           <TypeAideTag :type="type" />
         </div>
         <div class="fr-card__end brand-rich-aide-montant__montant">

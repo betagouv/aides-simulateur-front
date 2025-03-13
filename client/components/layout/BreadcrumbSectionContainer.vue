@@ -21,7 +21,9 @@ const styles = computed(() => {
 <template>
   <SectionContainer type="page-breadcrumb">
     <div class="fr-grid-row fr-grid-row--gutters">
-      <div class="fr-col-12">
+      <div
+        class="fr-col-12 breadcrumb-container"
+      >
         <DsfrBreadcrumb
           v-if="breadcrumbs.length"
           class="fr-m-0"
@@ -33,3 +35,12 @@ const styles = computed(() => {
     </div>
   </SectionContainer>
 </template>
+
+<style scoped lang="scss">
+.breadcrumb-container {
+  min-height: 2.25rem;
+  @media screen and (min-width: 48em) {
+    min-height: 3.25rem;
+  }
+}
+</style>

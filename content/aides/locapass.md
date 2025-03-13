@@ -2,7 +2,8 @@
 titre: Avance LOCA-PASS
 type: pret
 instructeur: Action logement
-resume: Prêt à 0% pour financer votre dépôt de garantie
+description: Prêt à 0% pour financer votre dépôt de garantie
+textesLoi: []
 ---
 
 L'avance LOCA-PASS® est une aide gratuite sous forme d'un prêt à 0 % pour financer tout ou partie de votre dépôt de garantie.
@@ -24,9 +25,6 @@ Pour en bénéficier, vous devez également :
 - Ne pas être fonctionnaire.
 
 Si vous êtes salarié ou préretraité d'une entreprise du secteur privé agricole, vous pouvez demander l'avance [Agri-Loca-Pass](https://www.actionlogement.fr/le-secteur-agricole).
-
-## Impact pour l'usager
-Pas besoin de donner de garantie de dépôt (avance)
 
 ## En savoir plus
 - [Service-public.fr](https://www.service-public.fr/particuliers/vosdroits/F18490)
