@@ -17,10 +17,22 @@ const debounceTimeout = ref<NodeJS.Timeout | null>(null)
 const selectedIndex = ref(-1)
 const suggestionListRef = ref<HTMLUListElement | null>(null)
 
+const isTagSelected = ref(false)
+const selectedTag = ref<{ code: string, autocompletion: string, libelle: string } | null>(null)
+
 // Met à jour inputValue quand modelValue change (pour les cas où la valeur est définie en dehors)
 watch(() => props.modelValue, (newValue) => {
   if (newValue !== undefined) {
-    inputValue.value = newValue
+    // Si nous avons un modelValue mais pas de tag sélectionné,
+    // il faut vérifier si c'est un code connu et retrouver l'autocomplétion
+    if (!isTagSelected.value && props.autocompleteFn && newValue) {
+      inputValue.value = newValue
+      // On pourrait ici faire une requête à l'API pour obtenir l'autocomplétion
+      // Mais pour l'instant on laisse juste le code comme valeur
+    }
+    else {
+      inputValue.value = newValue
+    }
   }
 })
 
@@ -64,9 +76,18 @@ async function handleInput (event: Event) {
 
 // Fonction pour sélectionner une suggestion
 function selectSuggestion (suggestion: { code: string, autocompletion: string }) {
-  inputValue.value = suggestion.autocompletion
+  selectedTag.value = suggestion
+  isTagSelected.value = true
   emit('update:modelValue', suggestion.code) // On émet le code comme valeur
   showSuggestions.value = false
+}
+
+// Fonction pour supprimer le tag sélectionné
+function removeTag () {
+  selectedTag.value = null
+  isTagSelected.value = false
+  inputValue.value = ''
+  emit('update:modelValue', '')
 }
 
 // Gestion des touches clavier pour naviguer dans les suggestions
@@ -119,6 +140,20 @@ function handleClickOutside (event: MouseEvent) {
 
 onMounted(() => {
   document.addEventListener('click', handleClickOutside)
+
+  // Si on a déjà une valeur, on essaie de la retrouver dans les suggestions
+  if (props.modelValue && props.autocompleteFn) {
+    props.autocompleteFn(props.modelValue).then((results) => {
+      // Si on trouve une correspondance exacte, on sélectionne ce tag
+      const match = results.find(item => item.code === props.modelValue)
+      if (match) {
+        selectedTag.value = match
+        isTagSelected.value = true
+      }
+    }).catch((error) => {
+      console.error('Erreur lors de la récupération de l\'autocomplétion initiale:', error)
+    })
+  }
 })
 
 onUnmounted(() => {
@@ -132,49 +167,82 @@ onUnmounted(() => {
 <template>
   <div class="question-container fr-mb-4w">
     <div class="autocomplete-container">
-      <DsfrInputGroup
-        :model-value="inputValue"
-        type="text"
-        :name="question.id"
-        :label="question.title"
-        :label-visible="false"
-        autocomplete="off"
-        @input="handleInput"
-        @keydown="handleKeyDown"
-      />
-
-      <!-- Indicateur de chargement -->
-      <div
-        v-if="loading"
-        class="loading-indicator"
-      >
-        <span
-          class="fr-icon-refresh-line fr-icon--sm"
-          aria-hidden="true"
+      <!-- Afficher soit l'input, soit le tag sélectionné -->
+      <template v-if="!isTagSelected">
+        <DsfrInputGroup
+          :model-value="inputValue"
+          type="text"
+          :name="question.id"
+          :label="question.title"
+          :label-visible="false"
+          autocomplete="off"
+          @input="handleInput"
+          @keydown="handleKeyDown"
         />
-        Chargement...
-      </div>
 
-      <!-- Liste des suggestions -->
-      <div
-        v-if="showSuggestions"
-        class="suggestions-container"
-      >
-        <ul
-          ref="suggestionListRef"
-          class="suggestions-list fr-mt-1w"
+        <!-- Indicateur de chargement -->
+        <div
+          v-if="loading"
+          class="loading-indicator"
         >
-          <li
-            v-for="(suggestion, index) in suggestions"
-            :key="suggestion.code"
-            class="suggestion-item"
-            :class="{ selected: index === selectedIndex }"
-            @click="selectSuggestion(suggestion)"
-            @mouseover="selectedIndex = index"
+          <span
+            class="fr-icon-refresh-line fr-icon--sm"
+            aria-hidden="true"
+          />
+          Chargement...
+        </div>
+
+        <!-- Liste des suggestions -->
+        <div
+          v-if="showSuggestions"
+          class="suggestions-container"
+        >
+          <ul
+            ref="suggestionListRef"
+            class="suggestions-list fr-mt-1w"
           >
-            {{ suggestion.autocompletion }}
-          </li>
-        </ul>
+            <li
+              v-for="(suggestion, index) in suggestions"
+              :key="suggestion.code"
+              class="suggestion-item"
+              :class="{ selected: index === selectedIndex }"
+              @click="selectSuggestion(suggestion)"
+              @mouseover="selectedIndex = index"
+            >
+              <div class="suggestion-content">
+                <span>{{ suggestion.autocompletion }}</span>
+                <span class="select-indicator">
+                  <span
+                    class="fr-icon-check-line fr-icon--sm"
+                    aria-hidden="true"
+                  />
+                  Sélectionner
+                </span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </template>
+
+      <!-- Affichage du tag sélectionné -->
+      <div
+        v-else
+        class="selected-tag-container fr-mt-2w"
+      >
+        <div class="selected-tag">
+          <span class="selected-tag-text">{{ selectedTag?.libelle }}</span>
+          <button
+            type="button"
+            class="selected-tag-remove"
+            aria-label="Supprimer la sélection"
+            @click="removeTag"
+          >
+            <span
+              class="fr-icon-close-line fr-icon--sm"
+              aria-hidden="true"
+            />
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -210,6 +278,27 @@ onUnmounted(() => {
   transition: background-color 0.2s;
 }
 
+.suggestion-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.select-indicator {
+  color: var(--text-action-high-blue-france);
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.suggestion-item:hover .select-indicator,
+.suggestion-item.selected .select-indicator {
+  opacity: 1;
+}
+
 .suggestion-item:hover, .suggestion-item.selected {
   background-color: var(--background-alt-grey);
 }
@@ -233,5 +322,47 @@ onUnmounted(() => {
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+/* Styles pour le tag sélectionné */
+.selected-tag-container {
+  padding: 8px 0;
+}
+
+.selected-tag {
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--background-action-low-blue-france);
+  border-radius: 4px;
+  padding: 6px 12px;
+  max-width: 100%;
+}
+
+.selected-tag-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-action-high-blue-france);
+  font-weight: 500;
+}
+
+.selected-tag-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--text-action-high-blue-france);
+  cursor: pointer;
+  padding: 0;
+  margin-left: 8px;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.selected-tag-remove:hover {
+  background-color: rgba(0, 0, 0, 0.05);
 }
 </style>

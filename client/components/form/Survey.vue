@@ -81,14 +81,6 @@ const hasAnswer = computed(() => {
   }
 })
 
-// Resume the form if the query parameter is present
-const route = useRoute()
-const doResume = computed(() => route.query.resume === 'true')
-if (doResume.value) {
-  resumeForm()
-  route.query.resume = null
-}
-
 // Focus on the question container after navigation
 const questionContainer = ref<HTMLElement | null>(null)
 function focusRenderedQuestion () {
@@ -117,6 +109,14 @@ onMounted(async () => {
   try {
     await loadSurveySchema(simulateurId)
     isLoading.value = false
+
+    // Resume the form if the query parameter is present
+    const route = useRoute()
+    const doResume = computed(() => route.query.resume === 'true')
+    if (doResume.value) {
+      resumeForm()
+      route.query.resume = null
+    }
 
     // Afficher l'écran de choix si un formulaire est en cours
     showChoiceScreen.value = hasInProgressForm.value && !doResume.value
@@ -335,7 +335,7 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
         </component>
         <p>
           <span class="fr-text--bold">Bienvenue !</span>
-          Ce simulateur vous permet d’estimer 5 aides financières pour le logement et le déménagement, en particulier
+          Ce simulateur vous permet d'estimer 5 aides financières pour le logement et le déménagement, en particulier
           destinées aux étudiants.
           <DsfrLink
             to="/aides"
@@ -345,7 +345,7 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
           />
         </p>
         <p>
-          Nous continuons à l’améliorer. Vos retours sont précieux :
+          Nous continuons à l'améliorer. Vos retours sont précieux :
           <ul>
             <li>
               Par mail à l'adresse <DsfrLink
