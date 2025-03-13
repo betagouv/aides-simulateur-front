@@ -393,7 +393,7 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
       </template>
       <div
         v-else-if="!surveySchema"
-        class="fr-py-5w fr-text--center"
+        class="fr-card fr-card--shadow fr-py-5w fr-text--center"
       >
         <p>Erreur lors du chargement du formulaire</p>
       </div>
@@ -404,7 +404,7 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
         />
         <div
           v-if="surveySchema && currentQuestion"
-          class="form-container fr-card fr-card--shadow fr-p-3w"
+          class="form-container fr-card fr-p-3w"
         >
           <DsfrBadge
             v-if="resultsFetchState !== 'idle'"
@@ -500,24 +500,26 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
               </div>
             </template>
           </div>
-          <div class="fr-btns-group fr-mt-2w brand-form-actions brand-form-actions__align-end">
-            <DsfrButton
-              class="brand-form-actions__button"
-              label="Précédent"
-              secondary
-              :icon="{ name: 'ri:arrow-left-line', ssr: true }"
-              :disabled="resultsFetchState === 'loading'"
-              @click="handlePrevious"
-            />
-            <DsfrButton
-              class="brand-form-actions__button"
-              :label="isLastQuestion ? 'Terminer' : 'Suivant'"
-              :icon="{ name: 'ri:arrow-right-line', ssr: true }"
-              icon-right
-              :disabled="!hasAnswer || resultsFetchState === 'loading'"
-              @click="handleNext"
-            />
-          </div>
+        </div>
+        <div class="fr-btns-group fr-btns-group--lg fr-mt-4w brand-form-actions brand-form-actions__align-end">
+          <DsfrButton
+            class="brand-form-actions__button"
+            label="Précédent"
+            secondary
+            size="lg"
+            :icon="{ name: 'ri:arrow-left-line', ssr: true }"
+            :disabled="resultsFetchState === 'loading'"
+            @click="handlePrevious"
+          />
+          <DsfrButton
+            size="lg"
+            class="brand-form-actions__button"
+            :label="isLastQuestion ? 'Terminer' : 'Suivant'"
+            :icon="{ name: 'ri:arrow-right-line', ssr: true }"
+            icon-right
+            :disabled="!hasAnswer || resultsFetchState === 'loading'"
+            @click="handleNext"
+          />
         </div>
       </template>
     </template>
@@ -546,7 +548,7 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
 }
 .fr-form-group {
   padding: .5rem .25rem;
-  height: max(24em, 40vh);
+  height: max(20em, 36vh);
   overflow-y: auto;
   overflow-x: hidden;
 }

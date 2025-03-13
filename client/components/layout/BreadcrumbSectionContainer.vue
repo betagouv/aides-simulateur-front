@@ -40,7 +40,7 @@ const styles = computed(() => {
 .breadcrumb-container {
   min-height: 2.25rem;
   @media screen and (min-width: 48em) {
-    min-height: 3rem;
+    min-height: 3.25rem;
   }
 }
 </style>
