@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 0.14.3 [#63](https://github.com/betagouv/aides-simulateur-front/pull/63)
+
+* Ajout de fonctionnalités.
+  * Détail : 
+    * Ajoute un indicateur d'état du fetch des résultats de simulation
+    * Utilise des boutons radios riches pour les questions avec radios
+    * Ajoute un style customisé 'riche' pour les question avec checkbox
+    * Améliore la navigation au clavier du formulaire
+
 ## 0.14.2 [#65](https://github.com/betagouv/aides-simulateur-front/pull/65)
 
 * Ajout de fonctionnalités.
