@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.14.4 [#64](https://github.com/betagouv/aides-simulateur-front/pull/64)
+
+* Répare un bug
+* Détail : 
+  * Répare le nom de la variable openfisca pour les revenus du patrimoine
+
 ## 0.14.3 [#63](https://github.com/betagouv/aides-simulateur-front/pull/63)
 
 * Ajout de fonctionnalités.
