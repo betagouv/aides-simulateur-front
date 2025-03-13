@@ -4,8 +4,8 @@ const { data: post } = await useAsyncData(`content-${slug}`, () => {
   return queryCollection('pages').where('stem', '=', `pages/${slug}`).first()
 })
 useSeoMeta({
-  title: post.value?.title,
-  description: post.value?.description
+  title: `${post.value?.title} | Aides simplifiées`,
+  description: `${post.value?.description.slice(0, 155)}...`
 })
 </script>
 

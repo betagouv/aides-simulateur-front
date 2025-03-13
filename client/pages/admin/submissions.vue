@@ -1,4 +1,8 @@
 <script setup lang="ts">
+useSeoMeta({
+  title: 'Administration des soumissions | Aides simplifiées',
+  description: 'Accédez aux informations relatives aux soumissions du simulateur d\'aides.'
+})
 const password = ref('')
 const isAuthenticated = ref(false)
 const error = ref('')

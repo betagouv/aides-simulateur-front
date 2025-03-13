@@ -20,7 +20,7 @@ function handleChange (value: string) {
       type="date"
       :name="question.id"
       :label="question.title"
-      label-visible
+      :label-visible="false"
       @update:model-value="handleChange"
     />
   </div>

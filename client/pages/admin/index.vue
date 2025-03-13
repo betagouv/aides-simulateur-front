@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
+useSeoMeta({
+  title: 'Administration du simulateur d\'aides | Aides simplifiées',
+  description: 'Accédez aux informations relatives au simulateur d\'aides.'
+})
+
 const password = ref('')
 const error = ref('')
 

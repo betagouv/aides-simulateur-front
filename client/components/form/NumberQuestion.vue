@@ -35,7 +35,7 @@ function handleChange (value: number | string) {
       type="number"
       :name="question.id"
       :label="question.title"
-      label-visible
+      :label-visible="false"
       @update:model-value="handleChange"
     />
   </div>

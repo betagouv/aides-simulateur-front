@@ -1,4 +1,9 @@
 <script lang="ts" setup>
+useSeoMeta({
+  title: 'Toutes les aides disponibles | Aides simplifiées',
+  description: 'Découvrez toutes les aides disponibles pour vous accompagner dans vos démarches.'
+})
+
 definePageMeta({
   layout: 'default',
 })

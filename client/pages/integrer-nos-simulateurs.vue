@@ -1,9 +1,14 @@
 <script lang="ts" setup>
 const { setBreadcrumbs } = useBreadcrumbStore()
 setBreadcrumbs([
-  { text: 'Accueil', to: '/' },
+{ text: 'Accueil', to: '/' },
   { text: 'Intégrer nos simulateurs', to: '/integrer-nos-simulateurs' },
 ])
+
+useSeoMeta({
+  title: 'Intégrer nos simulateurs d\'aides sur votre plateforme | Aides simplifiées',
+  description: 'Offrez à vos usagers un accès simple aux aides pertinentes en intégrant nos simulateurs via API ou iFrame. Solution clé en main, rapide à mettre en place.'
+})
 
 // Choix des options d'affichage (inutilisé pour le moment)
 const displayOptions = ref([
@@ -194,7 +199,7 @@ const activeAccordion = ref<number>()
               <p>
                 Si vous souhaitez une intégration personnalisée du simulateur, vous pouvez
                 contacter notre équipe à l'adresse
-                <a href="mailto:contact@aides-simplifiees.fr">contact@aides-simplifiees.fr</a>.
+                <a href="mailto:aides.simplifiees@numerique.gouv.fr">aides.simplifiees@numerique.gouv.fr</a>.
               </p>
             </div>
           </DsfrAccordion>
@@ -207,7 +212,7 @@ const activeAccordion = ref<number>()
             </p>
             <p>
               Pour plus d'informations, contactez notre équipe à l'adresse
-              <a href="mailto:contact@aides-simplifiees.fr">contact@aides-simplifiees.fr</a>.
+              <a href="mailto:aides.simplifiees@numerique.gouv.fr">aides.simplifiees@numerique.gouv.fr</a>.
             </p>
           </DsfrAccordion>
         </DsfrAccordionGroup>
