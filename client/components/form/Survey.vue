@@ -354,12 +354,12 @@ const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
         <p>Erreur lors du chargement du formulaire</p>
       </div>
       <template v-else-if="surveySchema">
-        <component
+        <!-- <component
           :is="surveyTitleTag"
           class="fr-h3"
         >
           Votre simulation « {{ surveySchema?.title }} »
-        </component>
+        </component> -->
         <DsfrStepper
           :steps="surveySchema?.steps.map(step => step.title).filter(Boolean) || []"
           :current-step="currentStepIndex"
