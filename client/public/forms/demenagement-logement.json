@@ -210,7 +210,7 @@
     {
       "id": "revenus-conjoint",
       "title": "Quels sont les revenus de votre conjoint(e) ?",
-      "description": "Si vous habitez avec votre conjoint(e), ses revenus sont pris en compte pour le calcul de vos aides. Indiquez ici ses ressources annuelles avant impôts. Si vous ne connaissez pas le montant exact, une estimation suffit.",
+      "description": "Si vous habitez avec votre conjoint(e) (marié(e), pacsé(e) ou en union libre), ses revenus sont pris en compte pour le calcul de vos aides. Indiquez ici ses ressources annuelles avant impôts. Si vous ne connaissez pas le montant exact, une estimation suffit.",
       "notion": {
         "id": "revenus-conjoint",
         "buttonLabel": "En savoir plus"
@@ -400,6 +400,58 @@
       "title": "Revenus issus du patrimoine (loyers perçus, revenus fonciers, intérêts, dividendes)",
       "type": "number",
       "nextQuestion": "confirmation-end"
+    }
+  ],
+  "tests": [
+    {
+      "id": "18yo-moving-away",
+      "description": "Un jeune de 18 ans déménage pour des études à l'université",
+      "answers": {
+        "statut-professionnel": "etudiant",
+        "situation-professionnelle": "sans-emploi",
+        "etudiant-mobilite": "parcoursup-nouvelle-region",
+        "boursier": true,
+        "date-naissance": "2007-03-01",
+        "handicap": false,
+        "statut-marital": "celibataire",
+        "habiter-avec-conjoint": false,
+        "code-postal-nouvelle-ville": "75101",
+        "situation-logement": "locataire",
+        "type-logement": "logement-meuble",
+        "colocation": false,
+        "logement-parente-proprietaire": false,
+        "nombre-personnes-logement": 1,
+        "loyer-montant-mensuel": 700,
+        "loyer-montant-charges": 100,
+        "loyer-difficile-payer": true,
+        "type-revenus": [
+          "aucun-autres-revenus"
+        ],
+        "confirmation-end": [
+          "confirmation-end-oui"
+        ]
+      },
+      "questionsToApi": [
+        "locapass-eligibilite",
+        "mobilite-master-1",
+        "mobilite-parcoursup",
+        "aide-personnalisee-logement",
+        "garantie-visale-eligibilite",
+        "garantie-visale"
+      ],
+      "results": {
+        "locapass": 0,
+        "locapass-eligibilite": false,
+        "mobilite-master-1": 0,
+        "mobilite-parcoursup": 0,
+        "aide-personnalisee-logement": 0,
+        "garantie-visale-eligibilite": false,
+        "garantie-visale": 800,
+        "aide-personnalisee-logement-eligibilite": false,
+        "mobilite-master-1-eligibilite": false,
+        "mobilite-parcoursup-eligibilite": false
+
+      }
     }
   ]
 }
