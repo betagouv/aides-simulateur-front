@@ -21,15 +21,20 @@ definePageMeta({
        * We want to force the resume by adding the query param resume=true.
        */
       if (!resume && shouldForceResume) {
-        return navigateTo(`${to.fullPath}?resume=true`)
+        // Create a new query object with all existing params
+        const query = { ...to.query, resume: 'true' }
+        return navigateTo({ path: to.path, query, hash: to.hash })
       }
       /**
        * If the query param resume=true is present,
        * and we are not coming from certain pages,
-       * we want to remove the query param *resume=true
+       * we want to remove the query param resume
        */
       if (resume && !shouldForceResume) {
-        return navigateTo(to.fullPath.replace('?resume=true', ''))
+        // Create a new query object without the resume param
+        const query = { ...to.query }
+        delete query.resume
+        return navigateTo({ path: to.path, query, hash: to.hash })
       }
     }
   ],
