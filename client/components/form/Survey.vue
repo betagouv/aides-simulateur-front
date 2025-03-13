@@ -150,7 +150,11 @@ function handleNext () {
 }
 
 function handlePrevious () {
-  goToPreviousQuestion()
+  const prevQuestion = goToPreviousQuestion()
+  if (prevQuestion === false) {
+    // If we are at the first question, show the welcome screen
+    showWelcomeScreen.value = true
+  }
   focusQuestionContainer()
 }
 
@@ -177,7 +181,7 @@ async function submitForm () {
   try {
     const request: OpenFiscaCalculationRequest = buildRequest(answers.value, questionsToApi)
     const openfiscaResponse: OpenFiscaCalculationResponse = await fetchOpenFiscaFranceCalculation(request)
-    
+
     // eslint-disable-next-line no-console
     console.debug('Réponse reçue :')
     // eslint-disable-next-line no-console
@@ -265,22 +269,21 @@ const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
           Progression : {{ progress }}%
         </p>
         <p>Souhaitez-vous reprendre votre formulaire là où vous vous êtes arrêté ou recommencer à zéro ?</p>
-        <DsfrButtonGroup
-          inline-layout-when="md"
-          :buttons="[
-            {
-              label: 'Reprendre',
-              icon: { name: 'ri:play-line', ssr: true },
-              onClick: resumeForm,
-            },
-            {
-              label: 'Recommencer',
-              secondary: true,
-              icon: { name: 'ri:restart-line', ssr: true },
-              onClick: restartForm,
-            },
-          ]"
-        />
+        <div class="fr-btns-group brand-form-actions">
+          <DsfrButton
+            class="brand-form-actions__button"
+            label="Reprendre"
+            :icon="{ name: 'ri:play-line', ssr: true }"
+            @click="resumeForm"
+          />
+          <DsfrButton
+            class="brand-form-actions__button"
+            label="Recommencer"
+            secondary
+            :icon="{ name: 'ri:restart-line', ssr: true }"
+            @click="restartForm"
+          />
+        </div>
       </div>
     </div>
     <!-- Écran de bienvenue -->
@@ -326,16 +329,14 @@ const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
           Merci pour votre aide !
         </p>
 
-        <DsfrButtonGroup
-          inline-layout-when="md"
-          :buttons="[
-            {
-              label: 'Commencer la simulation',
-              icon: { name: 'ri:play-line', ssr: true },
-              onClick: handleStart,
-            },
-          ]"
-        />
+        <div class="fr-btns-group brand-form-actions">
+          <DsfrButton
+            class="brand-form-actions__button"
+            label="Commencer la simulation"
+            :icon="{ name: 'ri:play-line', ssr: true }"
+            @click="handleStart"
+          />
+        </div>
       </div>
     </div>
 
@@ -385,7 +386,7 @@ const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
             <DsfrButton
               v-if="currentQuestion?.notion"
               :label="currentQuestion?.notion.buttonLabel"
-              icon="ri-information-line"
+              icon="ri:information-line"
               secondary
               icon-right
               class="fr-mb-2w"
@@ -438,29 +439,41 @@ const surveyQuestionTitleTag = computed(() => isIframe.value ? 'h2' : 'h3')
               />
             </template>
           </div>
-
-          <DsfrButtonGroup
-            class="fr-mt-3w"
-            align="right"
-            inline-layout-when="md"
-            :buttons="[
-              {
-                label: 'Précédent',
-                secondary: true,
-                icon: { name: 'ri-arrow-left-line', ssr: true },
-                onClick: handlePrevious,
-              },
-              {
-                label: isLastQuestion ? 'Terminer' : 'Suivant',
-                icon: { name: 'ri-arrow-right-line', ssr: true },
-                iconRight: true,
-                disabled: !hasAnswer,
-                onClick: handleNext,
-              },
-            ]"
-          />
+          <div class="fr-btns-group brand-form-actions brand-form-actions__align-end">
+            <DsfrButton
+              class="brand-form-actions__button"
+              label="Précédent"
+              secondary
+              :icon="{ name: 'ri:arrow-left-line', ssr: true }"
+              @click="handlePrevious"
+            />
+            <DsfrButton
+              class="brand-form-actions__button"
+              :label="isLastQuestion ? 'Terminer' : 'Suivant'"
+              :icon="{ name: 'ri:arrow-right-line', ssr: true }"
+              icon-right
+              :disabled="!hasAnswer"
+              @click="handleNext"
+            />
+          </div>
         </div>
       </template>
     </template>
   </div>
 </template>
+
+<style scoped lang="scss">
+.brand-form-actions {
+  display: flex;
+  &.brand-form-actions__align-end {
+    justify-content: flex-end;
+  }
+  margin-top: 2rem;
+  .brand-form-actions__button {
+    flex-basis: 100%;
+    @media (min-width: 36em) {
+      flex-basis: calc(50% - 1rem);
+    }
+  }
+}
+</style>
