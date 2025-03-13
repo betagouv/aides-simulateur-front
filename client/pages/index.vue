@@ -22,7 +22,7 @@ const simulationTiles: DsfrTileProps[] = [
   {
     title: 'Rénovation du logement',
     titleTag: 'h2',
-    to: '#',
+    to: 'https://mesaidesreno.beta.gouv.fr/',
     svgPath: '/artworks/pictograms/buildings/house.svg'
   }
 ]
