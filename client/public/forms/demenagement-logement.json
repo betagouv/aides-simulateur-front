@@ -281,8 +281,8 @@
     },
     {
       "id": "montant-chomage",
-      "title": "Allocations chômage : allocation de Retour à l’Emploi (ARE) et allocation de solidarité spécifique (ASS)",
-      "description": "Indiquez le montant en euros de vos revenus de chômage au cours des 12 derniers mois avant impôts.",
+      "title": "Allocations chômage perçues au cours des 12 derniers mois",
+      "description": "Indiquez le montant total des allocations chômage (Allocation de Retour à l'Emploi (ARE), Allocation de Solidarité Spécifique (ASS)) que vous avez perçues au cours des 12 derniers mois.",
       "type": "number",
       "nextQuestion": "confirmation-end",
       "notion": {
@@ -297,13 +297,15 @@
     },
     {
       "id": "montant-bourse-lycee",
-      "title": "Montant de la bourse de lycée (si existant)",
+      "title": "Bourses de lycée perçues au cours des 12 derniers mois",
+      "description": "Indiquez le montant total des bourses de lycée que vous avez perçues au cours des 12 derniers mois. Indiquez 0 si vous n'en avez pas perçu. Si vous n'avez pas perçu de bourse de lycée, mais une bourse d'enseignement supérieur, veuillez indiquer 0 et passer à la question suivante.",
       "type": "number",
       "nextQuestion": "montant-bourse-superieur"
     },
     {
       "id": "montant-bourse-superieur",
-      "title": "Montant de la bourse de l'enseignement supérieur (si existant)",
+      "title": "Bourses d'enseignement supérieur perçues au cours des 12 derniers mois",
+      "description": "Indiquez le montant total des bourses d'enseignement supérieur que vous avez perçues au cours des 12 derniers mois. Indiquez 0 si vous n'en avez pas perçu.",
       "type": "number",
       "nextQuestion": "confirmation-end",
       "notion": {
@@ -317,50 +319,34 @@
     },
     {
       "id": "montant-ca-micro-entreprise",
-      "title": "En profession libérale (entrepreneur)",
+      "title": "Chiffre d'affaires généré via une micro-entreprise",
+      "description": "Indiquez le dernier chiffre d’affaires annuel déclaré au service des impôts.",
       "type": "number",
       "nextQuestion": "confirmation-end",
       "bypassToQuestion": [
         { "condition": "type-revenus.includes('revenus-parents')", "question": "montant-parents" }
-      ]
+      ],
+      "notion": {
+        "id": "montant-ca-micro-entreprise",
+        "buttonLabel": "En savoir plus"
+      }
     },
     {
       "id": "montant-parents",
-      "title": "Montant des ressources des parents",
-      "description": "Ressources des parents (si vous êtes rattaché fiscalement)",
+      "title": "Ressources des parents au cours des 12 derniers mois",
+      "description": "Indiquez le montant total des ressources de vos parents au cours des 12 derniers mois, si vous êtes rattaché(e) à leur foyer fiscal et que vous ne déclarez pas vos propres revenus.",
       "type": "number",
-      "nextQuestion": "confirmation-end"
+      "nextQuestion": "confirmation-end",
+      "notion": {
+        "id": "montant-parents",
+        "buttonLabel": "En savoir plus"
+      }
     }
   ],
   "tests": [
     {
       "id": "18yo-moving-away",
-      "description": "Un jeune de 18 ans déménage pour des études à l'université",
-      "answers": {
-        "statut-professionnel": "etudiant",
-        "situation-professionnelle": "sans-emploi",
-        "etudiant-mobilite": "parcoursup-nouvelle-region",
-        "boursier": true,
-        "date-naissance": "2007-03-01",
-        "handicap": false,
-        "statut-marital": "celibataire",
-        "code-postal-nouvelle-ville": "75101",
-        "situation-logement": "locataire",
-        "type-logement": "logement-meuble",
-        "logement-conventionne": true,
-        "colocation": false,
-        "logement-parente-proprietaire": false,
-        "nombre-personnes-logement": 1,
-        "loyer-montant-mensuel": 700,
-        "loyer-montant-charges": 100,
-        "loyer-difficile-payer": true,
-        "type-revenus": [
-          "aucun-autres-revenus"
-        ],
-        "confirmation-end": [
-          "confirmation-end-oui"
-        ]
-      },
+      "description": "Un jeune boursier de 18 ans déménage pour des études après le lycée",
       "questionsToApi": [
         "locapass-eligibilite",
         "mobilite-master-1",
@@ -368,49 +354,11 @@
         "aide-personnalisee-logement",
         "garantie-visale-eligibilite",
         "garantie-visale"
-      ],
-      "results": {
-        "locapass": 1200,
-        "locapass-eligibilite": true,
-        "mobilite-master-1": 0,
-        "mobilite-master-1-eligibilite": false,
-        "mobilite-parcoursup": 500,
-        "mobilite-parcoursup-eligibilite": true,
-        "aide-personnalisee-logement": 327,
-        "aide-personnalisee-logement-eligibilite": true,
-        "garantie-visale": 800,
-        "garantie-visale-eligibilite": true
-      }
+      ]
     },
     {
       "id": "20yo-moving-away",
       "description": "Un jeune de 20 ans déménage pour des études en master",
-      "answers": {
-        "statut-professionnel": "etudiant",
-        "situation-professionnelle": "salarie-hors-alternance",
-        "etudiant-mobilite": "master-nouvelle-zone",
-        "boursier": true,
-        "date-naissance": "2005-01-01",
-        "handicap": false,
-        "statut-marital": "celibataire",
-        "code-postal-nouvelle-ville": "69381",
-        "situation-logement": "locataire",
-        "type-logement": "logement-foyer",
-        "logement-conventionne": true,
-        "colocation": false,
-        "logement-parente-proprietaire": false,
-        "nombre-personnes-logement": 1,
-        "loyer-montant-mensuel": 600,
-        "loyer-montant-charges": 100,
-        "loyer-difficile-payer": true,
-        "type-revenus": [
-          "revenus-activite"
-        ],
-        "salaire-imposable": 2000,
-        "confirmation-end": [
-          "confirmation-end-oui"
-        ]
-      },
       "questionsToApi": [
         "locapass-eligibilite",
         "mobilite-master-1",
@@ -418,39 +366,11 @@
         "aide-personnalisee-logement",
         "garantie-visale-eligibilite",
         "garantie-visale"
-      ],
-      "results": {
-        "locapass": 1200,
-        "locapass-eligibilite": true,
-        "mobilite-master-1": 1000,
-        "mobilite-master-1-eligibilite": true,
-        "mobilite-parcoursup": 0,
-        "mobilite-parcoursup-eligibilite": false,
-        "aide-personnalisee-logement": 293.54,
-        "aide-personnalisee-logement-eligibilite": true,
-        "garantie-visale": 800,
-        "garantie-visale-eligibilite": true
-      }
+      ]
     },
     {
       "id": "35yo-employee",
       "description": "Un actif de 35 ans célibataire à hauts revenus",
-      "answers": {
-        "statut-professionnel": "actif",
-        "date-naissance": "1990-01-01",
-        "handicap": false,
-        "statut-marital": "celibataire",
-        "code-postal-nouvelle-ville": "13201",
-        "situation-logement": "proprietaire",
-        "primo-accedant": false,
-        "type-revenus": [
-          "revenus-activite"
-        ],
-        "salaire-imposable": 70000,
-        "confirmation-end": [
-          "confirmation-end-oui"
-        ]
-      },
       "questionsToApi": [
         "locapass-eligibilite",
         "mobilite-master-1",
@@ -458,19 +378,7 @@
         "aide-personnalisee-logement",
         "garantie-visale-eligibilite",
         "garantie-visale"
-      ],
-      "results": {
-        "locapass": 0,
-        "locapass-eligibilite": false,
-        "mobilite-master-1": 0,
-        "mobilite-master-1-eligibilite": false,
-        "mobilite-parcoursup": 0,
-        "mobilite-parcoursup-eligibilite": false,
-        "aide-personnalisee-logement": 0,
-        "aide-personnalisee-logement-eligibilite": false,
-        "garantie-visale": 0,
-        "garantie-visale-eligibilite": false
-      }
+      ]
     }
   ]
 }

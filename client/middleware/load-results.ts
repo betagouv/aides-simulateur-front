@@ -10,7 +10,13 @@ export default defineNuxtRouteMiddleware(async (to) => {
   }
 
   const { data, error } = await useAsyncData(`rich-results-${simulateurId}`, async () => {
-    return transformSimulationResults(results.data, new Date(results.meta.createdAt), simulateurId)
+    try {
+      const transformedData = await transformSimulationResults(results.data, new Date(results.meta.createdAt), simulateurId)
+      return transformedData
+    } catch (err) {
+      console.error('Error transforming results:', err)
+      throw err
+    }
   }, {
     default: () => ({
       aides: [],
@@ -22,6 +28,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
   })
 
   if (!data.value || error.value) {
+    console.error('Failed to get results:', error.value)
     return createError({
       statusCode: 500,
       message: 'Erreur lors de la récupération des résultats'

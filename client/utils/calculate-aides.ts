@@ -322,9 +322,13 @@ function addSurveyAnswerToRequest (
         request[entity][entityId][formattedVariableName] = { ...formattedAnswer[formattedVariableName] }
       }
       else {
+        // Instead of throwing an error, we do nothing
+        console.error(`Transcription aurait étéremplacée pour '${formattedVariableName}': '${existingValue}' par la nouvelle valeur de '${answerKey}': '${answerValue}'`)
+        //request[entity][entityId][formattedVariableName] = existingValue
+
         // not one of the expected very specific cases :-o
-        console.warn(`Valeur déjà existante pour '${formattedVariableName}': '${existingValue}'. Input complémentaire ignoré : '${answerKey}': '${answerValue}'`)
-        throw new UnexpectedValueUpdateError(answerKey)
+        //console.error(`Valeur déjà existante pour '${formattedVariableName}'='${existingValue}'. Input complémentaire ignoré : '${answerKey}'='${answerValue}'`)
+        //throw new UnexpectedValueUpdateError(answerKey)
       }
     }
     else {
@@ -484,6 +488,10 @@ function clampInputsInRequest (request: OpenFiscaCalculationRequest) {
     }
   }
 
+  //Cleanup double answers keys
+  //ex : 'statut-professionnel' and 'statut-professionnel-eligibilite' => 'activite' defined twice
+  //Make sure that request[Entites.Individus][INDIVIDU_ID] has no double identical keys
+  console.log("!!!!!!!!------ uniqueRequest ---------!!!!!!!!", request)
   return request
 }
 

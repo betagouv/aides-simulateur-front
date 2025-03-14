@@ -119,7 +119,7 @@ const activeAccordion = ref<number>()
           <hgroup>
             <h3>1. En résumé</h3>
             <p class="fr-text--xl">
-              Nous estimons que vous pourriez recevoir :
+              Voici un récapitulatif des aides auxquelles vous pourriez être éligible en fonction des informations renseignées :
             </p>
           </hgroup>
           <DsfrSegmentedSet
