@@ -1,9 +1,10 @@
 # CHANGELOG
 
-##
+## 0.17.0 [#71](https://github.com/betagouv/aides-simulateur-front/pull/71)
 
 * Amélioration du calcul.
 * Détails :
+  * Évite des valeurs à zéro pour garantie visale, locapass, aide mobilité parcoursup et aide mobilité master 1
   * Bouchonne des valeurs par défaut dans la requête à `aides-calculatrice-back` 
     * Ajoute une `nationalite` à `FR` pour activer `visale_eligibilite`
     * Ajoute `date_entree_logement` au mois suivant la simulation pour `locapass_eligibilite` 
