@@ -107,14 +107,20 @@ const activeAccordion = ref<number>()
       fluid
       class="fr-mt-6w"
     />
-    <DsfrNotice
+    <DsfrBadge
+      class="fr-mt-4w"
       type="warning"
-      title="Attention, ces résultats sont des estimations, et notre service est en construction."
+      label="Attention, ces résultats sont des estimations, et notre service est en construction."
     />
     <div class="results__content fr-mt-8w">
       <template v-if="hasAides">
         <div class="results__content-resume">
-          <h3>1. En résumé</h3>
+          <hgroup>
+            <h3>1. En résumé</h3>
+            <p class="fr-text--xl">
+              Nous estimons que vous pourriez recevoir :
+            </p>
+          </hgroup>
           <DsfrSegmentedSet
             v-if="segmentedSetOptions && segmentedSetOptions.length > 1"
             v-model="visibleTabName"

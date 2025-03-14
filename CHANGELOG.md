@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.17.1 [#72](https://github.com/betagouv/aides-simulateur-front/pull/72)
+* Amélioration UI mineures
+
 ## 0.17.0 [#71](https://github.com/betagouv/aides-simulateur-front/pull/71)
 
 * Amélioration du calcul.
