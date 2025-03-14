@@ -16,12 +16,6 @@ export const individusVariables: { [aidesSimplifieesKey: string]: AidesSimplifie
     period: 'MONTH'
   },
 
-  // Aide mobilité parcours sup looks for 'bourse_lycee'
-  'montant-bourse-lycee': {
-    openfiscaVariableName: 'bourse_lycee',
-    period: 'MONTH'
-  },
-
   // APL, Locapass (eligibility) and Aide mobilité master 1 look for any bourse ('boursier')
   'montant-bourse-superieur': {
     // could also be 'bourse_enseignement_sup'
@@ -39,7 +33,7 @@ export const individusVariables: { [aidesSimplifieesKey: string]: AidesSimplifie
   },
   'montant-ca-micro-entreprise': {
     openfiscaVariableName: 'rpns_imposables',
-    period: 'MONTH'
+    period: 'YEAR'
   },
   'montant-parents': {
     // TODO add people and define the right type of revenue to set
@@ -120,6 +114,11 @@ export const menagesVariables: { [aidesSimplifieesKey: string]: AidesSimplifiees
 export const famillesVariables: { [aidesSimplifieesKey: string]: AidesSimplifieesMapping } = {
   'logement-parente-proprietaire': { // 'logement-parente-proprietaire-non' TODO: move to boolean value
     openfiscaVariableName: 'proprietaire_proche_famille',
+    period: 'MONTH'
+  },
+  // Aide mobilité parcours sup looks for 'bourse_lycee'
+  'montant-bourse-lycee': {
+    openfiscaVariableName: 'bourse_lycee',
     period: 'MONTH'
   }
 }
