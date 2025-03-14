@@ -229,20 +229,13 @@ onUnmounted(() => {
         v-else
         class="selected-tag-container fr-mt-2w"
       >
-        <div class="selected-tag">
-          <span class="selected-tag-text">{{ selectedTag?.libelle }}</span>
-          <button
-            type="button"
-            class="selected-tag-remove"
-            aria-label="Supprimer la sélection"
-            @click="removeTag"
-          >
-            <span
-              class="fr-icon-close-line fr-icon--sm"
-              aria-hidden="true"
-            />
-          </button>
-        </div>
+        <button
+          class="fr-tag fr-tag--dismiss"
+          aria-label="Supprimer la sélection"
+          @click="removeTag"
+        >
+          {{ selectedTag?.libelle }}
+        </button>
       </div>
     </div>
   </div>
@@ -322,47 +315,5 @@ onUnmounted(() => {
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
-}
-
-/* Styles pour le tag sélectionné */
-.selected-tag-container {
-  padding: 8px 0;
-}
-
-.selected-tag {
-  display: inline-flex;
-  align-items: center;
-  background-color: var(--background-action-low-blue-france);
-  border-radius: 4px;
-  padding: 6px 12px;
-  max-width: 100%;
-}
-
-.selected-tag-text {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: var(--text-action-high-blue-france);
-  font-weight: 500;
-}
-
-.selected-tag-remove {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  border: none;
-  color: var(--text-action-high-blue-france);
-  cursor: pointer;
-  padding: 0;
-  margin-left: 8px;
-  height: 20px;
-  width: 20px;
-  border-radius: 50%;
-  transition: background-color 0.2s;
-}
-
-.selected-tag-remove:hover {
-  background-color: rgba(0, 0, 0, 0.05);
 }
 </style>

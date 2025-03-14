@@ -306,6 +306,10 @@
       "title": "Montant de la bourse de l'enseignement supérieur (si existant)",
       "type": "number",
       "nextQuestion": "confirmation-end",
+      "notion": {
+        "id": "montant-chomage",
+        "buttonLabel": "En savoir plus"
+      },
       "bypassToQuestion": [
         { "condition": "type-revenus.includes('revenus-entreprise')", "question": "montant-ca-micro-entreprise" },
         { "condition": "type-revenus.includes('revenus-parents')", "question": "montant-parents" }
