@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 const { setBreadcrumbs } = useBreadcrumbStore()
 setBreadcrumbs([
-{ text: 'Accueil', to: '/' },
+  { text: 'Accueil', to: '/' },
   { text: 'Intégrer nos simulateurs', to: '/integrer-nos-simulateurs' },
 ])
 
@@ -95,7 +95,7 @@ const activeAccordion = ref<number>()
         <h2>
           Vous avez un site qui informe ou accompagne les usagers ?
         </h2>
-        <p class="fr-text--xl">
+        <p class="fr-text--lg">
           Intégrez facilement nos simulateurs pour offrir à votre audience un accès immédiat aux aides disponibles.
         </p>
       </hgroup>
@@ -103,7 +103,7 @@ const activeAccordion = ref<number>()
         <h3>
           Deux options d’intégration
         </h3>
-        <ul class="fr-text--xl">
+        <ul class="fr-text--lg">
           <li>
             iFrame : Intégration simple et rapide sur votre site web.
           </li>

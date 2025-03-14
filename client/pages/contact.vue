@@ -25,10 +25,12 @@ useSeoMeta({
           <h1>
             Contactez-nous
           </h1>
-          <p class="fr-text--xl">
-            Nous facilitons l’accès aux aides en vous proposant les services les plus simples et clairs possibles. Besoin d’informations ou d’assistance ? Nous sommes là pour vous aider.
+          <p class="fr-text--lg">
+            Nous facilitons l’accès aux aides en vous proposant les services les plus simples et clairs possibles.
+            <br>
+            Besoin d’informations ou d’assistance ? Nous sommes là pour vous aider.
           </p>
-          <p class="fr-text--xl">
+          <p class="fr-text--lg">
             Écrivez-nous à <strong>aides.simplifiees@numerique.gouv.fr</strong>
           </p>
         </div>
