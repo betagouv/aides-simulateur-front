@@ -194,6 +194,34 @@ export function dispatchTypeLogement (
   }
 }
 
+function dispatchEtudiantMobilite (
+  answerKey: string,
+  answerValue: boolean | number | string,
+  periodType: 'ETERNITY' | 'YEAR' | 'YEAR_ROLLING' | 'MONTH'
+) {
+  const period = getPeriod(periodType)
+  if (period === UNDEFINED_PERIOD_TYPE) {
+    console.error(`Variable '${answerKey}' de période imprévue ou inconnue: ${periodType}`)
+    throw new UnknownPeriodError(answerKey)
+  }
+
+  if (answerValue === 'parcoursup-nouvelle-region') {
+    return formatSurveyAnswerToRequest('sortie_academie', period, true)
+  }
+  else if (answerValue === 'master-nouvelle-zone') {
+    return formatSurveyAnswerToRequest('sortie_region_academique', period, true)
+  }
+  else if (answerValue === 'pas-de-mobilite') {
+    // TODO: add formatSurveyAnswerToRequest('sortie_academie', period, false)
+    // if university 1st year even if 'false' will have no effect on the calculation result
+    return formatSurveyAnswerToRequest('sortie_region_academique', period, false)
+  }
+  else {
+    console.debug(`Valeur inattendue ${answerKey}: ${answerValue}`)
+    throw new UnexpectedValueError(answerKey)
+  }
+}
+
 function initRequest (): OpenFiscaCalculationRequest {
   // eslint-disable-next-line no-console
   console.debug('initRequest...')
@@ -426,13 +454,36 @@ function addQuestionsToRequest (
 }
 
 function clampInputsInRequest (request: OpenFiscaCalculationRequest) {
+  // SITUATION PERSONNELLE
+
+  // TODO: for consistency with the user situation, the form should ask about the nationality
   const welcomeToFrance = 'FR'
   const formattedNationalite = formatSurveyAnswerToRequest('nationalite', MONTH, welcomeToFrance)
   request[Entites.Individus][INDIVIDU_ID].nationalite = { ...formattedNationalite.nationalite }
 
+  // LOGEMENT
+
   const dateEntreeLogement = MONTH_NEXT
   const formattedDateEntreeLogement = formatSurveyAnswerToRequest('date_entree_logement', MONTH, dateEntreeLogement)
   request[Entites.Menages][MENAGE_ID].date_entree_logement = { ...formattedDateEntreeLogement.date_entree_logement }
+
+  // ETUDES (+ NOUVELLE ACADEMIE)
+
+  // if 'parcoursup-nouvelle-region' value is chosen at 'etudiant-mobilite' => 'sortie_academie' à true
+  const sortieAcademieApresTerminale = request[Entites.Individus][INDIVIDU_ID].sortie_academie[MONTH]
+  if (sortieAcademieApresTerminale) {
+    const formattedAnneeEtude = formatSurveyAnswerToRequest('annee_etude', MONTH, 'terminale')
+    request[Entites.Individus][INDIVIDU_ID].annee_etude = { ...formattedAnneeEtude.annee_etude }
+  }
+
+  // if 'master-nouvelle-zone' value is chosen at 'etudiant-mobilite' => 'sortie_region_academique' à true
+  const sortieAcademieApresL3ouM1 = request[Entites.Individus][INDIVIDU_ID].sortie_region_academique[MONTH]
+  if (sortieAcademieApresL3ouM1) {
+    // TODO: for consistency with the user situation, the form should ask about the university level
+    const welcomeToMaster1 = 'master_1' // could as well be 'licence_3' here
+    const formattedAnneeEtude = formatSurveyAnswerToRequest('annee_etude', MONTH, welcomeToMaster1)
+    request[Entites.Individus][INDIVIDU_ID].annee_etude = { ...formattedAnneeEtude.annee_etude }
+  }
 
   return request
 }

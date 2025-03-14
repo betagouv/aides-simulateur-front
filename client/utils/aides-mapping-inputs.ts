@@ -108,7 +108,8 @@ export const individusVariables: { [aidesSimplifieesKey: string]: AidesSimplifie
     exclude: true
   },
   'etudiant-mobilite': {
-    exclude: true
+    dispatch: dispatchEtudiantMobilite,
+    period: 'MONTH'
   },
   'loyer-difficile-payer': { // true
     // TODO: link to APL calculation?
