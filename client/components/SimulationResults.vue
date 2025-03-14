@@ -21,6 +21,8 @@ const { data: richResults } = await useAsyncData('rich-results', async () => {
   })
 })
 
+const showMethodology = ref(false)
+
 const hasAides = computed(() => richResults.value.aides.length > 0)
 const hasEcheances = computed(() => richResults.value.echeances.length > 0)
 const hasMontants = computed(() => richResults.value.montants.length > 0)
@@ -153,91 +155,100 @@ const activeAccordion = ref<number>()
           </p>
           <AidesList :aides="richResults.aides" />
         </div>
-        <SectionSeparator
-          fluid
-          class="fr-mt-8w"
-        />
-        <div class="results__liste-annexes fr-mt-8w">
-          <h3>3. Pour aller plus loin</h3>
-          <div class="fr-card">
-            <div class="fr-card__body">
-              <div class="fr-card__content">
-                <DsfrAccordionsGroup v-model="activeAccordion">
-                  <DsfrAccordion id="methodologie">
-                    <template #title>
-                      <VIcon
-                        name="ri:question-line"
-                        ssr
-                      />
-                      <span class="fr-ml-1w">
-                        Comment avons nous estimé ces aides ?
-                      </span>
-                    </template>
-                    <template #default>
-                      Contenu à venir
-                    </template>
-                  </DsfrAccordion>
-                  <DsfrAccordion
-                    v-if="hasAidesNonEligibles"
-                    id="aides-non-eligibles"
-                    title=""
-                  >
-                    <template #title>
-                      <VIcon
-                        name="ri:chat-delete-line"
-                        ssr
-                      />
-                      <span class="fr-ml-1w">
-                        Les aides auxquelles vous n’avez pas été estimé·e éligible
-                      </span>
-                    </template>
-                    <template #default>
-                      <AidesList :aides="richResults.aidesNonEligibles" />
-                    </template>
-                  </DsfrAccordion>
-                  <DsfrAccordion
-                    v-if="hasTextesDeLoi"
-                    id="textes-reference"
-                    title="Textes de référence"
-                  >
-                    <template #title>
-                      <VIcon
-                        name="ri:scales-3-line"
-                        ssr
-                      />
-                      <span class="fr-ml-1w">
-                        Textes de référence
-                      </span>
-                    </template>
-                    <template #default>
-                      <ul>
-                        <li
-                          class="fr-mb-1w"
-                          v-for="texteItem, i in richResults.textesLoi"
-                          :key="i"
-                        >
-                          <template v-if="typeof texteItem === 'string'">
-                            {{ texteItem }}
-                          </template>
-                          <template v-else-if="texteItem && texteItem.url && texteItem.label">
+        <template
+          v-if="hasAidesNonEligibles || hasTextesDeLoi || showMethodology"
+        >
+          <SectionSeparator
+            fluid
+            class="fr-mt-8w"
+          />
+          <div
+            class="results__liste-annexes fr-mt-8w"
+          >
+            <h3>3. Pour aller plus loin</h3>
+            <div class="fr-card">
+              <div class="fr-card__body">
+                <div class="fr-card__content">
+                  <DsfrAccordionsGroup v-model="activeAccordion">
+                    <DsfrAccordion
+                      v-if="showMethodology"
+                      id="methodologie"
+                    >
+                      <template #title>
+                        <VIcon
+                          name="ri:question-line"
+                          ssr
+                        />
+                        <span class="fr-ml-1w">
+                          Comment avons nous estimé ces aides ?
+                        </span>
+                      </template>
+                      <template #default>
+                        Contenu à venir
+                      </template>
+                    </DsfrAccordion>
+                    <DsfrAccordion
+                      v-if="hasAidesNonEligibles"
+                      id="aides-non-eligibles"
+                      title=""
+                    >
+                      <template #title>
+                        <VIcon
+                          name="ri:chat-delete-line"
+                          ssr
+                        />
+                        <span class="fr-ml-1w">
+                          Les aides auxquelles vous n’avez pas été estimé·e éligible
+                        </span>
+                      </template>
+                      <template #default>
+                        <AidesList :aides="richResults.aidesNonEligibles" />
+                      </template>
+                    </DsfrAccordion>
+                    <DsfrAccordion
+                      v-if="hasTextesDeLoi"
+                      id="textes-reference"
+                      title="Textes de référence"
+                    >
+                      <template #title>
+                        <VIcon
+                          name="ri:scales-3-line"
+                          ssr
+                        />
+                        <span class="fr-ml-1w">
+                          Textes de référence
+                        </span>
+                      </template>
+                      <template #default>
+                        <ul>
+                          <li
+                            v-for="texteItem, i in richResults.textesLoi"
+                            :key="i"
+                            class="fr-mb-1w"
+                          >
+                            <template v-if="typeof texteItem === 'string'">
+                              {{ texteItem }}
+                            </template>
+                            <template v-else-if="texteItem && texteItem.url && texteItem.label">
                               <span v-if="texteItem.prefixe">
                                 {{ texteItem.prefixe }} :
                               </span>
-                            <DsfrLink
-                              :to="texteItem.url"
-                              :icon="{ name: 'ri:external-link-line', ssr: true }"
-                              :label="texteItem.label"
-                            />
-                          </template>
-                        </li>
-                      </ul>
-                    </template>
-                  </DsfrAccordion>
-                </DsfrAccordionsGroup>
+                              <DsfrLink
+                                :to="texteItem.url"
+                                :icon="{ name: 'ri:external-link-line', ssr: true }"
+                                :label="texteItem.label"
+                              />
+                            </template>
+                          </li>
+                        </ul>
+                      </template>
+                    </DsfrAccordion>
+                  </DsfrAccordionsGroup>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </template>
       </template>
       <template v-else>
         <div class="results__no-aides fr-card fr-p-3w">
