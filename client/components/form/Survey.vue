@@ -86,8 +86,8 @@ const questionContainer = ref<HTMLElement | null>(null)
 function focusRenderedQuestion () {
   nextTick(() => {
     if (questionContainer.value) {
-      // Focus the first focusable element inside the question container
-      const focusable = questionContainer.value.querySelector('input, button, select, textarea') as HTMLElement | null
+      // Focus the first focusable input field inside the question container
+      const focusable = questionContainer.value.querySelector('input, select, textarea')
       if (focusable) {
         focusable.focus()
       }
