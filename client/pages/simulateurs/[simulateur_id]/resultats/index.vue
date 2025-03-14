@@ -111,6 +111,7 @@ const activeAccordion = ref<number>()
       class="fr-mt-4w"
       type="warning"
       title="Attention, ces résultats sont des estimations, et notre service est en construction."
+      label="Attention, ces résultats sont des estimations, et notre service est en construction."
     />
     <div class="results__content fr-mt-4w">
       <template v-if="hasAides">
