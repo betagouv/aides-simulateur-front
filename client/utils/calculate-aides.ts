@@ -6,7 +6,6 @@ import {
 } from '@/utils/aides-mapping-questions'
 
 import {
-  BOURSE_DEFAULT_TARGET_VARIABLE,
   famillesVariables,
   foyersFiscauxVariables,
   individusVariables,
@@ -491,20 +490,6 @@ function clampInputsInRequest (request: OpenFiscaCalculationRequest) {
       const formattedAnneeEtude = formatSurveyAnswerToRequest('annee_etude', MONTH, welcomeToMaster1)
       request[Entites.Individus][INDIVIDU_ID].annee_etude = { ...formattedAnneeEtude.annee_etude }
     }
-  }
-
-  // REVENUS
-
-  if (sortieAcademie && sortieAcademieApresTerminale) { // replace BOURSE_DEFAULT_TARGET_VARIABLE_INDIVIDU with 'bourse_lycee'
-    const montantBourse = request[Entites.Individus][INDIVIDU_ID][BOURSE_DEFAULT_TARGET_VARIABLE_INDIVIDU][MONTH] as number
-
-    // clean up default variable value
-    const formattedDefaultBourseIndividu = formatSurveyAnswerToRequest(BOURSE_DEFAULT_TARGET_VARIABLE_INDIVIDU, MONTH, 0)
-    request[Entites.Individus][INDIVIDU_ID][BOURSE_DEFAULT_TARGET_VARIABLE_INDIVIDU] = { ...formattedDefaultBourseIndividu[BOURSE_DEFAULT_TARGET_VARIABLE_INDIVIDU] }
-
-    // dispatch value to more precise variable
-    const formattedBourseLycee = formatSurveyAnswerToRequest('bourse_lycee', MONTH, montantBourse)
-    request[Entites.Individus][INDIVIDU_ID].bourse_lycee = { ...formattedBourseLycee.bourse_lycee }
   }
 
   return request
