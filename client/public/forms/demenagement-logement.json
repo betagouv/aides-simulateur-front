@@ -75,19 +75,6 @@
             { "id": "jeune_veuf", "title": "Veuf(ve) d’un(e) conjoint(e) décédé(e) dans l’année" },
             { "id": "non_renseigne", "title": "Je préfère ne pas renseigner" }
           ]
-        },
-        {
-          "id": "habiter-avec-conjoint",
-          "title": "Habiterez-vous avec votre conjoint(e) ?",
-          "notion": {
-            "id": "habiter-avec-conjoint",
-            "buttonLabel": "En savoir plus"
-          },
-          "type": "boolean",
-          "nextQuestion": "code-postal-nouvelle-ville",
-          "bypassToQuestion": [
-            { "condition": "habiter-avec-conjoint=true", "question": "revenus-conjoint" }
-          ]
         }
       ]
     },
@@ -142,23 +129,19 @@
           "description": "Sélectionnez tous les types de revenus que vous avez perçus dans les 12 derniers mois. Vous pourrez ensuite saisir les montants.",
           "type": "checkbox",
           "choices": [
-            { "id": "revenus-activite", "title": "Revenus d'activité" },
-            { "id": "revenus-remplacement", "title": "Revenus de remplacement" },
-            { "id": "revenus-allocations", "title": "Revenus des allocations and co" },
-            { "id": "revenus-entreprise", "title": "Revenus d'entreprise" },
-            { "id": "ressources-parents", "title": "Ressources des parents" },
-            { "id": "ressources-conjoint", "title": "Ressources du conjoint" },
-            { "id": "autres-revenus", "title": "Autres revenus" },
+            { "id": "revenus-activite", "title": "Revenus d'activité (salaires, primes)" },
+            { "id": "revenus-chomage", "title": "Chômage" },
+            { "id": "revenus-bourses", "title": "Bourses" },
+            { "id": "revenus-entreprise", "title": "Revenus professionnels non salariés" },
+            { "id": "revenus-parents", "title": "Ressources des parents" },
             { "id": "aucun-autres-revenus", "title": "Aucun autre revenu à déclarer" }
           ],
           "bypassToQuestion": [
             { "condition": "type-revenus.includes('revenus-activite')", "question": "salaire-imposable" },
-            { "condition": "type-revenus.includes('revenus-remplacement')", "question": "revenus-chomage" },
-            { "condition": "type-revenus.includes('revenus-allocations')", "question": "abattement-indemnite-chomage" },
-            { "condition": "type-revenus.includes('revenus-entreprise')", "question": "moins-values" },
-            { "condition": "type-revenus.includes('ressources-parents')", "question": "ressources-parents" },
-            { "condition": "type-revenus.includes('ressources-conjoint')", "question": "ressources-conjoint" },
-            { "condition": "type-revenus.includes('autres-revenus')", "question": "pensions-alimentaires" }
+            { "condition": "type-revenus.includes('revenus-chomage')", "question": "montant-chomage" },
+            { "condition": "type-revenus.includes('revenus-bourses')", "question": "montant-bourse-lycee" },
+            { "condition": "type-revenus.includes('revenus-entreprise')", "question": "montant-revenus-liberal" },
+            { "condition": "type-revenus.includes('revenus-parents')", "question": "montant-parents" }
           ]
         },
         {
@@ -208,17 +191,6 @@
       "nextQuestion": "date-naissance"
     },
     {
-      "id": "revenus-conjoint",
-      "title": "Quels sont les revenus de votre conjoint(e) ?",
-      "description": "Si vous habitez avec votre conjoint(e) (marié(e), pacsé(e) ou en union libre), ses revenus sont pris en compte pour le calcul de vos aides. Indiquez ici ses ressources annuelles avant impôts. Si vous ne connaissez pas le montant exact, une estimation suffit.",
-      "notion": {
-        "id": "revenus-conjoint",
-        "buttonLabel": "En savoir plus"
-      },
-      "type": "number",
-      "nextQuestion": "code-postal-nouvelle-ville"
-    },
-    {
       "id": "primo-accedant",
       "title": "Êtes-vous un primo-accédant ?",
       "type": "boolean",
@@ -238,10 +210,14 @@
     },
     {
       "id": "logement-conventionne",
-      "title": "Votre logement est-il conventionné pour les Aides Personalisées au Logement ?",
+      "title": "Votre logement est-il conventionné pour les Aides Personalisées au Logement (APL) ?",
       "description": "Les logements conventionnés sont des logements collectifs ou des logements individuels qui ont fait l'objet d'une convention avec l'État pour recevoir des aides financières.",
       "type": "boolean",
-      "nextQuestion": "colocation"
+      "nextQuestion": "colocation",
+      "notion": {
+        "id": "logement-conventionne",
+        "buttonLabel": "En savoir plus"
+      }
     },
     {
       "id": "colocation",
@@ -297,114 +273,78 @@
       "type": "number",
       "nextQuestion": "confirmation-end",
       "bypassToQuestion": [
-        { "condition": "type-revenus.includes('revenus-remplacement')", "question": "revenus-chomage" },
-        { "condition": "type-revenus.includes('revenus-allocations')", "question": "abattement-indemnite-chomage" },
-        { "condition": "type-revenus.includes('revenus-entreprise')", "question": "moins-values" },
-        { "condition": "type-revenus.includes('ressources-parents')", "question": "ressources-parents" },
-        { "condition": "type-revenus.includes('ressources-conjoint')", "question": "ressources-conjoint" },
-        { "condition": "type-revenus.includes('autres-revenus')", "question": "pensions-alimentaires" }
+        { "condition": "type-revenus.includes('revenus-chomage')", "question": "montant-chomage" },
+        { "condition": "type-revenus.includes('revenus-bourses')", "question": "montant-bourse-lycee" },
+        { "condition": "type-revenus.includes('revenus-entreprise')", "question": "montant-revenus-liberal" },
+        { "condition": "type-revenus.includes('revenus-parents')", "question": "montant-parents" }
       ]
     },
     {
-      "id": "revenus-chomage",
+      "id": "montant-chomage",
       "title": "Revenus du chômage imposables",
-      "type": "number",
-      "nextQuestion": "retraites-imposables"
-    },
-    {
-      "id": "retraites-imposables",
-      "title": "Retraites imposables",
-      "type": "number",
-      "nextQuestion": "bourse-montant"
-    },
-    {
-      "id": "bourse-montant",
-      "title": "Montant de la bourse",
+      "description": "Indiquez le montant en euros de vos revenus de chômage au cours des 12 derniers mois avant impôts.",
       "type": "number",
       "nextQuestion": "confirmation-end",
+      "notion": {
+        "id": "montant-chomage",
+        "buttonLabel": "En savoir plus"
+      },
       "bypassToQuestion": [
-        { "condition": "type-revenus.includes('revenus-allocations')", "question": "abattement-indemnite-chomage" },
-        { "condition": "type-revenus.includes('revenus-entreprise')", "question": "moins-values" },
-        { "condition": "type-revenus.includes('ressources-parents')", "question": "ressources-parents" },
-        { "condition": "type-revenus.includes('ressources-conjoint')", "question": "ressources-conjoint" },
-        { "condition": "type-revenus.includes('autres-revenus')", "question": "pensions-alimentaires" }
+        { "condition": "type-revenus.includes('revenus-bourses')", "question": "montant-bourse-lycee" },
+        { "condition": "type-revenus.includes('revenus-entreprise')", "question": "montant-revenus-liberal" },
+        { "condition": "type-revenus.includes('revenus-parents')", "question": "montant-parents" }
       ]
     },
     {
-      "id": "abattement-indemnite-chomage",
-      "title": "Abattement pour indemnités chômage",
+      "id": "montant-bourse-lycee",
+      "title": "Montant de la bourse de lycée (si existant)",
       "type": "number",
-      "nextQuestion": "complement-allocation-divers"
+      "nextQuestion": "montant-bourse-superieur"
     },
     {
-      "id": "complement-allocation-divers",
-      "title": "Compléments divers (ex. allocation logement, allocations familiales, complément familial, allocation d'éducation de l'enfant handicapé (AEEH), allocation de soutien familial, allocation journalière de présence parentale (AJPP)).",
-      "type": "number",
-      "nextQuestion": "pensions-alimentaires-recues"
-    },
-    {
-      "id": "pensions-alimentaires-recues",
-      "title": "Pensions alimentaires perçues",
+      "id": "montant-bourse-superieur",
+      "title": "Montant de la bourse de l'enseignement supérieur (si existant)",
       "type": "number",
       "nextQuestion": "confirmation-end",
       "bypassToQuestion": [
-        { "condition": "type-revenus.includes('revenus-entreprise')", "question": "moins-values" },
-        { "condition": "type-revenus.includes('ressources-parents')", "question": "ressources-parents" },
-        { "condition": "type-revenus.includes('ressources-conjoint')", "question": "ressources-conjoint" },
-        { "condition": "type-revenus.includes('autres-revenus')", "question": "pensions-alimentaires" }
+        { "condition": "type-revenus.includes('revenus-entreprise')", "question": "montant-revenus-liberal" },
+        { "condition": "type-revenus.includes('revenus-parents')", "question": "montant-parents" }
       ]
     },
     {
-      "id": "moins-values",
-      "title": "Moins-values à court et long terme des non-salariés (RPNS MVCT et RPNS MVLT)",
+      "id": "montant-revenus-liberal",
+      "title": "En profession libérale (entrepreneur)",
       "type": "number",
-      "nextQuestion": "revenus-independant"
+      "nextQuestion": "montant-micro-entreprise-bnc"
     },
     {
-      "id": "revenus-independant",
-      "title": "Revenus d'indépendants (RPNS - Revenus professionnels non salariés)",
+      "id": "montant-micro-entreprise-bnc",
+      "title": "Montant des BNC de la micro-entreprise",
+      "description": "Via une micro-entreprise : activité libérale et/ou intellectuelle - bénéfices non commerciaux (BNC)",
       "type": "number",
-      "nextQuestion": "pensions-invalidite"
+      "nextQuestion": "montant-micro-entreprise-bic"
     },
     {
-      "id": "pensions-invalidite",
-      "title": "Pensions d'invalidité",
+      "id": "montant-micro-entreprise-bic",
+      "title": "Montant des BIC de la micro-entreprise",
+      "description": "Via une micro-entreprise : activité libérale et/ou intellectuelle - bénéfices industriels et commerciaux (BIC)",
+      "type": "number",
+      "nextQuestion": "montant-micro-entreprise-achat-revente"
+    },
+    {
+      "id": "montant-micro-entreprise-achat-revente",
+      "title": "Montant d'Achat/revente ou fourniture de logement de la micro-entreprise",
+      "description": "Via une micro-entreprise : achat/revente ou fourniture de logement",
       "type": "number",
       "nextQuestion": "confirmation-end",
       "bypassToQuestion": [
-        { "condition": "type-revenus.includes('ressources-parents')", "question": "ressources-parents" },
-        { "condition": "type-revenus.includes('ressources-conjoint')", "question": "ressources-conjoint" },
-        { "condition": "type-revenus.includes('autres-revenus')", "question": "pensions-alimentaires" }
+        { "condition": "type-revenus.includes('revenus-parents')", "question": "montant-parents" }
       ]
     },
     {
-      "id": "ressources-parents",
-      "title": "Ressources des parents (si le demandeur est rattaché fiscalement)",
-      "type": "number",
-      "nextQuestion": "confirmation-end",
-      "bypassToQuestion": [
-        { "condition": "type-revenus.includes('ressources-conjoint')", "question": "ressources-conjoint" },
-        { "condition": "type-revenus.includes('autres-revenus')", "question": "pensions-alimentaires" }
-      ]
-    },
-    {
-      "id": "ressources-conjoint",
-      "title": "Ressources du conjoint·e",
-      "type": "number",
-      "nextQuestion": "confirmation-end",
-      "bypassToQuestion": [
-        { "condition": "type-revenus.includes('autres-revenus')", "question": "pensions-alimentaires" }
-      ]
-    },
-    {
-      "id": "pensions-alimentaires",
-      "title": "Pensions alimentaires perçues",
-      "type": "number",
-      "nextQuestion": "revenus-patrimoine"
-    },
-    {
-      "id": "revenus-patrimoine",
-      "title": "Revenus issus du patrimoine (loyers perçus, revenus fonciers, intérêts, dividendes)",
+      "id": "montant-parents",
+      "title": "Montant des ressources des parents",
+      "description": "Ressources des parents (si vous êtes rattaché fiscalement)",
       "type": "number",
       "nextQuestion": "confirmation-end"
     }
@@ -421,7 +361,6 @@
         "date-naissance": "2007-03-01",
         "handicap": false,
         "statut-marital": "celibataire",
-        "habiter-avec-conjoint": false,
         "code-postal-nouvelle-ville": "75101",
         "situation-logement": "locataire",
         "type-logement": "logement-meuble",
@@ -471,7 +410,6 @@
         "date-naissance": "2005-01-01",
         "handicap": false,
         "statut-marital": "celibataire",
-        "habiter-avec-conjoint": false,
         "code-postal-nouvelle-ville": "69381",
         "situation-logement": "locataire",
         "type-logement": "logement-foyer",
@@ -519,7 +457,6 @@
         "date-naissance": "1990-01-01",
         "handicap": false,
         "statut-marital": "celibataire",
-        "habiter-avec-conjoint": false,
         "code-postal-nouvelle-ville": "13201",
         "situation-logement": "proprietaire",
         "primo-accedant": false,
