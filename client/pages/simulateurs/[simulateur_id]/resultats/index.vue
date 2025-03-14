@@ -110,8 +110,9 @@ const activeAccordion = ref<number>()
     <DsfrNotice
       type="warning"
       title="Attention, ces résultats sont des estimations, et notre service est en construction."
+      class="fr-mt-4w"
     />
-    <div class="results__content fr-mt-8w">
+    <div class="results__content fr-mt-4w">
       <template v-if="hasAides">
         <div class="results__content-resume">
           <h3>1. En résumé</h3>

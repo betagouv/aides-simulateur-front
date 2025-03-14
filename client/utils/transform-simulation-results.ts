@@ -1,13 +1,13 @@
 const mockCalculationResponse = {
-  'aide-personnalisee-logement': 1212.23,
+  'aide-personnalisee-logement': 212.23,
   'aide-personnalisee-logement-eligibilite': true,
-  'garantie-visale': 317.855,
+  'garantie-visale': 1000,
   'garantie-visale-eligibilite': true,
-  'locapass': 300.24,
+  'locapass': 800,
   'locapass-eligibilite': true,
-  'mobilite-master-1': 343.34,
+  'mobilite-master-1': 1000,
   'mobilite-master-1-eligibilite': true,
-  'mobilite-parcoursup': 200,
+  'mobilite-parcoursup': 500,
   'mobilite-parcoursup-eligibilite': false
 }
 /**
@@ -22,7 +22,13 @@ export async function transformSimulationResults (
   /**
    * Uncomment below to use mock data for testing
    */
-  // calculationResponse = mockCalculationResponse
+
+  // Check if url contains ?mock=true
+  const route = useRoute()
+  if (route.fullPath.includes('mock=true')) {
+    calculationResponse = mockCalculationResponse
+  }
+
   const rawAides: RawAide[] = Object.entries(mockCalculationResponse)
     .reduce((acc, [key, value]) => {
       if (key.match('-eligibilite')) {
