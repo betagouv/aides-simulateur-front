@@ -412,6 +412,28 @@ function addAnswersToRequest (
     }
   }
 
+  // Check if "bourse_lycee" exists directly in famillesVariables (properly named variable)
+  const bourse_lycee_in_families = Object.keys(famillesVariables).includes("bourse_lycee");
+
+  // Using the same logic but with answers (the user input) instead of the mapping objects
+  if (
+    // If user has answered "boursier" question with true
+    answers["boursier"] === true &&
+    // And user has selected parcoursup mobility
+    answers["etudiant-mobilite"] === "parcoursup-nouvelle-region" &&
+    // And we need to add bourse_lycee because it's not directly in famillesVariables
+    !bourse_lycee_in_families
+  ) {
+    // Add the montant-bourse-lycee mapping for bourse_lycee, to the proper entity (Familles)
+    request = addSurveyAnswerToRequest(
+      "bourse_lycee",
+      1,
+      famillesVariables["montant-bourse-lycee"],
+      Entites.Familles,
+      request
+    );
+  }
+
   // TODO add additional information from gathered data?
   // ex: logement_conventionne
   return request
@@ -488,10 +510,6 @@ function clampInputsInRequest (request: OpenFiscaCalculationRequest) {
     }
   }
 
-  //Cleanup double answers keys
-  //ex : 'statut-professionnel' and 'statut-professionnel-eligibilite' => 'activite' defined twice
-  //Make sure that request[Entites.Individus][INDIVIDU_ID] has no double identical keys
-  console.log("!!!!!!!!------ uniqueRequest ---------!!!!!!!!", request)
   return request
 }
 
