@@ -13,25 +13,32 @@ import {
 } from '~/utils/aides-mapping-inputs'
 
 function initDates () {
-  const today = new Date().toISOString() // YYYY-MM-DD
-  const monthDate = today.slice(0, 7)
-  const month = today.slice(5, 7)
-  const year = today.slice(0, 4)
+  const today = new Date()
+  const todayAsString = today.toISOString() // YYYY-MM-DD
+  const monthDate = todayAsString.slice(0, 7)
+  const month = todayAsString.slice(5, 7)
+
+  const monthPlusOne = new Date(today)
+  monthPlusOne.setMonth(today.getMonth() + 1)
+  const nextMonth = monthPlusOne.toISOString().slice(0, 7)
+
+  const year = todayAsString.slice(0, 4)
   const previous_year = String(Number.parseInt(year) - 1)
 
   // rolling year format:
   // https://openfisca.org/doc/coding-the-legislation/35_periods.html#periods
-  const rolling_year = `month:${previous_year}-${month}:12`
+  const rolling_year = `month:${previous_year}-${month}:12` // rolling in the past
 
   return {
     MONTH: monthDate,
+    MONTH_NEXT: nextMonth,
     YEAR: year,
     YEAR_ROLLING: rolling_year
   }
 }
 
 // init all periods once according to today's date
-export const { MONTH, YEAR, YEAR_ROLLING } = initDates()
+export const { MONTH, MONTH_NEXT, YEAR, YEAR_ROLLING } = initDates()
 const ETERNITY_PERIOD = 'ETERNITY' // https://openfisca.org/doc/coding-the-legislation/35_periods.html#periods
 const UNDEFINED_PERIOD_TYPE = 'PERIODE_DEFNITION_INCONNUE'
 
@@ -419,9 +426,13 @@ function addQuestionsToRequest (
 }
 
 function clampInputsInRequest (request: OpenFiscaCalculationRequest) {
-  const welcome_to_france = 'FR'
-  const formattedNationalite = formatSurveyAnswerToRequest('nationalite', MONTH, welcome_to_france)
+  const welcomeToFrance = 'FR'
+  const formattedNationalite = formatSurveyAnswerToRequest('nationalite', MONTH, welcomeToFrance)
   request[Entites.Individus][INDIVIDU_ID].nationalite = { ...formattedNationalite.nationalite }
+
+  const dateEntreeLogement = MONTH_NEXT
+  const formattedDateEntreeLogement = formatSurveyAnswerToRequest('date_entree_logement', MONTH, dateEntreeLogement)
+  request[Entites.Menages][MENAGE_ID].date_entree_logement = { ...formattedDateEntreeLogement.date_entree_logement }
 
   return request
 }
