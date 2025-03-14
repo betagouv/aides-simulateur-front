@@ -6,6 +6,7 @@ import {
 } from '@/utils/aides-mapping-questions'
 
 import {
+  BOURSE_DEFAULT_TARGET_VARIABLE,
   famillesVariables,
   foyersFiscauxVariables,
   individusVariables,
@@ -470,19 +471,33 @@ function clampInputsInRequest (request: OpenFiscaCalculationRequest) {
   // ETUDES (+ NOUVELLE ACADEMIE)
 
   // if 'parcoursup-nouvelle-region' value is chosen at 'etudiant-mobilite' => 'sortie_academie' à true
-  const sortieAcademieApresTerminale = request[Entites.Individus][INDIVIDU_ID].sortie_academie[MONTH]
+  const sortieAcademieApresTerminale = request[Entites.Individus][INDIVIDU_ID].sortie_academie[MONTH] as boolean
   if (sortieAcademieApresTerminale) {
     const formattedAnneeEtude = formatSurveyAnswerToRequest('annee_etude', MONTH, 'terminale')
     request[Entites.Individus][INDIVIDU_ID].annee_etude = { ...formattedAnneeEtude.annee_etude }
   }
 
   // if 'master-nouvelle-zone' value is chosen at 'etudiant-mobilite' => 'sortie_region_academique' à true
-  const sortieAcademieApresL3ouM1 = request[Entites.Individus][INDIVIDU_ID].sortie_region_academique[MONTH]
+  const sortieAcademieApresL3ouM1 = request[Entites.Individus][INDIVIDU_ID].sortie_region_academique[MONTH] as boolean
   if (sortieAcademieApresL3ouM1) {
     // TODO: for consistency with the user situation, the form should ask about the university level
     const welcomeToMaster1 = 'master_1' // could as well be 'licence_3' here
     const formattedAnneeEtude = formatSurveyAnswerToRequest('annee_etude', MONTH, welcomeToMaster1)
     request[Entites.Individus][INDIVIDU_ID].annee_etude = { ...formattedAnneeEtude.annee_etude }
+  }
+
+  // REVENUS
+
+  if (sortieAcademieApresTerminale) { // replace BOURSE_DEFAULT_TARGET_VARIABLE_INDIVIDU with 'bourse_lycee'
+    const montantBourse = request[Entites.Individus][INDIVIDU_ID][BOURSE_DEFAULT_TARGET_VARIABLE_INDIVIDU][MONTH] as number
+
+    // clean up default variable value
+    const formattedDefaultBourseIndividu = formatSurveyAnswerToRequest(BOURSE_DEFAULT_TARGET_VARIABLE_INDIVIDU, MONTH, 0)
+    request[Entites.Individus][INDIVIDU_ID][BOURSE_DEFAULT_TARGET_VARIABLE_INDIVIDU] = { ...formattedDefaultBourseIndividu[BOURSE_DEFAULT_TARGET_VARIABLE_INDIVIDU] }
+
+    // dispatch value to more precise variable
+    const formattedBourseLycee = formatSurveyAnswerToRequest('bourse_lycee', MONTH, montantBourse)
+    request[Entites.Individus][INDIVIDU_ID].bourse_lycee = { ...formattedBourseLycee.bourse_lycee }
   }
 
   return request
