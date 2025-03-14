@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## 0.17.0 [#71](https://github.com/betagouv/aides-simulateur-front/pull/71)
+
+* Amélioration du calcul.
+* Détails :
+  * Évite des valeurs à zéro pour garantie visale, locapass, aide mobilité parcoursup et aide mobilité master 1
+  * Bouchonne des valeurs par défaut dans la requête à `aides-calculatrice-back` 
+    * Ajoute une `nationalite` à `FR` pour activer `visale_eligibilite`
+    * Ajoute `date_entree_logement` au mois suivant la simulation pour `locapass_eligibilite` 
+    * Ajoute `annee_etude` à `master_1` si  `sortie_region_academique` choisi (L3 et M1 étaient possibles)
+  * Injecte des valeurs par défaut par rapport à la situation de la personne à la requête `aides-calculatrice-back`
+    * Ajoute `sortie_academie` si 'parcoursup-nouvelle-region' choisi (aide mobilité parcoursup) et `sortie_region_academique` si `master-nouvelle-zone` choisi (aide mobilité master 1)
+    * Ajoute `bourse_lycee` à la place de `bourse_criteres_sociaux` si 'parcoursup-nouvelle-region' choisi
+
 ## 0.16.2 [#70](https://github.com/betagouv/aides-simulateur-front/pull/70)
 
 * Ajout de fonctionnalités.

@@ -1,38 +1,45 @@
 import {
-  famillesVariables,
-  foyersFiscauxVariables,
-  individusVariables,
-  menagesVariables
-} from '~/utils/aides-mapping-inputs'
-
-import {
   famillesQuestionsVariables,
   foyersFiscauxQuestionsVariables,
   individusQuestionsVariables,
   menagesQuestionsVariables
 } from '@/utils/aides-mapping-questions'
 
+import {
+  BOURSE_DEFAULT_TARGET_VARIABLE,
+  famillesVariables,
+  foyersFiscauxVariables,
+  individusVariables,
+  menagesVariables
+} from '~/utils/aides-mapping-inputs'
 
-function initDates(){
-  const today = new Date().toISOString() // YYYY-MM-DD
-  const monthDate = today.slice(0, 7)
-  const month = today.slice(5, 7)
-  const year = today.slice(0, 4)
-  const previous_year = String(parseInt(year) - 1)
+function initDates () {
+  const today = new Date()
+  const todayAsString = today.toISOString() // YYYY-MM-DD
+  const monthDate = todayAsString.slice(0, 7)
+  const month = todayAsString.slice(5, 7)
+
+  const monthPlusOne = new Date(today)
+  monthPlusOne.setMonth(today.getMonth() + 1)
+  const nextMonth = monthPlusOne.toISOString().slice(0, 7)
+
+  const year = todayAsString.slice(0, 4)
+  const previous_year = String(Number.parseInt(year) - 1)
 
   // rolling year format:
   // https://openfisca.org/doc/coding-the-legislation/35_periods.html#periods
-  const rolling_year = `month:${previous_year}-${month}:12`
+  const rolling_year = `month:${previous_year}-${month}:12` // rolling in the past
 
   return {
     MONTH: monthDate,
+    MONTH_NEXT: nextMonth,
     YEAR: year,
     YEAR_ROLLING: rolling_year
   }
 }
 
 // init all periods once according to today's date
-export const { MONTH, YEAR, YEAR_ROLLING } = initDates()
+export const { MONTH, MONTH_NEXT, YEAR, YEAR_ROLLING } = initDates()
 const ETERNITY_PERIOD = 'ETERNITY' // https://openfisca.org/doc/coding-the-legislation/35_periods.html#periods
 const UNDEFINED_PERIOD_TYPE = 'PERIODE_DEFNITION_INCONNUE'
 
@@ -71,10 +78,10 @@ function getEntityId (entity: Entites): string {
   }
 }
 
-export function getPeriod(
+export function getPeriod (
   periodType: 'ETERNITY' | 'YEAR' | 'YEAR_ROLLING' | 'MONTH'
 ): string {
-  switch(periodType){
+  switch (periodType) {
     case 'MONTH':
       return MONTH
     case 'YEAR':
@@ -89,42 +96,7 @@ export function getPeriod(
   }
 }
 
-export function dispatchSituationProfessionnelle(
-  answerKey: string,
-  answerValue: boolean | number | string,
-  periodType: 'ETERNITY' | 'YEAR' | 'YEAR_ROLLING' | 'MONTH'
-): unknown{
-  const period = getPeriod(periodType)
-  if (period === UNDEFINED_PERIOD_TYPE) {
-    console.error(`Variable '${answerKey}' de période imprévue ou inconnue: ${periodType}`)
-    throw new UnknownPeriodError(answerKey)
-  }
-
-  let openfiscaVariableName = undefined
-  
-  if (answerValue == "stage"){ 
-    openfiscaVariableName = 'stagiaire'
-    return formatSurveyAnswerToRequest(openfiscaVariableName, period, answerValue)
-
-  } else if (answerValue == "alternance"){
-    openfiscaVariableName = 'alternant'
-    return formatSurveyAnswerToRequest(openfiscaVariableName, period, answerValue)
-
-  } else if (answerValue == "salarie-hors-alternance"){
-    openfiscaVariableName = 'activite' // TypesActivite possible values: https://legislation.fr.openfisca.org/activite
-    return formatSurveyAnswerToRequest(openfiscaVariableName, period, 'actif')
-
-  } else if (answerValue == "sans-emploi"){
-    openfiscaVariableName = 'activite' // TypesActivite possible values: https://legislation.fr.openfisca.org/activite
-    return formatSurveyAnswerToRequest(openfiscaVariableName, period, 'chomeur')
-
-  } else {
-    console.debug(`Valeur inattendue ${answerKey}: ${answerValue}`)
-    throw new UnexpectedValueError(answerKey)
-  }  
-}
-
-export function dispatchSituationLogement(
+export function dispatchSituationProfessionnelle (
   answerKey: string,
   answerValue: boolean | number | string,
   periodType: 'ETERNITY' | 'YEAR' | 'YEAR_ROLLING' | 'MONTH'
@@ -135,33 +107,68 @@ export function dispatchSituationLogement(
     throw new UnknownPeriodError(answerKey)
   }
 
-  let openfiscaVariableName = "statut_occupation_logement"
+  let openfiscaVariableName
+
+  if (answerValue == 'stage') {
+    openfiscaVariableName = 'stagiaire'
+    return formatSurveyAnswerToRequest(openfiscaVariableName, period, answerValue)
+  }
+  else if (answerValue == 'alternance') {
+    openfiscaVariableName = 'alternant'
+    return formatSurveyAnswerToRequest(openfiscaVariableName, period, answerValue)
+  }
+  else if (answerValue == 'salarie-hors-alternance') {
+    openfiscaVariableName = 'activite' // TypesActivite possible values: https://legislation.fr.openfisca.org/activite
+    return formatSurveyAnswerToRequest(openfiscaVariableName, period, 'actif')
+  }
+  else if (answerValue == 'sans-emploi') {
+    openfiscaVariableName = 'activite' // TypesActivite possible values: https://legislation.fr.openfisca.org/activite
+    return formatSurveyAnswerToRequest(openfiscaVariableName, period, 'chomeur')
+  }
+  else {
+    console.debug(`Valeur inattendue ${answerKey}: ${answerValue}`)
+    throw new UnexpectedValueError(answerKey)
+  }
+}
+
+export function dispatchSituationLogement (
+  answerKey: string,
+  answerValue: boolean | number | string,
+  periodType: 'ETERNITY' | 'YEAR' | 'YEAR_ROLLING' | 'MONTH'
+): unknown {
+  const period = getPeriod(periodType)
+  if (period === UNDEFINED_PERIOD_TYPE) {
+    console.error(`Variable '${answerKey}' de période imprévue ou inconnue: ${periodType}`)
+    throw new UnknownPeriodError(answerKey)
+  }
+
+  let openfiscaVariableName = 'statut_occupation_logement'
   // possible values: https://legislation.fr.openfisca.org/statut_occupation_logement
 
-  if (answerValue == "locataire"){
+  if (answerValue == 'locataire') {
     // TypesStatutOccupationLogement: 'locataire_foyer', 'locataire_hlm', 'locataire_meuble', 'locataire_vide'
     // exemple d'input 'type-logement': "logement-foyer"
     console.debug(`Transcription simplifiee de '${answerKey}': '${answerValue}' en '${openfiscaVariableName}': 'locataire_vide'.`)
     console.debug(`Transcription pouvant être mise à jour en cas de valeur 'type-logement'`)
     return formatSurveyAnswerToRequest(openfiscaVariableName, period, 'locataire_vide')
-
-  } else if (answerValue == "proprietaire"){
+  }
+  else if (answerValue == 'proprietaire') {
     // TypesStatutOccupationLogement: 'proprietaire' (could also be a subset: 'primo_accedant')
     return formatSurveyAnswerToRequest(openfiscaVariableName, period, 'proprietaire')
-
-  } else if (answerValue == "heberge"){
+  }
+  else if (answerValue == 'heberge') {
     return formatSurveyAnswerToRequest(openfiscaVariableName, period, 'loge_gratuitement')
-  
-  } else if (answerValue == "sans-domicile"){
+  }
+  else if (answerValue == 'sans-domicile') {
     return formatSurveyAnswerToRequest(openfiscaVariableName, period, 'sans_domicile')
-  
-  } else {
+  }
+  else {
     console.debug(`Valeur inattendue ${answerKey}: ${answerValue}`)
     throw new UnexpectedValueError(answerKey)
   }
 }
 
-export function dispatchTypeLogement(
+export function dispatchTypeLogement (
   answerKey: string,
   answerValue: boolean | number | string,
   periodType: 'ETERNITY' | 'YEAR' | 'YEAR_ROLLING' | 'MONTH'
@@ -172,19 +179,49 @@ export function dispatchTypeLogement(
     throw new UnknownPeriodError(answerKey)
   }
 
-  let openfiscaVariableName = "statut_occupation_logement"
-  if (answerValue == "logement-non-meuble"){
+  let openfiscaVariableName = 'statut_occupation_logement'
+  if (answerValue == 'logement-non-meuble') {
     return formatSurveyAnswerToRequest(openfiscaVariableName, period, 'locataire_vide')
-  } else if (answerValue == "logement-meuble"){
+  }
+  else if (answerValue == 'logement-meuble') {
     return formatSurveyAnswerToRequest(openfiscaVariableName, period, 'locataire_meuble')
-  } else if (answerValue == "logement-foyer" ){
+  }
+  else if (answerValue == 'logement-foyer') {
     return formatSurveyAnswerToRequest(openfiscaVariableName, period, 'locataire_foyer')
-  } else {
+  }
+  else {
     console.debug(`Valeur inattendue ${answerKey}: ${answerValue}`)
     throw new UnexpectedValueError(answerKey)
   }
 }
 
+export function dispatchEtudiantMobilite (
+  answerKey: string,
+  answerValue: boolean | number | string,
+  periodType: 'ETERNITY' | 'YEAR' | 'YEAR_ROLLING' | 'MONTH'
+) {
+  const period = getPeriod(periodType)
+  if (period === UNDEFINED_PERIOD_TYPE) {
+    console.error(`Variable '${answerKey}' de période imprévue ou inconnue: ${periodType}`)
+    throw new UnknownPeriodError(answerKey)
+  }
+
+  if (answerValue === 'parcoursup-nouvelle-region') {
+    return formatSurveyAnswerToRequest('sortie_academie', period, true)
+  }
+  else if (answerValue === 'master-nouvelle-zone') {
+    return formatSurveyAnswerToRequest('sortie_region_academique', period, true)
+  }
+  else if (answerValue === 'pas-de-mobilite') {
+    // TODO: add formatSurveyAnswerToRequest('sortie_academie', period, false)
+    // if university 1st year even if 'false' will have no effect on the calculation result
+    return formatSurveyAnswerToRequest('sortie_region_academique', period, false)
+  }
+  else {
+    console.debug(`Valeur inattendue ${answerKey}: ${answerValue}`)
+    throw new UnexpectedValueError(answerKey)
+  }
+}
 
 function initRequest (): OpenFiscaCalculationRequest {
   // eslint-disable-next-line no-console
@@ -233,13 +270,12 @@ function formatSurveyAnswerToRequest (
   return result
 }
 
-
 /**
  * one step of the openfisca web API request building:
  * for a survey answer found in the mapping, add the answer data to the given request
  * unless it's a survey answer that should not be sent to the calculation (excluded answers)
  * @thorows UnknownEntityError if the given entity is not referenced for the current simulation
- * @throws UndefinedValueError if some issue occured on the survey input 
+ * @throws UndefinedValueError if some issue occured on the survey input
  * @throws UnexpectedValueError if a mapping is defined on an unexpected form input type
  */
 function addSurveyAnswerToRequest (
@@ -249,7 +285,7 @@ function addSurveyAnswerToRequest (
   entity: Entites,
   request: OpenFiscaCalculationRequest
 ): OpenFiscaCalculationRequest {
-  if (! ('exclude' in mapping) ) {
+  if (!('exclude' in mapping)) {
     if (answerValue === undefined) {
       throw new UndefinedValueError(answerKey)
     }
@@ -258,14 +294,15 @@ function addSurveyAnswerToRequest (
     }
 
     const period = getPeriod(mapping.period)
-    let formattedAnswer: { [openfiscaKey: string]: VariableValueOnPeriod } | undefined = undefined
-    if ('dispatch' in mapping){
+    let formattedAnswer: { [openfiscaKey: string]: VariableValueOnPeriod } | undefined
+    if ('dispatch' in mapping) {
       // dispatch and manage period in dispatch
       formattedAnswer = mapping.dispatch(answerKey, answerValue, mapping.period) as { [openfiscaKey: string]: VariableValueOnPeriod }
-    } else { 
+    }
+    else {
       formattedAnswer = formatSurveyAnswerToRequest(mapping.openfiscaVariableName, period, answerValue)
     }
-    
+
     const entityId = getEntityId(entity)
     if (entityId === UNDEFINED_ENTITY_ID) {
       console.error(`Variable '${answerKey}' d'entité imprévue ou inconnue: ${entity}`)
@@ -273,9 +310,9 @@ function addSurveyAnswerToRequest (
     }
 
     let formattedVariableName = Object.keys(formattedAnswer)[0]
-    if (request[entity][entityId][formattedVariableName]){
+    if (request[entity][entityId][formattedVariableName]) {
       // MANAGING VERY SPECIFIC CASE 🙀
-      // a value already exists in the request for formattedVariableName 
+      // a value already exists in the request for formattedVariableName
       // we expect it to be at the same period as, for now, we set each variable once (for one period only)
       let existingValue = request[entity][entityId][formattedVariableName][period]
       if (formattedVariableName == 'statut_occupation_logement' && existingValue == 'locataire_vide') {
@@ -284,18 +321,20 @@ function addSurveyAnswerToRequest (
         // (happens at least when dispatchSituationLogement is called before dispatchTypeLogement)
         console.warn(`Transcription mise à jour pour '${formattedVariableName}': '${existingValue}' suite input '${answerKey}': '${answerValue}'`)
         request[entity][entityId][formattedVariableName] = { ...formattedAnswer[formattedVariableName] }
-      } else {
+      }
+      else {
         // not one of the expected very specific cases :-o
         console.warn(`Valeur déjà existante pour '${formattedVariableName}': '${existingValue}'. Input complémentaire ignoré : '${answerKey}': '${answerValue}'`)
         throw new UnexpectedValueUpdateError(answerKey)
       }
-    } else {
+    }
+    else {
       // formattedVariableName value is set for the first time here
       request[entity][entityId][formattedVariableName] = { ...formattedAnswer[formattedVariableName] }
     }
 
     // MANAGING VERY SPECIFIC CASE 🙀
-    if(formattedVariableName == 'statut_occupation_logement' && request[entity][entityId][formattedVariableName][period] == 'locataire_foyer'){
+    if (formattedVariableName == 'statut_occupation_logement' && request[entity][entityId][formattedVariableName][period] == 'locataire_foyer') {
       // for the same entity Menage and at the same period than 'statut_occupation_logement' add 'logement_conventionne'
       const additionalOpenFiscaVariableName = 'logement_conventionne'
       const formattedAdditionalVariable = formatSurveyAnswerToRequest(additionalOpenFiscaVariableName, period, true)
@@ -366,18 +405,19 @@ function addAnswersToRequest (
     }
     catch (error) {
       if (
-        error instanceof UnknownVariableError  
-        || error instanceof UnknownEntityError 
+        error instanceof UnknownVariableError
+        || error instanceof UnknownEntityError
         || error instanceof UnexpectedValueError
         || error instanceof UndefinedValueError) {
         console.warn(`Donnée '${answerKey}' non transcrite dans la requête de calcul suite à l'erreur '${error}'.`)
-      } else {
-        console.error(`Donnée '${answerKey}' non transcrite dans la requête de calcul suite à l'erreur inattendue '${error}'.`);
+      }
+      else {
+        console.error(`Donnée '${answerKey}' non transcrite dans la requête de calcul suite à l'erreur inattendue '${error}'.`)
       }
     }
   }
 
-  // TODO add additional information from gathered data? 
+  // TODO add additional information from gathered data?
   // ex: logement_conventionne
   return request
 }
@@ -414,6 +454,62 @@ function addQuestionsToRequest (
   return request
 }
 
+function clampInputsInRequest (request: OpenFiscaCalculationRequest) {
+  // SITUATION PERSONNELLE
+
+  // TODO: for consistency with the user situation, the form should ask about the nationality
+  const welcomeToFrance = 'FR'
+  const formattedNationalite = formatSurveyAnswerToRequest('nationalite', MONTH, welcomeToFrance)
+  request[Entites.Individus][INDIVIDU_ID].nationalite = { ...formattedNationalite.nationalite }
+
+  // LOGEMENT
+
+  const dateEntreeLogement = MONTH_NEXT
+  const formattedDateEntreeLogement = formatSurveyAnswerToRequest('date_entree_logement', MONTH, dateEntreeLogement)
+  request[Entites.Menages][MENAGE_ID].date_entree_logement = { ...formattedDateEntreeLogement.date_entree_logement }
+
+  // ETUDES (+ NOUVELLE ACADEMIE)
+
+  // if 'parcoursup-nouvelle-region' value is chosen at 'etudiant-mobilite' => 'sortie_academie' à true
+  const sortieAcademie = request[Entites.Individus][INDIVIDU_ID].sortie_academie
+  let sortieAcademieApresTerminale = false
+  if (sortieAcademie) {
+    sortieAcademieApresTerminale = request[Entites.Individus][INDIVIDU_ID].sortie_academie[MONTH] as boolean
+  }
+
+  if (sortieAcademie && sortieAcademieApresTerminale) {
+    const formattedAnneeEtude = formatSurveyAnswerToRequest('annee_etude', MONTH, 'terminale')
+    request[Entites.Individus][INDIVIDU_ID].annee_etude = { ...formattedAnneeEtude.annee_etude }
+  }
+
+  // if 'master-nouvelle-zone' value is chosen at 'etudiant-mobilite' => 'sortie_region_academique' à true
+  if (request[Entites.Individus][INDIVIDU_ID].sortie_region_academique) {
+    const sortieAcademieApresL3ouM1 = request[Entites.Individus][INDIVIDU_ID].sortie_region_academique[MONTH] as boolean
+    if (sortieAcademieApresL3ouM1) {
+    // TODO: for consistency with the user situation, the form should ask about the university level
+      const welcomeToMaster1 = 'master_1' // could as well be 'licence_3' here
+      const formattedAnneeEtude = formatSurveyAnswerToRequest('annee_etude', MONTH, welcomeToMaster1)
+      request[Entites.Individus][INDIVIDU_ID].annee_etude = { ...formattedAnneeEtude.annee_etude }
+    }
+  }
+
+  // REVENUS
+
+  if (sortieAcademie && sortieAcademieApresTerminale) { // replace BOURSE_DEFAULT_TARGET_VARIABLE_INDIVIDU with 'bourse_lycee'
+    const montantBourse = request[Entites.Individus][INDIVIDU_ID][BOURSE_DEFAULT_TARGET_VARIABLE_INDIVIDU][MONTH] as number
+
+    // clean up default variable value
+    const formattedDefaultBourseIndividu = formatSurveyAnswerToRequest(BOURSE_DEFAULT_TARGET_VARIABLE_INDIVIDU, MONTH, 0)
+    request[Entites.Individus][INDIVIDU_ID][BOURSE_DEFAULT_TARGET_VARIABLE_INDIVIDU] = { ...formattedDefaultBourseIndividu[BOURSE_DEFAULT_TARGET_VARIABLE_INDIVIDU] }
+
+    // dispatch value to more precise variable
+    const formattedBourseLycee = formatSurveyAnswerToRequest('bourse_lycee', MONTH, montantBourse)
+    request[Entites.Individus][INDIVIDU_ID].bourse_lycee = { ...formattedBourseLycee.bourse_lycee }
+  }
+
+  return request
+}
+
 export function buildRequest (answers: SurveyAnswers, questions: string[]): OpenFiscaCalculationRequest {
   // eslint-disable-next-line no-console
   console.debug('buildRequest...')
@@ -424,6 +520,7 @@ export function buildRequest (answers: SurveyAnswers, questions: string[]): Open
 
   request = addAnswersToRequest(request, answers) // user answers
   request = addQuestionsToRequest(request, questions) // simulator questions to rules engine
+  request = clampInputsInRequest(request)
 
   return request
 }
@@ -446,7 +543,7 @@ export async function fetchOpenFiscaFranceCalculation (
     },
     body: JSON.stringify(request),
   }
-  
+
   const response = await fetch(
     config.public.apiEndpointOpenFiscaFranceCalculate,
     requestSettings,

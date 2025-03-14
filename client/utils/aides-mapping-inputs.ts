@@ -2,6 +2,11 @@
 // to aides-calculatrice-back (openfisca-france here)
 // checked with openfisca-france v169.16.16
 
+export const BOURSE_DEFAULT_TARGET_VARIABLE_INDIVIDU_AT_UNIVERSITY = 'bourse_criteres_sociaux'
+// could also be 'bourse_enseignement_sup'
+// APL, Locapass (eligibility) and Aide mobilité master 1 look for any bourse ('boursier')
+// Aide mobilité parcours sup looks for 'bourse_lycee'
+
 export const individusVariables: { [aidesSimplifieesKey: string]: AidesSimplifieesMapping } = {
   'date-naissance': { // '2000-01-01'
     openfiscaVariableName: 'date_naissance',
@@ -16,7 +21,7 @@ export const individusVariables: { [aidesSimplifieesKey: string]: AidesSimplifie
     period: 'MONTH'
   },
   'bourse-montant': {
-    openfiscaVariableName: 'bourse_criteres_sociaux',
+    openfiscaVariableName: BOURSE_DEFAULT_TARGET_VARIABLE_INDIVIDU_AT_UNIVERSITY,
     // TODO dispatch to bourse_enseignement_sup, bourse_criteres_sociaux and bourse_lycee
     // according to user other inputs?
     period: 'MONTH'
@@ -108,7 +113,8 @@ export const individusVariables: { [aidesSimplifieesKey: string]: AidesSimplifie
     exclude: true
   },
   'etudiant-mobilite': {
-    exclude: true
+    dispatch: dispatchEtudiantMobilite,
+    period: 'MONTH'
   },
   'loyer-difficile-payer': { // true
     // TODO: link to APL calculation?
