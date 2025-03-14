@@ -1,6 +1,13 @@
 # CHANGELOG
 
 # CHANGELOG
+
+## 0.16.1 [#69](https://github.com/betagouv/aides-simulateur-front/pull/69)
+
+* Ajout de fonctionnalités.
+* Détail :
+  * Mise à jour du formulaire du simulateur demenagement-logement : ajout de personae et ajout de la question sur le logement conventionné
+
 ## 0.16.0 [#68](https://github.com/betagouv/aides-simulateur-front/pull/68)
 
 * Ajout de fonctionnalités.
