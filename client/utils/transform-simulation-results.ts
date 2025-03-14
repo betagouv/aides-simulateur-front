@@ -15,8 +15,10 @@ const mockCalculationResponse = {
  */
 export async function transformSimulationResults (
   calculationResponse: SimulationResultsAides,
+  createdAt: Date,
   simulateurId: string
 ): Promise<RichSimulationResults> {
+  const simulationDateTime = formatDateTime(createdAt)
   /**
    * Uncomment below to use mock data for testing
    */
@@ -49,6 +51,7 @@ export async function transformSimulationResults (
   // Handle empty input case
   if (!rawAides || rawAides.length === 0) {
     return {
+      createAt: simulationDateTime,
       aides: [],
       montants: [],
       echeances: [],
@@ -145,12 +148,13 @@ export async function transformSimulationResults (
     }))
 
   // Sample texts - would come from a real data source
-  const textesLoi: string[] = []
+  const textesLoi: TexteLoi[] = []
   richAides.forEach((aide) => {
     textesLoi.push(...aide.textesLoi)
   })
 
   return {
+    createAt: simulationDateTime,
     aides: eligibleAides,
     montants,
     echeances,
