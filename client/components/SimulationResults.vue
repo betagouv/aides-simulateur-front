@@ -103,6 +103,10 @@ const activeAccordion = ref<number>()
       fluid
       class="fr-mt-6w"
     />
+    <DsfrNotice
+      type="warning"
+      title="Attention, ces résultats sont des estimations, et notre service est en construction."
+    />
     <div class="results__content fr-mt-8w">
       <template
         v-if="hasAides"
