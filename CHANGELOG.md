@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 0.18.0 [#72](https://github.com/betagouv/aides-simulateur-front/pull/73)
+
+* Refactor du questionnaire
+* Détail : 
+  * Correctif des questions du questionnaire
+  * Changement du mapping OpenFisca
+
+
 ## 0.17.1 [#72](https://github.com/betagouv/aides-simulateur-front/pull/72)
 * Amélioration UI mineures
 

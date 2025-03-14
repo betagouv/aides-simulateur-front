@@ -108,6 +108,10 @@ export const menagesVariables: { [aidesSimplifieesKey: string]: AidesSimplifiees
     // but other types like logement_meuble can also be conventionné (then remove calsulate-aides.ts specific code for 'logement_conventionne')
     dispatch: dispatchTypeLogement,
     period: 'MONTH'
+  },
+  'logement-conventionne': {
+    openfiscaVariableName: 'logement_conventionne',
+    period: 'MONTH'
   }
 }
 
