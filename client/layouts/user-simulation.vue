@@ -21,13 +21,13 @@ const simulateur = computed(() => {
               :svg-path="simulateur.pictogramme"
             />
           </div>
-          <!-- <div
+          <div
             id="simulateur-title"
             class="simulation-title-container fr-col-9 fr-col-sm-10 fr-col-lg-11"
-          > -->
-          <div
-            class="simulation-title-container fr-col-9 fr-col-sm-10 fr-col-lg-11"
           >
+            <!-- <div
+            class="simulation-title-container fr-col-9 fr-col-sm-10 fr-col-lg-11"
+          > -->
             <h1
               v-if="simulateur?.titre"
               class="fr-h5 fr-m-0"

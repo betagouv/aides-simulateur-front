@@ -54,8 +54,13 @@ defineProps({
                 Merci de réessayer plus tard ou de vous rendre sur nos réseaux sociaux, vous serez bientôt en mesure de réutiliser le service.
               </p>
             </template>
-            <div v-if="error?.message" class="fr-mt-5w">
-              <h2 class="fr-h2">Message d'erreur</h2>
+            <div
+              v-if="error?.message"
+              class="fr-mt-5w"
+            >
+              <h2 class="fr-h2">
+                Message d'erreur
+              </h2>
               <p class="fr-text--sm fr-mb-3w">
                 {{ error?.message }}
               </p>

@@ -42,8 +42,8 @@ useSeoMeta({
       </h1>
       <DsfrLink
         icon-before
-        label="Revenir à ma simulation"
-        :to="`/simulateurs/${simulateurId}#simulateur-title`"
+        label="Revenir à mes résultats"
+        :to="`/simulateurs/${simulateurId}/resultats/#simulateur-title`"
         :icon="{ name: 'ri:arrow-left-line', ssr: true }"
       />
     </header>

@@ -9,7 +9,7 @@ const props = defineProps<{
 const formStore = useFormStore()
 const isLoading = ref(true)
 
-const resultsFetchState = ref<'idle' | 'loading' | 'loaded' | 'error'>('idle')
+const resultsFetchState = ref<'idle' | 'loading' | 'success' | 'error'>('idle')
 
 const simulateurId = props.simulateurId
 // État pour afficher ou non l'écran de choix
@@ -86,8 +86,8 @@ const questionContainer = ref<HTMLElement | null>(null)
 function focusRenderedQuestion () {
   nextTick(() => {
     if (questionContainer.value) {
-      // Focus the first focusable element inside the question container
-      const focusable = questionContainer.value.querySelector('input, button, select, textarea') as HTMLElement | null
+      // Focus the first focusable input field inside the question container
+      const focusable = questionContainer.value.querySelector('input, select, textarea')
       if (focusable) {
         focusable.focus()
       }
@@ -135,8 +135,16 @@ onMounted(async () => {
   }
 })
 
+function scrollToAnchor (anchor: string) {
+  const element = document.getElementById(anchor)
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth' })
+  }
+}
+
 function handleStart () {
   showWelcomeScreen.value = false
+  scrollToAnchor('simulateur-title')
 }
 
 // Handle updates from question components
@@ -189,7 +197,6 @@ async function submitForm () {
     resultsFetchState.value = 'loading'
     const request: OpenFiscaCalculationRequest = buildRequest(answers.value, questionsToApi)
     const openfiscaResponse: OpenFiscaCalculationResponse = await fetchOpenFiscaFranceCalculation(request)
-    resultsFetchState.value = 'loaded'
     // eslint-disable-next-line no-console
     console.debug('Réponse reçue :')
     // eslint-disable-next-line no-console
@@ -202,8 +209,7 @@ async function submitForm () {
     console.debug(results)
 
     if (results) {
-      resultStore.setResults(simulateurId, results)
-      navigateTo(`/simulateurs/${simulateurId}/resultats#simulateur-title`)
+      handleResults(results)
     }
     // Track form submission in Matomo
     if (typeof window !== 'undefined' && (window as any)._paq) {
@@ -236,7 +242,7 @@ async function submitForm () {
     }
   }
   catch (error) {
-    resultsFetchState.value = 'error'
+    handleResultsFetchError()
     // TODO Handle the error more professionnally and display a message to the user :)
     console.error('Erreur inattendue lors de la soumission du formulaire et de l\'appel au calcul :', error)
   }
@@ -248,6 +254,9 @@ function resumeForm () {
   resultsFetchState.value = 'idle'
   showChoiceScreen.value = false
   showWelcomeScreen.value = false
+  // scrollTo anchor #simulateur-title
+  scrollToAnchor('simulateur-title')
+
   // Focus the question after resuming
   focusRenderedQuestion()
 }
@@ -257,8 +266,24 @@ function restartForm () {
   resultsFetchState.value = 'idle'
   showWelcomeScreen.value = true
   showChoiceScreen.value = false
+  scrollToAnchor('simulateur-title')
   // Focus the question after restarting
   focusRenderedQuestion()
+}
+
+function handleResults (results) {
+  resultsFetchState.value = 'success'
+  resultStore.setResults(simulateurId, results)
+  setTimeout(() => {
+    navigateTo(`/simulateurs/${simulateurId}/resultats#simulateur-title`)
+  }, 1000)
+}
+
+function handleResultsFetchError () {
+  resultsFetchState.value = 'error'
+  setTimeout(() => {
+    resumeForm()
+  }, 1500)
 }
 
 /**
@@ -384,12 +409,13 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
     <!-- Formulaire -->
     <template v-else>
       <template v-if="isLoading">
-        <div class="fr-card fr-card--shadow fr-p-3w">
+        <div class="state-panel fr-card fr-card--shadow fr-p-3w">
           <p class="loading-indicator fr-text--xl fr-mt-3w">
             <span
               class="fr-icon-refresh-line fr-icon fr-icon--md fr-mr-2w"
               aria-hidden="true"
-            />Chargement du formulaire...
+            />Chargement du
+            formulaire...
           </p>
         </div>
       </template>
@@ -408,24 +434,42 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
           v-if="surveySchema && currentQuestion"
           class="form-container fr-card fr-p-3w"
         >
-          <DsfrBadge
+          <div
             v-if="resultsFetchState !== 'idle'"
-            class="survey-fetch-state-badge"
-            :type="({
-              // idle: 'info',
-              loading: 'info',
-              loaded: 'success',
-              error: 'error',
-            }[resultsFetchState] as 'info' | 'success' | 'error')"
-            :label="{
-              // idle: `progression : ${progress}%`,
-              loading: 'Estimation en cours...',
-              loaded: 'Estimation terminée',
-              error: 'Erreur lors de l\'estimation',
-            }[resultsFetchState]"
-          />
+            class="state-panel"
+          >
+            <p
+              v-if="resultsFetchState === 'loading'"
+              class="loading-indicator fr-text--xl fr-mt-3w"
+            >
+              <span
+                class="fr-icon-refresh-line fr-icon fr-icon--md fr-mr-1v"
+                aria-hidden="true"
+              />Estimation en
+              cours...
+            </p>
+            <DsfrBadge
+              v-if="resultsFetchState === 'error' || resultsFetchState === 'success'"
+              class="survey-fetch-state-badge"
+              :type="({
+                // idle: 'info',
+                loading: 'info',
+                success: 'success',
+                error: 'error',
+              }[resultsFetchState] as 'info' | 'success' | 'error')"
+              :label="{
+                // idle: `progression : ${progress}%`,
+                loading: 'Estimation en cours...',
+                success: 'Estimation terminée',
+                error: 'Erreur lors de l\'estimation',
+              }[resultsFetchState]"
+            />
+          </div>
           <!-- Current Question -->
-          <div class="fr-form-group">
+          <div
+            v-if="resultsFetchState === 'idle'"
+            class="fr-form-group"
+          >
             <hgroup class="fr-mb-3w">
               <component
                 :is="surveyH2"
@@ -510,7 +554,7 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
             secondary
             size="lg"
             :icon="{ name: 'ri:arrow-left-line', ssr: true }"
-            :disabled="resultsFetchState === 'loading'"
+            :disabled="resultsFetchState !== 'idle'"
             @click="handlePrevious"
           />
           <DsfrButton
@@ -519,7 +563,7 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
             :label="isLastQuestion ? 'Terminer' : 'Suivant'"
             :icon="{ name: 'ri:arrow-right-line', ssr: true }"
             icon-right
-            :disabled="!hasAnswer || resultsFetchState === 'loading'"
+            :disabled="!hasAnswer || resultsFetchState !== 'idle'"
             @click="handleNext"
           />
         </div>
@@ -545,20 +589,21 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
   }
 }
 
-.form-container {
-  position: relative;
-}
-.fr-form-group {
-  padding: .5rem .25rem;
-  height: max(20em, 36vh);
-  overflow-y: auto;
-  overflow-x: hidden;
-}
+//.fr-form-group {
+//   padding: .5rem .25rem;
+//   height: max(20em, 36vh);
+//   overflow-y: auto;
+//   overflow-x: hidden;
+// }
 
-.survey-fetch-state-badge {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
+.state-panel {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  min-height: 10em;
 }
 
 .loading-indicator {
@@ -568,7 +613,6 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
   align-items: center;
   justify-content: center;
   gap: .5rem;
-  min-height: 10em;
 }
 
 .loading-indicator .fr-icon {

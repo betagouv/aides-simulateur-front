@@ -1,6 +1,19 @@
 # CHANGELOG
 
-# CHANGELOG
+## 0.16.2 [#70](https://github.com/betagouv/aides-simulateur-front/pull/70)
+
+* Ajout de fonctionnalités.
+* Détail :
+  * Répare le lien de retour aux résultat
+  * Desactive le scroll du conteneur de question
+  * Ne focus pas le bouton de lien vers une notion lors du rendu d'une * nouvelle question
+  * Masque provisoirement l'accordéon "Comment avons-nous estimé ces aides ?"
+  * Restore l'ancre vers le titre du simulateur
+  * Ajoute un bandeau de warning à la page de résultats
+  * Améliore l'affichage des états de chargement des résultats
+  * Améliore l'expérience du scroll
+  * Améliore le chargement des résultats transformés de la simulation
+  * Modifications de styles mineures
 
 ## 0.16.1 [#69](https://github.com/betagouv/aides-simulateur-front/pull/69)
 

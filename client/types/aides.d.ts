@@ -49,6 +49,10 @@ declare global {
   }
 
   interface RichSimulationResults {
+    createAt: {
+      date: string
+      time: string
+    } | null
     aides: RichAide[]
     montants: RichMontant[]
     echeances: RichEcheance[]
