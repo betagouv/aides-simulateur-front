@@ -20,6 +20,17 @@ export const individusVariables: { [aidesSimplifieesKey: string]: AidesSimplifie
     openfiscaVariableName: 'boursier',
     period: 'MONTH'
   },
+
+  // 'montant-bourse-lycee': {
+  //   openfiscaVariableName: 'bourse_lycee',
+  //   period: 'MONTH'
+  // },
+
+  // 'montant-bourse-superieur': {
+  //   openfiscaVariableName: 'bourse_enseignement_sup',
+  //   period: 'MONTH'
+  // },
+
   'bourse-montant': {
     openfiscaVariableName: BOURSE_DEFAULT_TARGET_VARIABLE_INDIVIDU_AT_UNIVERSITY,
     // TODO dispatch to bourse_enseignement_sup, bourse_criteres_sociaux and bourse_lycee
@@ -30,52 +41,15 @@ export const individusVariables: { [aidesSimplifieesKey: string]: AidesSimplifie
     openfiscaVariableName: 'salaire_imposable',
     period: 'YEAR_ROLLING'
   },
-  'revenus-chomage': { // imposable
+  'montant-chomage': { // imposable
     openfiscaVariableName: 'chomage_imposable',
     period: 'MONTH'
   },
-  'abattement-indemnite-chomage': {
-    // TODO delete key as amount might already be removed from salaire-imposable that we need?
-    openfiscaVariableName: 'aide_logement_abattement_indemnites_chomage',
-    period: 'MONTH'
-  },
-  'retraites-imposables': { // TODO do not use plural id for the revenue of 1 person?
-    openfiscaVariableName: 'retraite_imposable',
-    period: 'MONTH'
-  },
-  'complement-allocation-divers': {
-    // TODO check who needs this and if the description is right:
-    // Compléments divers (ex. allocation logement, allocations familiales,
-    // complément familial, allocation d'éducation de l'enfant handicapé (AEEH),
-    // allocation de soutien familial, allocation journalière de présence parentale (AJPP)).
-    exclude: true
-  },
-  'pensions-alimentaires-recues': {
-    openfiscaVariableName: 'pensions_alimentaires_percues',
-    period: 'MONTH'
-  },
-  'pensions-alimentaires': {
-    // TODO duplicates pensions-alimentaires-recues ; or should it be "versées"?
-    exclude: true
-  },
-  'moins-values': {
-    // TODO dispatch to moins_values_court_terme_non_salaries and moins_values_long_terme_non_salaries
-    openfiscaVariableName: 'moins_values_court_terme_non_salaries',
-    period: 'MONTH'
-  },
-  'ressources-conjoint': {
-    exclude: true
-  },
-  'revenus-independant': {
-    // TODO check if it's imposable as mapped here
+  'montant-ca-micro-entreprise': {
     openfiscaVariableName: 'rpns_imposables',
     period: 'MONTH'
   },
-  'pensions-invalidite': {
-    openfiscaVariableName: 'pensions_invalidite',
-    period: 'MONTH'
-  },
-  'ressources-parents': {
+  'montant-parents': {
     // TODO add people and define the right type of revenue to set
     exclude: true
   },
@@ -96,9 +70,7 @@ export const individusVariables: { [aidesSimplifieesKey: string]: AidesSimplifie
     period: 'MONTH'
     // TODO: check 'situation-professionnelle' values as some also match 'statut-professionnel' values
   },
-  'habitation-avec-autre-personnes': { // false
-    exclude: true
-  },
+
   'nombre-personnes-logement': { // int
     exclude: true
   },
@@ -111,14 +83,6 @@ export const individusVariables: { [aidesSimplifieesKey: string]: AidesSimplifie
   },
   'loyer-difficile-payer': { // true
     // TODO: link to APL calculation?
-    exclude: true
-  },
-  'loyer-besoin-garant': { // true
-    // TODO: link to Garantie visale calculation?
-    exclude: true
-  },
-  'loyer-besoin-cautions': {
-    // TODO: link to Locapass calculation?
     exclude: true
   },
   'confirmation-end': {
@@ -136,10 +100,7 @@ export const menagesVariables: { [aidesSimplifieesKey: string]: AidesSimplifiees
     openfiscaVariableName: 'coloc',
     period: 'MONTH'
   },
-  'logement-chambre': { // 'logement-chambre-non' TODO: move to boolean value
-    openfiscaVariableName: 'logement_chambre',
-    period: 'MONTH'
-  },
+
   'loyer-montant-charges': { // for Garantie visale (not APL)
     openfiscaVariableName: 'charges_locatives',
     period: 'MONTH'
@@ -168,10 +129,6 @@ export const menagesVariables: { [aidesSimplifieesKey: string]: AidesSimplifiees
 export const famillesVariables: { [aidesSimplifieesKey: string]: AidesSimplifieesMapping } = {
   'logement-parente-proprietaire': { // 'logement-parente-proprietaire-non' TODO: move to boolean value
     openfiscaVariableName: 'proprietaire_proche_famille',
-    period: 'MONTH'
-  },
-  'revenus-patrimoine': {
-    openfiscaVariableName: 'aide_logement_base_ressources_patrimoine',
     period: 'MONTH'
   }
 }

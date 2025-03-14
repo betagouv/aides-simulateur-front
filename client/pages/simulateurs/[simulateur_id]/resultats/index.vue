@@ -110,9 +110,9 @@ const activeAccordion = ref<number>()
     <DsfrBadge
       class="fr-mt-4w"
       type="warning"
-      label="Attention, ces résultats sont des estimations, et notre service est en construction."
+      title="Attention, ces résultats sont des estimations, et notre service est en construction."
     />
-    <div class="results__content fr-mt-8w">
+    <div class="results__content fr-mt-4w">
       <template v-if="hasAides">
         <div class="results__content-resume">
           <hgroup>
