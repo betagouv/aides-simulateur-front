@@ -58,10 +58,6 @@ export const individusVariables: { [aidesSimplifieesKey: string]: AidesSimplifie
     openfiscaVariableName: 'moins_values_court_terme_non_salaries',
     period: 'MONTH'
   },
-  'revenus-conjoint': { // (number)
-    // TODO remove as duplicates ressources-conjoint?
-    exclude: true
-  },
   'ressources-conjoint': {
     exclude: true
   },
@@ -96,9 +92,6 @@ export const individusVariables: { [aidesSimplifieesKey: string]: AidesSimplifie
     // TODO: check 'situation-professionnelle' values as some also match 'statut-professionnel' values
   },
   'habitation-avec-autre-personnes': { // false
-    exclude: true
-  },
-  'habiter-avec-conjoint': { // false
     exclude: true
   },
   'nombre-personnes-logement': { // int
