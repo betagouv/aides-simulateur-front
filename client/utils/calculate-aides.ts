@@ -322,9 +322,13 @@ function addSurveyAnswerToRequest (
         request[entity][entityId][formattedVariableName] = { ...formattedAnswer[formattedVariableName] }
       }
       else {
+        // Instead of throwing an error, we do nothing
+        console.error(`Transcription aurait étéremplacée pour '${formattedVariableName}': '${existingValue}' par la nouvelle valeur de '${answerKey}': '${answerValue}'`)
+        //request[entity][entityId][formattedVariableName] = existingValue
+
         // not one of the expected very specific cases :-o
-        console.warn(`Valeur déjà existante pour '${formattedVariableName}': '${existingValue}'. Input complémentaire ignoré : '${answerKey}': '${answerValue}'`)
-        throw new UnexpectedValueUpdateError(answerKey)
+        //console.error(`Valeur déjà existante pour '${formattedVariableName}'='${existingValue}'. Input complémentaire ignoré : '${answerKey}'='${answerValue}'`)
+        //throw new UnexpectedValueUpdateError(answerKey)
       }
     }
     else {
@@ -406,6 +410,28 @@ function addAnswersToRequest (
         console.error(`Donnée '${answerKey}' non transcrite dans la requête de calcul suite à l'erreur inattendue '${error}'.`)
       }
     }
+  }
+
+  // Check if "bourse_lycee" exists directly in famillesVariables (properly named variable)
+  const bourse_lycee_in_families = Object.keys(famillesVariables).includes("bourse_lycee");
+
+  // Using the same logic but with answers (the user input) instead of the mapping objects
+  if (
+    // If user has answered "boursier" question with true
+    answers["boursier"] === true &&
+    // And user has selected parcoursup mobility
+    answers["etudiant-mobilite"] === "parcoursup-nouvelle-region" &&
+    // And we need to add bourse_lycee because it's not directly in famillesVariables
+    !bourse_lycee_in_families
+  ) {
+    // Add the montant-bourse-lycee mapping for bourse_lycee, to the proper entity (Familles)
+    request = addSurveyAnswerToRequest(
+      "bourse_lycee",
+      1,
+      famillesVariables["montant-bourse-lycee"],
+      Entites.Familles,
+      request
+    );
   }
 
   // TODO add additional information from gathered data?

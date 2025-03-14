@@ -116,11 +116,10 @@ export const menagesVariables: { [aidesSimplifieesKey: string]: AidesSimplifiees
 }
 
 export const famillesVariables: { [aidesSimplifieesKey: string]: AidesSimplifieesMapping } = {
-  'logement-parente-proprietaire': { // 'logement-parente-proprietaire-non' TODO: move to boolean value
+  'logement-parente-proprietaire': {
     openfiscaVariableName: 'proprietaire_proche_famille',
     period: 'MONTH'
   },
-  // Aide mobilité parcours sup looks for 'bourse_lycee'
   'montant-bourse-lycee': {
     openfiscaVariableName: 'bourse_lycee',
     period: 'MONTH'

@@ -1,14 +1,14 @@
 const mockCalculationResponse = {
-  'aide-personnalisee-logement': 212.23,
+  'aide-personnalisee-logement': 42.23,
   'aide-personnalisee-logement-eligibilite': true,
   'garantie-visale': 1000,
   'garantie-visale-eligibilite': true,
   'locapass': 800,
   'locapass-eligibilite': true,
   'mobilite-master-1': 1000,
-  'mobilite-master-1-eligibilite': true,
+  'mobilite-master-1-eligibilite': false,
   'mobilite-parcoursup': 500,
-  'mobilite-parcoursup-eligibilite': false
+  'mobilite-parcoursup-eligibilite': true
 }
 /**
  * Transforms raw aides data from OpenFisca into rich content for UI display
@@ -27,13 +27,15 @@ export async function transformSimulationResults (
   const route = useRoute()
   if (route.fullPath.includes('mock=true')) {
     calculationResponse = mockCalculationResponse
+    console.log("!!!!!!!!------ This is a hardcoded mock test ---------!!!!!!!!")
   }
 
-  const rawAides: RawAide[] = Object.entries(mockCalculationResponse)
+  const rawAides: RawAide[] = Object.entries(calculationResponse)
     .reduce((acc, [key, value]) => {
       if (key.match('-eligibilite')) {
-        const eligibilite = value
+        // Extract the base aide id by removing '-eligibilite' suffix
         const aideId = key.replace('-eligibilite', '')
+        const eligibilite = value
         if (eligibilite === true) {
           const montant = calculationResponse[aideId]
           if (montant && typeof montant === 'number') {
@@ -125,19 +127,19 @@ export async function transformSimulationResults (
       switch (type) {
         case 'mensuelle':
           montantInfo.prefix = 'Jusqu\'à'
-          montantInfo.suffix = 'par mois pour vous aider à payer votre loyer'
+          montantInfo.suffix = 'versés chaque mois'
           break
         case 'pret':
           montantInfo.prefix = 'Jusqu\'à'
-          montantInfo.suffix = 'prétés'
+          montantInfo.suffix = 'sous forme de prêt'
           break
         case 'caution':
           montantInfo.prefix = 'Jusqu\'à'
-          montantInfo.suffix = 'de caution à rembourser en cas de dégâts'
+          montantInfo.suffix = 'de caution pour couvrir votre bailleur et le dépôt de garantie'
           break
         case 'une-fois':
           montantInfo.prefix = 'Jusqu\'à'
-          montantInfo.suffix = 'pour financer votre installation'
+          montantInfo.suffix = 'versés en une seule fois'
           break
       }
 
