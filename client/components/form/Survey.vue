@@ -548,12 +548,13 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
 .form-container {
   position: relative;
 }
-.fr-form-group {
-  padding: .5rem .25rem;
-  height: max(20em, 36vh);
-  overflow-y: auto;
-  overflow-x: hidden;
-}
+
+//.fr-form-group {
+//   padding: .5rem .25rem;
+//   height: max(20em, 36vh);
+//   overflow-y: auto;
+//   overflow-x: hidden;
+// }
 
 .survey-fetch-state-badge {
   position: absolute;
