@@ -135,8 +135,16 @@ onMounted(async () => {
   }
 })
 
+function scrollToAnchor (anchor: string) {
+  const element = document.getElementById(anchor)
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth' })
+  }
+}
+
 function handleStart () {
   showWelcomeScreen.value = false
+  scrollToAnchor('simulateur-title')
 }
 
 // Handle updates from question components
@@ -246,6 +254,9 @@ function resumeForm () {
   resultsFetchState.value = 'idle'
   showChoiceScreen.value = false
   showWelcomeScreen.value = false
+  // scrollTo anchor #simulateur-title
+  scrollToAnchor('simulateur-title')
+
   // Focus the question after resuming
   focusRenderedQuestion()
 }
@@ -255,6 +266,7 @@ function restartForm () {
   resultsFetchState.value = 'idle'
   showWelcomeScreen.value = true
   showChoiceScreen.value = false
+  scrollToAnchor('simulateur-title')
   // Focus the question after restarting
   focusRenderedQuestion()
 }
@@ -542,7 +554,7 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
             secondary
             size="lg"
             :icon="{ name: 'ri:arrow-left-line', ssr: true }"
-            :disabled="resultsFetchState === 'loading'"
+            :disabled="resultsFetchState !== 'idle'"
             @click="handlePrevious"
           />
           <DsfrButton
@@ -551,7 +563,7 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
             :label="isLastQuestion ? 'Terminer' : 'Suivant'"
             :icon="{ name: 'ri:arrow-right-line', ssr: true }"
             icon-right
-            :disabled="!hasAnswer || resultsFetchState === 'loading'"
+            :disabled="!hasAnswer || resultsFetchState !== 'idle'"
             @click="handleNext"
           />
         </div>

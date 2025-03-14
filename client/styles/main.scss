@@ -17,7 +17,12 @@
   }
 }
 html {
-  scroll-padding-top: 2rem;
+  @media screen and (min-width: em) {
+    scroll-padding-top: 1rem;
+  }
+  @media screen and (min-width: 48em) {
+    scroll-padding-top: 2rem;
+  }
 }
 .brand-contrast-text {
   color: var(--brand-contrast-text);
