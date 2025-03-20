@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 0.18.2 [#75](https://github.com/betagouv/aides-simulateur-front/pull/75)
+
+* Ajout de contenu
+* Détail : 
+  * Ajouter le contenu de la page mention-legale.md
+  * Changer le layout `slug.vue` des pages statiques
+
 ## 0.18.1 [#74](https://github.com/betagouv/aides-simulateur-front/pull/74)
 
 * Amélioration du calcul.
@@ -8,7 +15,7 @@
   * Evite le hardcrash en cas de conflit de set concurrents de variable OpenFisca 
   * Ajout de 'bourse_lycee' en cas d'erreur de l'utilisateur (s'il remplit boursier mais n'indique pas les revenus boursiers)
 * Modification de contenu statique
-  
+
 ## 0.18.0 [#73](https://github.com/betagouv/aides-simulateur-front/pull/73)
 
 * Refactor du questionnaire
