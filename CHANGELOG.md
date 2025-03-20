@@ -16,7 +16,7 @@
   * Ajout de 'bourse_lycee' en cas d'erreur de l'utilisateur (s'il remplit boursier mais n'indique pas les revenus boursiers)
 * Modification de contenu statique
 
-## 0.18.0 [#72](https://github.com/betagouv/aides-simulateur-front/pull/73)
+## 0.18.0 [#73](https://github.com/betagouv/aides-simulateur-front/pull/73)
 
 * Refactor du questionnaire
 * Détail : 
