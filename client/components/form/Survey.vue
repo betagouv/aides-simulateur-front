@@ -126,7 +126,7 @@ onMounted(async () => {
     if (typeof window !== 'undefined' && (window as any)._paq) {
       const source = isIframe.value ? `iframe@${getIframeSource()}` : 'website'
       const category = `[${simulateurId}][${source}]Survey`
-        ; (window as any)._paq.push(['trackEvent', category, 'Start'])
+        ; (window as any)._paq.push(['trackEvent', category, 'Start', `[${simulateurId}][${source}]`, 1])
     }
   }
   catch (error) {
@@ -215,7 +215,7 @@ async function submitForm () {
     if (typeof window !== 'undefined' && (window as any)._paq) {
       const source = isIframe.value ? `iframe@${getIframeSource()}` : 'website'
       const category = `[${simulateurId}][${source}]Survey`
-        ; (window as any)._paq.push(['trackEvent', category, 'Submit'])
+        ; (window as any)._paq.push(['trackEvent', category, 'Submit', `[${simulateurId}][${source}]`, 1])
     }
 
     // Store form data and results
@@ -385,7 +385,7 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
             Via
             <DsfrLink
               :icon="{ name: 'ri:external-link-line', ssr: true }"
-              to="'https://tally.so/r/w27b9D"
+              to="https://tally.so/r/w27b9D"
               target="_blank"
               label="le questionnaire de satisfaction"
             />
@@ -393,6 +393,13 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
         </ul>
         <p>
           Merci pour votre aide !
+        </p>
+        <p>
+          En accédant à ce service, vous reconnaissez avoir pris connaissance et accepté les <DsfrLink
+            to="/content/cgu"
+            label="Conditions Générales d'Utilisation"
+            target="_blank"
+          />
         </p>
 
         <div class="fr-btns-group brand-form-actions">

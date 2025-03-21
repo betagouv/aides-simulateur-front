@@ -54,5 +54,12 @@ export default defineAppConfig({
         title: 'data.gouv.fr, nouvelle fenêtre',
       },
     ],
+    afterMandatoryLinks: [
+      {
+        label: 'CGU',
+        to: '/content/cgu',
+      },
+
+    ]
   }
 })
