@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 0.18.3 [#78](https://github.com/betagouv/aides-simulateur-front/pull/78)
+
+* Ajout de contenu
+* Détail : 
+  * Ajouter le contenu de la page donnees-personnelles.md
+  * Ajout des cas tests du simulateur `demenagement-logement`
+  * Stylisation des tableaux dans les pages statiques
+  * Mise à jour des noms d'événements Mattomo
+
 ## 0.18.2 [#75](https://github.com/betagouv/aides-simulateur-front/pull/75)
 
 * Ajout de contenu
