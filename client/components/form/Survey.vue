@@ -126,7 +126,7 @@ onMounted(async () => {
     if (typeof window !== 'undefined' && (window as any)._paq) {
       const source = isIframe.value ? `iframe@${getIframeSource()}` : 'website'
       const category = `[${simulateurId}][${source}]Survey`
-        ; (window as any)._paq.push(['trackEvent', category, 'Start'])
+        ; (window as any)._paq.push(['trackEvent', category, 'Start', `[${simulateurId}][${source}]`, 1])
     }
   }
   catch (error) {
@@ -215,7 +215,7 @@ async function submitForm () {
     if (typeof window !== 'undefined' && (window as any)._paq) {
       const source = isIframe.value ? `iframe@${getIframeSource()}` : 'website'
       const category = `[${simulateurId}][${source}]Survey`
-        ; (window as any)._paq.push(['trackEvent', category, 'Submit'])
+        ; (window as any)._paq.push(['trackEvent', category, 'Submit', `[${simulateurId}][${source}]`, 1])
     }
 
     // Store form data and results
@@ -394,7 +394,6 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
         <p>
           Merci pour votre aide !
         </p>
-
         <p>
           En accédant à ce service, vous reconnaissez avoir pris connaissance et accepté les <DsfrLink
             to="/content/cgu"

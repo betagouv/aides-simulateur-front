@@ -37,3 +37,40 @@ useSeoMeta({
     </BrandBackgroundContainer>
   </template>
 </template>
+
+<style scoped lang="scss">
+:deep(th) {
+  text-align: left !important;
+}
+
+:deep(table) {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+}
+
+:deep(thead) {
+  border-bottom: 2px solid var(--border-default-grey);
+}
+
+:deep(tbody tr) {
+  border-bottom: 1px solid var(--border-default-grey);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+:deep(th), :deep(td) {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border-default-grey);
+}
+
+/* Adjustments for dark mode, if your app supports it */
+.dark-mode :deep(thead),
+.dark-mode :deep(th),
+.dark-mode :deep(td),
+.dark-mode :deep(tbody tr) {
+  border-color: var(--border-default-grey-dark, #666);
+}
+</style>
