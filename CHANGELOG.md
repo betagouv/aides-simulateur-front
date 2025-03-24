@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 0.18.4 [#79](https://github.com/betagouv/aides-simulateur-front/pull/79)
+
+* Ajout de contenu et de fonctionnalité
+* Détail : 
+  * Met à jour le contenu de la page `accessibilite.md`
+  * Met à jour la mention de conformité dans le pied de page
+  * Ajoute une redirection permanente de `/accessibilite` vers `/content/accessibilite`
+
 ## 0.18.3 [#78](https://github.com/betagouv/aides-simulateur-front/pull/78)
 
 * Ajout de contenu
