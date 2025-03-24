@@ -3,6 +3,15 @@ import { defineNuxtConfig } from 'nuxt/config'
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
 
+  routeRules: {
+    '/accessibilite': { // mandatory route
+      redirect: {
+        to: '/content/accessibilite', // content generated route
+        statusCode: 308, // Redirect permanently
+      },
+    },
+  },
+
   runtimeConfig: {
     // Variables serveur privées (accessibles uniquement côté serveur)
     adminPassword: process.env.ADMIN_PASSWORD || '',

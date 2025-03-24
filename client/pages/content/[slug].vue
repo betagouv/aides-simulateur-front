@@ -24,14 +24,19 @@ useSeoMeta({
     <div>Contenu introuvable</div>
   </template>
   <template v-else>
-    <BrandBackgroundContainer>
+    <BrandBackgroundContainer
+      textured
+      subtle
+    >
       <BreadcrumbSectionContainer />
       <SectionContainer type="page-header">
         <article>
           <header class="fr-mb-4w">
             <h1>{{ post.titre }}</h1>
           </header>
-          <ContentRenderer :value="post" />
+          <ContentRenderer
+            :value="post"
+          />
         </article>
       </SectionContainer>
     </BrandBackgroundContainer>
