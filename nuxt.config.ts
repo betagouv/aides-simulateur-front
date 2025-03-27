@@ -96,6 +96,7 @@ export default defineNuxtConfig({
     '@nuxt/content',
     '@pinia/nuxt',
     'pinia-plugin-persistedstate/nuxt',
+    '@nuxt/test-utils/module',
   ],
 
   css: [
