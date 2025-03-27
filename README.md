@@ -31,7 +31,7 @@ pnpm install
 ```
 ## Vue-dsfr
 
-Pour pouvoir exécuter le script icons, installer les icônes de vue-dsfr, exécuter la commande suivante dans un terminal shell :
+Pour pouvoir exécuter le script `icons`, exécuter la commande suivante dans un terminal shell :
 
 ```bash
 # si npm
@@ -55,7 +55,7 @@ pnpm run dev
 
 ## Générer le code de production
 
-Génère le code de production de l’application :
+Génère le code de production de l'application :
 
 ```bash
 # npm
@@ -75,8 +75,74 @@ npm run preview
 pnpm run preview
 ```
 
+## Tests
+
+Le projet est testé avec deux outils principaux :
+* [Vitest](https://vitest.dev) pour les tests unitaires
+* [Playwright](https://playwright.dev) pour les tests end-to-end
+
+### Installation des dépendances de test
+
+Pour Playwright, vous devez installer les navigateurs nécessaires après l'installation des dépendances :
+
+```bash
+# npm
+npx playwright install
+
+# pnpm
+pnpx playwright install
+```
+
+### Exécution des tests
+
+**Attention, les tests e2e nécessitent que le serveur de développement soit lancé avec `pnpm run dev` ou `npm run dev`.**
+
+Pour lancer tous les tests (unitaires et e2e) :
+
+```bash
+# npm
+npm run test
+
+# pnpm
+pnpm run test
+```
+
+Pour exécuter uniquement les tests unitaires :
+
+```bash
+# npm
+npm run test:unit
+
+# pnpm
+pnpm run test:unit
+```
+
+Pour exécuter uniquement les tests end-to-end :
+
+```bash
+# npm
+npm run test:e2e
+
+# pnpm
+pnpm run test:e2e
+```
+
+Pour générer et consulter un rapport des tests e2e :
+
+```bash
+# Générer le rapport
+npm run e2e:report
+# ou
+pnpm run e2e:report
+
+# Afficher le rapport dans un navigateur
+npm run e2e:web
+# ou
+pnpm run e2e:web
+```
+
 ## FAQ
 
 **En mode développement, un type n'est pas reconnu, que faire ?**
 
-Regénérer la configuration, des références en prticulier, avec `pnpm nuxi prepare`.
+Regénérer la configuration, des références en particulier, avec `npx nuxi prepare` ou `pnpx nuxi prepare`.
