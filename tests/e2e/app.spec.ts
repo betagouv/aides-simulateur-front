@@ -22,40 +22,14 @@ test('homepage loads successfully with link to housing simulator', async ({ page
  * Scénario 2 : Vérification du menu, footer et liens vers pages statiques
  */
 test('homepage displays menu, footer and links to static pages', async ({ page }) => {
-
-  await page.goto('/')
+  await page.goto('/', { waitUntil: 'networkidle' })
 
   // Check that the header title is correct
   await expect(page.locator('.fr-header__service-title').first()).toHaveText('aides simplifiées')
 
   // Get the current viewport width
   const viewportWidth = await page.evaluate(() => window.innerWidth)
-  const navMenu = page.locator('[aria-label="Menu principal"]')
-
-  // Determine if we're on mobile viewport (below 768px is mobile in DSFR)
-  if (viewportWidth >= 768) {
-    // On desktop, the navigation should be visible by default
-    await expect(navMenu).toBeVisible()
-  } else {
-    // On mobile, the navigation menu is hidden by default
-    await expect(navMenu).not.toBeVisible()
-
-    // Click the nav toggler button to show the menu
-    const navToggler = page.locator('[data-testid="open-menu-btn"]')
-    await expect(navToggler).toBeVisible()
-    await navToggler.click()
-
-    /**
-     * THIS DOESN'T WORK
-     */
-    await page.waitForTimeout(300)
-    page.screenshot({ path: 'tests/e2e/screenshots/menu-should-be-open.png' })
-    await expect(navMenu).toBeVisible()
-
-    navToggler.click()
-    await page.waitForTimeout(300)
-    await expect(navMenu).not.toBeVisible()
-  }
+  const navMenu = page.locator('[aria-label="Menu principal"]').first()
 
   // Check footer exists
   const footer = page.locator('.fr-footer')
@@ -74,12 +48,38 @@ test('homepage displays menu, footer and links to static pages', async ({ page }
     await expect(footerLink).toBeVisible()
   }
 
-  // Test the contact page specifically
-  const contactLink = page.getByRole('link', { name: 'Contact' }).first()
-  await contactLink.click()
-  await page.waitForURL('**/contact')
-  await expect(page).toHaveURL(/.*\/contact/)
-  await expect(page.locator('h1')).toContainText('Contact')
+  // Determine if we're on mobile viewport (below 768px is mobile in DSFR)
+  if (viewportWidth >= 768) {
+    // On desktop, the navigation should be visible by default
+    await expect(navMenu).toBeVisible()
+
+    // Test the contact page specifically
+    const contactLink = page.getByRole('link', { name: 'Contact' }).first()
+    await contactLink.click()
+    await page.waitForURL('**/contact')
+    await expect(page).toHaveURL(/.*\/contact/)
+    await expect(page.locator('h1')).toContainText('Contact')
+  }
+  else {
+    // On mobile, the navigation menu is hidden by default
+    await expect(navMenu).not.toBeVisible()
+
+    // Click the nav toggler button to show the menu
+    const navOpenBtn = page.locator('[data-testid="open-menu-btn"]')
+    await expect(navOpenBtn).toBeVisible()
+    await navOpenBtn.click()
+
+    // Wait for menu to be visible and animation to complete
+    await navMenu.waitFor({ state: 'visible' })
+    await page.screenshot({ path: 'tests/e2e/screenshots/menu-should-be-open.png' })
+
+    const navCloseBtn = page.locator('[data-testid="close-modal-btn"]')
+    await navCloseBtn.click()
+
+    // Wait for menu to be hidden and animation to complete
+    await page.screenshot({ path: 'tests/e2e/screenshots/menu-should-be-closed.png' })
+    await navMenu.waitFor({ state: 'hidden' })
+  }
 })
 
 /**

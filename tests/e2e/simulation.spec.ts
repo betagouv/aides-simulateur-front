@@ -33,110 +33,110 @@ test.describe('Subsidy simulator form', () => {
     await page.route('**/calculate', async (route) => {
       // Mock OpenFisca calculation response
       const mockResponse = {
-          "individus": {
-            "usager": {
-              "activite": {
-                "2025-03": "etudiant"
-              },
-              "stagiaire": {
-                "2025-03": "stage"
-              },
-              "sortie_academie": {
-                "2025-03": true
-              },
-              "boursier": {
-                "2025-03": true
-              },
-              "date_naissance": {
-                "ETERNITY": "1980-12-13"
-              },
-              "handicap": {
-                "2025-03": true
-              },
-              "statut_marital": {
-                "2025-03": "celibataire"
-              },
-              "salaire_imposable": {
-                "month:2024-03:12": 100
-              },
-              "locapass_eligibilite": {
-                "2025-03": null
-              },
-              "aide_mobilite_master": {
-                "2025-03": null
-              },
-              "aide_mobilite_parcoursup": {
-                "2025-03": null
-              },
-              "nationalite": {
-                "2025-03": "FR"
-              },
-              "annee_etude": {
-                "2025-03": "terminale"
-              }
-            }
-          },
-          "menages": {
-            "menage_usager": {
-              "personne_de_reference": [
-                "usager"
-              ],
-              "conjoint": [],
-              "enfants": [],
-              "depcom": {
-                "2025-03": "81202"
-              },
-              "statut_occupation_logement": {
-                "2025-03": "locataire_vide"
-              },
-              "logement_conventionne": {
-                "2025-03": false
-              },
-              "coloc": {
-                "2025-03": false
-              },
-              "loyer": {
-                "2025-03": 100
-              },
-              "charges_locatives": {
-                "2025-03": 100
-              },
-              "visale_eligibilite": {
-                "2025-03": null
-              },
-              "visale_montant_max": {
-                "2025-03": null
-              },
-              "date_entree_logement": {
-                "2025-03": "2025-04"
-              }
-            }
-          },
-          "foyers_fiscaux": {
-            "foyer_fiscal_usager": {
-              "declarants": [
-                "usager"
-              ],
-              "personnes_a_charge": []
-            }
-          },
-          "familles": {
-            "famille_usager": {
-              "parents": [
-                "usager"
-              ],
-              "enfants": [],
-              "proprietaire_proche_famille": {
-                "2025-03": true
-              },
-              "bourse_lycee": {
-                "2025-03": 1
-              },
-              "apl": {
-                "2025-03": null
-              }
+        individus: {
+          usager: {
+            activite: {
+              '2025-03': 'etudiant'
+            },
+            stagiaire: {
+              '2025-03': 'stage'
+            },
+            sortie_academie: {
+              '2025-03': true
+            },
+            boursier: {
+              '2025-03': true
+            },
+            date_naissance: {
+              ETERNITY: '1980-12-13'
+            },
+            handicap: {
+              '2025-03': true
+            },
+            statut_marital: {
+              '2025-03': 'celibataire'
+            },
+            salaire_imposable: {
+              'month:2024-03:12': 100
+            },
+            locapass_eligibilite: {
+              '2025-03': null
+            },
+            aide_mobilite_master: {
+              '2025-03': null
+            },
+            aide_mobilite_parcoursup: {
+              '2025-03': null
+            },
+            nationalite: {
+              '2025-03': 'FR'
+            },
+            annee_etude: {
+              '2025-03': 'terminale'
             }
           }
+        },
+        menages: {
+          menage_usager: {
+            personne_de_reference: [
+              'usager'
+            ],
+            conjoint: [],
+            enfants: [],
+            depcom: {
+              '2025-03': '81202'
+            },
+            statut_occupation_logement: {
+              '2025-03': 'locataire_vide'
+            },
+            logement_conventionne: {
+              '2025-03': false
+            },
+            coloc: {
+              '2025-03': false
+            },
+            loyer: {
+              '2025-03': 100
+            },
+            charges_locatives: {
+              '2025-03': 100
+            },
+            visale_eligibilite: {
+              '2025-03': null
+            },
+            visale_montant_max: {
+              '2025-03': null
+            },
+            date_entree_logement: {
+              '2025-03': '2025-04'
+            }
+          }
+        },
+        foyers_fiscaux: {
+          foyer_fiscal_usager: {
+            declarants: [
+              'usager'
+            ],
+            personnes_a_charge: []
+          }
+        },
+        familles: {
+          famille_usager: {
+            parents: [
+              'usager'
+            ],
+            enfants: [],
+            proprietaire_proche_famille: {
+              '2025-03': true
+            },
+            bourse_lycee: {
+              '2025-03': 1
+            },
+            apl: {
+              '2025-03': null
+            }
+          }
+        }
       }
       await route.fulfill({
         status: 200,
@@ -211,6 +211,7 @@ test.describe('Subsidy simulator form', () => {
          * We click on the label instead of directly checking the input to match DSFR implementation
          */
         const radioLabel = page.locator('.fr-radio-group label').first()
+        await radioLabel.scrollIntoViewIfNeeded()
         await radioLabel.click()
       }
       else if (await page.locator('input[type="checkbox"]').count() > 0) {
@@ -218,22 +219,25 @@ test.describe('Subsidy simulator form', () => {
          * We click on the label instead of directly checking the input to match DSFR implementation
          */
         const checkboxLabel = page.locator('.fr-checkbox-group label').first()
+        await checkboxLabel.scrollIntoViewIfNeeded()
         await checkboxLabel.click()
       }
       else if (await page.locator('input[type="number"]').count() > 0) {
         // Wait to ensure field is ready
         await page.waitForSelector('input[type="number"]', { state: 'visible' })
+        await page.locator('input[type="number"]').scrollIntoViewIfNeeded()
         await page.locator('input[type="number"]').fill('1000')
       }
       else if (await page.locator('input[type="date"]').count() > 0) {
         // Wait to ensure field is ready
         await page.waitForSelector('input[type="date"]', { state: 'visible' })
+        await page.locator('input[type="date"]').scrollIntoViewIfNeeded()
         await page.locator('input[type="date"]').fill('1980-01-01')
       }
       else if (await page.locator('input[type="text"]').count() > 0) {
         // Wait to ensure field is ready
         await page.waitForSelector('input[type="text"]', { state: 'visible' })
-
+        await page.locator('input[type="text"]').scrollIntoViewIfNeeded()
         // Check if this is a text field with autocomplete (commune selection)
         const isAutocompleteField = await page.locator('.autocomplete-container').count() > 0
 
@@ -255,7 +259,8 @@ test.describe('Subsidy simulator form', () => {
             // Verify a tag was selected
             await page.waitForSelector('.selected-tag-container', { state: 'visible' })
             // console.log('Successfully selected commune from autocomplete')
-          } catch (error) {
+          }
+          catch (error) {
             console.error('Error handling autocomplete:', error)
           }
         }
@@ -282,11 +287,12 @@ test.describe('Subsidy simulator form', () => {
     while (!isCompleted && questionCount < maxQuestions) {
       try {
         await answerCurrentQuestion()
-        // console.log('Completed question', questionCount)
-        // await page.screenshot({ path: `./tests/e2e/screenshots/question-${questionCount}.png` })
+        console.log('Completed question ', questionCount)
+        await page.screenshot({ path: `./tests/e2e/screenshots/question-${questionCount}.png` })
+        await page.waitForTimeout(500)
         questionCount++
         if (questionCount >= maxQuestions) {
-          page.screenshot({ path: './tests/e2e/screenshots/max-questions-reached.png' })
+          await page.screenshot({ path: './tests/e2e/screenshots/max-questions-reached.png' })
           throw new Error('Exceeded maximum question count')
         }
 

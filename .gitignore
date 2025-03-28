@@ -30,3 +30,8 @@ claude.sh
 data/form-submissions/*
 
 tests/e2e/screenshots/**
+
+
+playwright-report/**
+test-results/.last-run.json
+trace.zip
