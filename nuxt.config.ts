@@ -15,6 +15,11 @@ export default defineNuxtConfig({
   runtimeConfig: {
     // Variables serveur privées (accessibles uniquement côté serveur)
     adminPassword: process.env.ADMIN_PASSWORD || '',
+    matomo: {
+      url: process.env.MATOMO_URL || 'https://stats.beta.gouv.fr/',
+      token: process.env.MATOMO_TOKEN || '',
+      siteId: process.env.MATOMO_SITE_ID || '199',
+    },
 
     public: {
       // apiEndpointOpenFiscaFranceCalculate: 'http://127.0.0.1:5000/calculate',

@@ -59,6 +59,10 @@ export default defineAppConfig({
         label: 'CGU',
         to: '/content/cgu',
       },
+      {
+        label: 'Statistiques',
+        to: '/statistiques',
+      },
 
     ]
   }
