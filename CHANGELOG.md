@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 0.19.0 [#83](https://github.com/betagouv/aides-simulateur-front/pull/83)
+* Ajout des modules Crisp et Statistiques
+* Détail : 
+   * Ajout de la librairie DSFRCharts
+   * Ajout de la connexion API à Matomo pour récupérer les statistiques (`statistics.ts`)
+   * Visualisation par simulateur des statistiques (`statistiques.vue`)
+   * Intégration du script Crisp dans `app.vue`
+
 ## 0.18.4 [#79](https://github.com/betagouv/aides-simulateur-front/pull/79)
 
 * Ajout de contenu et de fonctionnalité
