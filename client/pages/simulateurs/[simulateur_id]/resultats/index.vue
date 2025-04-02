@@ -36,22 +36,34 @@ const hasMontants = richResults.montants.length > 0
 const hasAidesNonEligibles = richResults.aidesNonEligibles.length > 0
 const hasTextesDeLoi = richResults.textesLoi.length > 0
 
-const segmentedSetOptions: DsfrSegmentedSetProps['options'] = [
+const segmentedSetOptions: any = [
   /**
    * @todo Restore "Vos informations" below once the feature is implemented
    */
   // { label: 'Vos informations', value: 'informations', icon: 'ri:edit-box-line' }
 ]
-if (hasEcheances.value) {
+if (hasEcheances) {
   segmentedSetOptions.unshift({ label: 'Échéances estimées', value: 'echeances', icon: 'ri:calendar-2-line' })
 }
-if (hasMontants.value) {
+if (hasMontants) {
   segmentedSetOptions.unshift({ label: 'Montants estimés', value: 'montants', icon: 'ri:money-euro-circle-line' })
 }
 
 const visibleTabName = ref<'montants' | 'echeances' | 'informations'>('montants')
 
 const activeAccordion = ref<number>()
+
+// stats if hasAides
+if (hasAides) {
+  let source = 'website'
+  const currentUrl = window.location.href ? new URL(window.location.href) : null
+  const utmSource = currentUrl?.searchParams.get('utm_source')
+  if (utmSource) {
+    source = utmSource.replace('iframe@', '')
+  }
+  const category = `[${simulateurId}][${source}]Survey`
+  ;(window as any)._paq.push(['trackEvent', category, 'Eligibility', `[${simulateurId}][${source}]`, richResults.aides.length])
+}
 </script>
 
 <template>
@@ -207,7 +219,7 @@ const activeAccordion = ref<number>()
                           ssr
                         />
                         <span class="fr-ml-1w">
-                          Les aides auxquelles vous n’avez pas été estimé·e éligible
+                          Les aides auxquelles vous n'avez pas été estimé·e éligible
                         </span>
                       </template>
                       <template #default>
@@ -279,7 +291,7 @@ const activeAccordion = ref<number>()
                 ssr
               />
               <span class="fr-ml-1w">
-                Les aides auxquelles vous n’avez pas été estimé·e éligible
+                Les aides auxquelles vous n'avez pas été estimé·e éligible
               </span>
             </template>
             <template #default>

@@ -370,7 +370,7 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
           />
         </p>
         <p>
-          Nous continuons à l’améliorer. Vos retours sont précieux :
+          Nous continuons à l'améliorer. Vos retours sont précieux :
         </p>
         <ul class="fr-mt-n2w fr-mb-2w">
           <li>
@@ -417,13 +417,7 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
     <template v-else>
       <template v-if="isLoading">
         <div class="state-panel fr-card fr-card--shadow fr-p-3w">
-          <p class="loading-indicator fr-text--xl fr-mt-3w">
-            <span
-              class="fr-icon-refresh-line fr-icon fr-icon--md fr-mr-2w"
-              aria-hidden="true"
-            />Chargement du
-            formulaire...
-          </p>
+          <LoadingSpinner text="Chargement du formulaire..." />
         </div>
       </template>
       <div
