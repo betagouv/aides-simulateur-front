@@ -11,6 +11,9 @@ importers:
       '@gouvfr/dsfr':
         specifier: ~1.13.0
         version: 1.13.0
+      '@gouvfr/dsfr-chart':
+        specifier: ^2.0.3
+        version: 2.0.3
       '@gouvminint/vue-dsfr':
         specifier: ^8.3.0
         version: 8.3.0(@iconify/vue@4.3.0(vue@3.5.13(typescript@5.8.2)))(vue-router@4.5.0(vue@3.5.13(typescript@5.8.2)))(vue@3.5.13(typescript@5.8.2))
@@ -648,6 +651,9 @@ packages:
   '@eslint/plugin-kit@0.2.7':
     resolution: {integrity: sha512-JubJ5B2pJ4k4yGxaNLdbjrnk9d/iDz6/q8wOilpIowd6PJPgaxCuHBnBszq7Ce2TyMrywm5r4PnKm6V3iiZF+g==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@gouvfr/dsfr-chart@2.0.3':
+    resolution: {integrity: sha512-Mh+0B6yCmA7nkZK8bB4xTDjsM8IcKMcrCsVAM7R/u2M8uA6l3unxLqHt5fSZQqOdym9ZcFCaXzxJihukoaXpig==}
 
   '@gouvfr/dsfr@1.13.0':
     resolution: {integrity: sha512-I6JLYfE63dogk5qOx69gMfW/bKsm+daFgfx2QX75isbKBy5khlJdVxOD0A6ohvywvUJlEcZTmVK8rNHeVvGmgw==}
@@ -5565,6 +5571,8 @@ snapshots:
     dependencies:
       '@eslint/core': 0.12.0
       levn: 0.4.1
+
+  '@gouvfr/dsfr-chart@2.0.3': {}
 
   '@gouvfr/dsfr@1.13.0': {}
 

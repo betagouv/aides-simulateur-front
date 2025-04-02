@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@gouvfr/dsfr": "~1.13.0",
+    "@gouvfr/dsfr-chart": "^2.0.3",
     "@gouvminint/vue-dsfr": "^8.3.0",
     "@iconify-json/ri": "^1.2.5",
     "@nuxt/content": "^3.3.0",
