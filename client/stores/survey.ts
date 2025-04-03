@@ -2,16 +2,19 @@ export const useFormStore = defineStore('form', () => {
   /**
    * State
    */
-  const schema = ref<SurveySchema | null>(null)
   const answers = ref<SurveyAnswers>({})
   const currentQuestionId = ref<string | null>(null)
-  const formVersions = ref<Record<string, string>>({})
 
   /**
    * Composables
    */
   const matomo = useMatomo()
   const { debugMode } = storeToRefs(useSurveyDebugStore())
+  const {
+    schema,
+    state: schemaState,
+    load: loadSchema
+  } = useSurveySchema()
 
   /**
    * Computed properties
@@ -173,6 +176,14 @@ export const useFormStore = defineStore('form', () => {
     return null
   })
 
+  const isFirstQuestion = computed(() => {
+    return previousVisibleQuestion.value === null
+  })
+
+  const isLastQuestion = computed(() => {
+    return nextVisibleQuestion.value === null
+  })
+
   const progress = computed(() => {
     if (!schema.value) {
       return 0
@@ -200,14 +211,6 @@ export const useFormStore = defineStore('form', () => {
     return Math.min(Math.round((answeredVisibleQuestionsCount / visibleQuestionsCount) * 100), 100)
   })
 
-  const isFirstQuestion = computed(() => {
-    return previousVisibleQuestion.value === null
-  })
-
-  const isLastQuestion = computed(() => {
-    return nextVisibleQuestion.value === null
-  })
-
   /**
    * Methods
    */
@@ -221,37 +224,12 @@ export const useFormStore = defineStore('form', () => {
   }
 
   async function loadSurveySchema (formId: string) {
-    try {
-      const response = await fetch(`/forms/${formId}.json`)
-      const newSchema = await response.json()
+    const { needsReset } = await loadSchema(formId)
 
-      // Check if we need to reset the form based on version and forceRefresh
-      const storedVersion = formVersions.value[formId]
-      const newVersion = newSchema.version
-
-      if (shouldReset(storedVersion, newVersion, newSchema.forceRefresh)) {
-        // Log version change and reset form
-        console.warn(`Form version changed from ${storedVersion} to ${newVersion} with forceRefresh`)
-        resetForm()
-      }
-
-      // Store the new version
-      formVersions.value[formId] = newVersion
-
-      schema.value = newSchema
-
-      // Initialize with the first category and question if available AND we're starting fresh
-      if (currentQuestionId.value === null) {
-        currentQuestionId.value = questions.value[0]?.id ?? null
-      }
-
-      if (debugMode.value) {
-        // eslint-disable-next-line no-console
-        console.log('[FormStore] Loaded survey schema:', newSchema)
-      }
-    }
-    catch (error) {
-      console.error('[FormStore] Error loading survey schema:', error)
+    if (needsReset) {
+      // Log version change and reset form
+      console.warn(`Form version changed with forceRefresh flag`)
+      resetForm()
     }
   }
 
@@ -328,6 +306,7 @@ export const useFormStore = defineStore('form', () => {
 
   return {
     schema,
+    schemaState,
     answers,
     currentQuestionId,
     currentStepId,

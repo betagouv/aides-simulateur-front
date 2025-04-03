@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { autocompleteFunctions } from '@/utils/autocompleteFunctions'
-
 definePageMeta({
   layout: 'user-simulation',
   middleware: [
@@ -74,9 +72,6 @@ onMounted(() => {
 
 <template>
   <template v-if="simulateur">
-    <Survey
-      :simulateur-id="simulateurId"
-      :autocomplete-functions="autocompleteFunctions"
-    />
+    <Survey :simulateur-id="simulateurId" />
   </template>
 </template>

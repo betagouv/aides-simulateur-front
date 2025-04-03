@@ -1,5 +1,6 @@
 export const useResultsStore = defineStore('results', () => {
   const results = ref<{ [id: string]: SurveyResults }>({})
+  const submissionState = ref<{ [id: string]: 'idle' | 'loading' | 'success' | 'error' }>({})
 
   const setResults = (simulateurId: string, data: SimulationResultsAides) => {
     results.value[simulateurId] = {
@@ -14,10 +15,92 @@ export const useResultsStore = defineStore('results', () => {
     return results.value[simulateurId]
   }
 
+  const getSubmissionState = (simulateurId: string) => {
+    return submissionState.value[simulateurId] || 'idle'
+  }
+
+  const setSubmissionState = (simulateurId: string, state: 'idle' | 'loading' | 'success' | 'error') => {
+    submissionState.value[simulateurId] = state
+  }
+
+  const submitForm = async (simulateurId: string, answers: any) => {
+    // eslint-disable-next-line no-console
+    console.log('[Results Store] submitForm', simulateurId, answers)
+
+    const questionsToApi: string[] = [
+      'locapass-eligibilite',
+      'mobilite-master-1',
+      'mobilite-parcoursup',
+      'aide-personnalisee-logement',
+      'garantie-visale-eligibilite',
+      'garantie-visale'
+    ]
+
+    // Sending the data to a web API to calculate a set of 'aides'
+    try {
+      setSubmissionState(simulateurId, 'loading')
+      const request: OpenFiscaCalculationRequest = buildRequest(answers, questionsToApi)
+      const openfiscaResponse: OpenFiscaCalculationResponse = await fetchOpenFiscaFranceCalculation(request)
+      // eslint-disable-next-line no-console
+      console.debug('[Results Store] openfiscaResponse', openfiscaResponse)
+
+      const results: SimulationResultsAides = extractAidesResults(openfiscaResponse, questionsToApi)
+      // eslint-disable-next-line no-console
+      console.debug('Results from OpenFisca:', results)
+
+      if (results) {
+        setResults(simulateurId, results)
+        setSubmissionState(simulateurId, 'success')
+
+        // Track form submission in Matomo
+        const matomo = useMatomo()
+        matomo.trackSurveySubmit(simulateurId)
+
+        // Store form data and results
+        try {
+          const storeResponse = await $fetch('/api/store-form-data', {
+            method: 'POST',
+            body: {
+              simulateurId,
+              answers,
+              results,
+            },
+          })
+
+          if (storeResponse.success) {
+            // eslint-disable-next-line no-console
+            console.debug('[Results Store] Form data stored successfully:', storeResponse)
+          }
+          else {
+            console.error('[Results Store] Failed to store form data:', storeResponse)
+          }
+        }
+        catch (storageError) {
+          console.error('[Results Store] Error storing form data:', storageError)
+        }
+
+        return true
+      }
+
+      setSubmissionState(simulateurId, 'error')
+      console.error('[Results Store] No results found in OpenFisca response')
+      return false
+    }
+    catch (error) {
+      setSubmissionState(simulateurId, 'error')
+      console.error('[Results Store] Error during form submission:', error)
+      return false
+    }
+  }
+
   return {
     results,
+    submissionState,
     setResults,
-    getResults
+    getResults,
+    getSubmissionState,
+    setSubmissionState,
+    submitForm
   }
 }, {
   persist: true
