@@ -2,7 +2,7 @@
 const props = defineProps<{
   simulateurId: string
 }>()
-const simulateurId = props.simulateurId
+const simulateurId = toRef(props.simulateurId)
 
 // Local state
 const showChoiceScreen = ref<boolean>(false)
@@ -12,13 +12,12 @@ const matomo = useMatomo()
 const route = useRoute()
 
 // Form schema loading and state management
-const formStore = useFormStore()
-const {
-  schemaState,
-  answers,
-  progress,
-  hasAnswers,
-} = storeToRefs(formStore)
+const surveysStore = useSurveysStore()
+
+// Get per-simulateur state
+const schemaStatus = computed(() => surveysStore.getSchemaStatus(simulateurId.value))
+const hasAnswers = computed(() => surveysStore.hasAnswers(simulateurId.value))
+const progress = computed(() => surveysStore.getProgress(simulateurId.value))
 
 // Form debugging
 const surveyDebugStore = useSurveyDebugStore()
@@ -27,43 +26,35 @@ const {
 } = storeToRefs(surveyDebugStore)
 
 // Form submission
-const resultStore = useResultsStore()
-const resultsFetchState = computed(() => resultStore.getSubmissionState(simulateurId))
+const submissionStore = useSubmissionStore()
+const resultsFetchState = computed(() => submissionStore.getsubmissionStatus(simulateurId.value))
 
 // Heading levels based on iframe context
 const { isIframe } = useIframeDisplay()
 const surveyH1 = computed(() => isIframe.value ? 'h1' : 'h2')
 const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
 
-// Load form when component mounts
-onMounted(async () => {
-  try {
-    await formStore.loadSurveySchema(simulateurId)
+surveysStore.loadSurveySchema(simulateurId.value)
 
-    // Resume the form if the query parameter is present
-    const doResume = computed(() => route.query.resume === 'true')
-    // Enable debug mode if the debug parameter is present
-    const enableDebug = computed(() => route.query.debug === 'true')
+// Resume the form if the query parameter is present
+const doResume = computed(() => route.query.resume === 'true')
+// Enable debug mode if the debug parameter is present
+const enableDebug = computed(() => route.query.debug === 'true')
 
-    if (enableDebug.value && !debugMode.value) {
-      surveyDebugStore.toggleDebugMode()
-    }
+if (enableDebug.value && !debugMode.value) {
+  surveyDebugStore.toggleDebugMode()
+}
 
-    if (doResume.value) {
-      resumeForm()
-      // Remove the query param
-      navigateTo({ query: { ...route.query, resume: undefined } })
-    }
+if (doResume.value) {
+  resumeForm()
+  // Remove the query param
+  navigateTo({ query: { ...route.query, resume: undefined } })
+}
 
-    handleScreens() // Moved screen-setting logic here
+handleScreens() // Moved screen-setting logic here
 
-    // Track form start in Matomo
-    matomo.trackSurveyStart(simulateurId)
-  }
-  catch (error) {
-    console.error('Error loading form:', error)
-  }
-})
+// Track form start in Matomo
+matomo.trackSurveyStart(simulateurId.value)
 
 // Scroll to element by ID
 function scrollToAnchor (anchor: string) {
@@ -81,7 +72,7 @@ function handleStart () {
 
 // Resume an in-progress form
 function resumeForm () {
-  resultStore.setSubmissionState(simulateurId, 'idle')
+  submissionStore.setSubmissionStatus(simulateurId.value, 'idle')
   showChoiceScreen.value = false
   showWelcomeScreen.value = false
   scrollToAnchor('simulateur-title')
@@ -89,8 +80,8 @@ function resumeForm () {
 
 // Restart the form from the beginning
 function restartForm () {
-  formStore.resetForm()
-  resultStore.setSubmissionState(simulateurId, 'idle')
+  surveysStore.resetSurvey(simulateurId.value)
+  submissionStore.setSubmissionStatus(simulateurId.value, 'idle')
   showWelcomeScreen.value = true
   showChoiceScreen.value = false
   scrollToAnchor('simulateur-title')
@@ -98,12 +89,13 @@ function restartForm () {
 
 // Submit the form for processing
 async function submitForm () {
-  const success = await resultStore.submitForm(simulateurId, answers.value)
+  const simulateurAnswers = surveysStore.getAnswers(simulateurId.value)
+  const success = await submissionStore.submitForm(simulateurId.value, simulateurAnswers)
 
   if (success) {
     // Navigate to results page after a short delay
     setTimeout(() => {
-      navigateTo(`/simulateurs/${simulateurId}/resultats#simulateur-title`)
+      navigateTo(`/simulateurs/${simulateurId.value}/resultats#simulateur-title`)
     }, 1000)
   }
   else {
@@ -137,7 +129,7 @@ function handleScreens () {
     </component>
 
     <!-- Form loading state panel -->
-    <template v-if="schemaState === 'loading'">
+    <template v-if="schemaStatus === 'pending'">
       <div class="state-panel fr-card fr-card--shadow fr-p-3w">
         <p class="loading-indicator fr-text--xl fr-mt-3w">
           <span
@@ -150,14 +142,14 @@ function handleScreens () {
 
     <!-- Form error state panel -->
     <div
-      v-else-if="schemaState === 'error'"
+      v-else-if="schemaStatus === 'error'"
       class="fr-card fr-card--shadow fr-py-5w fr-text--center"
     >
       <p>Erreur lors du chargement du formulaire</p>
     </div>
 
     <!-- Form success state -->
-    <template v-else-if="schemaState === 'success'">
+    <template v-else-if="schemaStatus === 'success'">
       <!-- Choice screen for resuming or restarting -->
       <div v-if="showChoiceScreen">
         <div class="fr-card fr-card--shadow fr-p-3w">
@@ -272,7 +264,7 @@ function handleScreens () {
         class="state-panel"
       >
         <p
-          v-if="resultsFetchState === 'loading'"
+          v-if="resultsFetchState === 'pending'"
           class="loading-indicator fr-text--xl fr-mt-3w"
         >
           <span

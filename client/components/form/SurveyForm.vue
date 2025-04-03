@@ -1,27 +1,27 @@
 <script lang="ts" setup>
 import { onKeyDown } from '@vueuse/core'
 
-defineProps<{
+const props = defineProps<{
   simulateurId: string
 }>()
 
 const emit = defineEmits<{
   (e: 'complete'): void
 }>()
-
+const simulateurId = props.simulateurId
 const { useHasValidAnswer } = useFormValidation()
 
 // Local state
 const questionContainer = ref<HTMLElement | null>(null)
 
-const formStore = useFormStore()
-const {
-  currentQuestion,
-  schema: surveySchema,
-  answers,
-  isLastQuestion,
-  currentStepIndex,
-} = storeToRefs(formStore) // maintain reactivity
+const surveysStore = useSurveysStore()
+
+// Get simulateur-specific state
+const currentQuestion = computed(() => surveysStore.getCurrentQuestion(simulateurId))
+const surveySchema = computed(() => surveysStore.getSchema(simulateurId))
+const isLastQuestion = computed(() => surveysStore.isLastQuestion(simulateurId))
+const currentStepIndex = computed(() => surveysStore.getCurrentStepIndex(simulateurId))
+const answers = computed(() => surveysStore.getAnswers(simulateurId))
 
 const steps = computed(() => {
   return surveySchema.value?.steps
@@ -40,7 +40,7 @@ const autocompleteFn = computed(() => {
 })
 
 // Check if the current question has been answered
-const hasAnswer = useHasValidAnswer(currentQuestion, answers)
+const hasAnswer = useHasValidAnswer(currentQuestion, computed(() => answers.value))
 
 // Heading levels based on iframe context
 const { isIframe } = useIframeDisplay()
@@ -62,7 +62,7 @@ function focusRenderedQuestion () {
 // Handle updates from question components
 function handleQuestionUpdate (questionId: string, value: any) {
   // Pass update to parent component
-  formStore.setAnswer(questionId, value)
+  surveysStore.setAnswer(simulateurId, questionId, value)
 }
 
 // Navigate to next question or submit form
@@ -72,7 +72,7 @@ function handleNext () {
     emit('complete')
   }
   else {
-    formStore.goToNextQuestion()
+    surveysStore.goToNextQuestion(simulateurId)
     focusRenderedQuestion()
   }
 }
@@ -86,7 +86,7 @@ onKeyDown('Enter', () => {
 
 // Navigate to previous question
 function handlePrevious () {
-  formStore.goToPreviousQuestion()
+  surveysStore.goToPreviousQuestion(simulateurId)
   focusRenderedQuestion()
 }
 

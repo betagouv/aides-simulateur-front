@@ -1,15 +1,15 @@
 <script setup lang="ts">
-defineProps<{
+const props = defineProps<{
   simulateurId: string
 }>()
+const simulateurId = toRef(props.simulateurId)
 
-const formStore = useFormStore()
-const {
-  groupedQuestions,
-  currentQuestionId,
-  currentStepId,
-  progress,
-} = storeToRefs(formStore)
+const surveysStore = useSurveysStore()
+
+const groupedQuestions = computed(() => surveysStore.getGroupedQuestions(simulateurId.value))
+const currentQuestionId = computed(() => surveysStore.getCurrentQuestionId(simulateurId.value))
+const currentStepId = computed(() => surveysStore.getCurrentStepId(simulateurId.value))
+const progress = computed(() => surveysStore.getProgress(simulateurId.value))
 </script>
 
 <template>

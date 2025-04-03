@@ -3,7 +3,7 @@
  */
 export default defineNuxtRouteMiddleware(async (to) => {
   const simulateurId = to.params.simulateur_id as string
-  const resultsStore = useResultsStore()
+  const resultsStore = useSubmissionStore()
   const results = resultsStore.getResults(simulateurId)
   if (!results) {
     return navigateTo(`/simulateurs/${simulateurId}#simulateur-title`)

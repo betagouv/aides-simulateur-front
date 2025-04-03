@@ -5,7 +5,7 @@ export const useSurveyDebugStore = defineStore('survey-debug', () => {
   function toggleDebugMode() {
     debugMode.value = !debugMode.value
     // eslint-disable-next-line no-console
-    console.log(`[FormStore] Debug mode ${debugMode.value ? 'enabled' : 'disabled'}`)
+    console.log(`[surveysStore] Debug mode ${debugMode.value ? 'enabled' : 'disabled'}`)
   }
 
   return {

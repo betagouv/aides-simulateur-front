@@ -1,6 +1,6 @@
-export const useResultsStore = defineStore('results', () => {
+export const useSubmissionStore = defineStore('submissions', () => {
   const results = ref<{ [id: string]: SurveyResults }>({})
-  const submissionState = ref<{ [id: string]: 'idle' | 'loading' | 'success' | 'error' }>({})
+  const submissionStatus = ref<{ [id: string]: 'idle' | 'pending' | 'success' | 'error' }>({})
 
   const setResults = (simulateurId: string, data: SimulationResultsAides) => {
     results.value[simulateurId] = {
@@ -15,12 +15,12 @@ export const useResultsStore = defineStore('results', () => {
     return results.value[simulateurId]
   }
 
-  const getSubmissionState = (simulateurId: string) => {
-    return submissionState.value[simulateurId] || 'idle'
+  const getsubmissionStatus = (simulateurId: string) => {
+    return submissionStatus.value[simulateurId] || 'idle'
   }
 
-  const setSubmissionState = (simulateurId: string, state: 'idle' | 'loading' | 'success' | 'error') => {
-    submissionState.value[simulateurId] = state
+  const setSubmissionStatus = (simulateurId: string, status: 'idle' | 'pending' | 'success' | 'error') => {
+    submissionStatus.value[simulateurId] = status
   }
 
   const submitForm = async (simulateurId: string, answers: any) => {
@@ -38,7 +38,7 @@ export const useResultsStore = defineStore('results', () => {
 
     // Sending the data to a web API to calculate a set of 'aides'
     try {
-      setSubmissionState(simulateurId, 'loading')
+      setSubmissionStatus(simulateurId, 'pending')
       const request: OpenFiscaCalculationRequest = buildRequest(answers, questionsToApi)
       const openfiscaResponse: OpenFiscaCalculationResponse = await fetchOpenFiscaFranceCalculation(request)
       // eslint-disable-next-line no-console
@@ -50,7 +50,7 @@ export const useResultsStore = defineStore('results', () => {
 
       if (results) {
         setResults(simulateurId, results)
-        setSubmissionState(simulateurId, 'success')
+        setSubmissionStatus(simulateurId, 'success')
 
         // Track form submission in Matomo
         const matomo = useMatomo()
@@ -82,12 +82,12 @@ export const useResultsStore = defineStore('results', () => {
         return true
       }
 
-      setSubmissionState(simulateurId, 'error')
+      setSubmissionStatus(simulateurId, 'error')
       console.error('[Results Store] No results found in OpenFisca response')
       return false
     }
     catch (error) {
-      setSubmissionState(simulateurId, 'error')
+      setSubmissionStatus(simulateurId, 'error')
       console.error('[Results Store] Error during form submission:', error)
       return false
     }
@@ -95,11 +95,11 @@ export const useResultsStore = defineStore('results', () => {
 
   return {
     results,
-    submissionState,
+    submissionStatus,
     setResults,
     getResults,
-    getSubmissionState,
-    setSubmissionState,
+    getsubmissionStatus,
+    setSubmissionStatus,
     submitForm
   }
 }, {
