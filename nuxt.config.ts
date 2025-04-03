@@ -14,11 +14,11 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     // Variables serveur privées (accessibles uniquement côté serveur)
-    adminPassword: process.env.ADMIN_PASSWORD || '',
+    adminPassword: '',
 
     public: {
-      // apiEndpointOpenFiscaFranceCalculate: 'http://127.0.0.1:5000/calculate',
-      apiEndpointOpenFiscaFranceCalculate: 'https://aides-calculatrice-back.osc-fr1.scalingo.io/calculate',
+      apiEndpointOpenFiscaFranceCalculate: 'http://127.0.0.1:5000/calculate',
+      // apiEndpointOpenFiscaFranceCalculate: 'https://aides-calculatrice-back.osc-fr1.scalingo.io/calculate',
       matomo: {
         host: 'https://stats.beta.gouv.fr/',
         siteId: 199,

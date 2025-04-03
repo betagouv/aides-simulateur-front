@@ -21,7 +21,13 @@ declare global {
 
   interface QuestionGroup {
     title: string
-    questions: { id: string, title: string, answered: boolean, visible: boolean }[]
+    questions: {
+      id: string
+      title: string
+      answer?: unknown
+      answered: boolean
+      visible: boolean
+    }[]
   }
 
   interface SurveyStep {

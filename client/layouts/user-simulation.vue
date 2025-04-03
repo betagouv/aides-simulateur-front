@@ -5,7 +5,7 @@ const nuxtApp = useNuxtApp()
 const simulateur = computed(() => {
   return nuxtApp.payload.data[`simulateur-${simulateurId.value}`]
 })
-const enableDebug = computed(() => route.query.debug === 'true')
+const { debugMode } = useSurveyDebugStore()
 </script>
 
 <template>
@@ -49,14 +49,14 @@ const enableDebug = computed(() => route.query.debug === 'true')
         <div class="fr-grid-row fr-grid-row--gutters">
           <div class="fr-col-12 fr-col-md-6">
             <FormDebugPanel
-              v-if="enableDebug"
+              v-if="debugMode"
               :simulateur-id="simulateurId"
             />
           </div>
           <div
             :class="[
-              { 'fr-col-12 fr-col-offset-md-1 fr-col-md-10 fr-col-offset-lg-2 fr-col-lg-8': !enableDebug },
-              { 'fr-col-12 fr-col-md-6': enableDebug },
+              { 'fr-col-12 fr-col-offset-md-1 fr-col-md-10 fr-col-offset-lg-2 fr-col-lg-8': !debugMode },
+              { 'fr-col-12 fr-col-md-6': debugMode },
             ]"
           >
             <slot />

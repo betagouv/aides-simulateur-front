@@ -4,17 +4,19 @@ definePageMeta({
 })
 
 const { data: simulateurs } = await useAsyncData('simulateurs', () => {
-  return queryCollectionNavigation('simulateurs', ['titre', 'description'])
+  return queryCollectionNavigation('simulateurs', ['titre', 'description', 'status'])
 }, {
   transform: (data) => {
     const simulateurs = data?.[0]?.children || []
-    return simulateurs.map((simulateur) => {
-      return {
-        id: simulateur.path.split('/').pop(),
-        titre: simulateur.titre as string,
-        description: simulateur.description as string
-      }
-    })
+    return simulateurs
+      .filter(simulateur => simulateur.status === 'published')
+      .map((simulateur) => {
+        return {
+          id: simulateur.path.split('/').pop(),
+          titre: simulateur.titre as string,
+          description: simulateur.description as string
+        }
+      })
   }
 })
 

@@ -2,6 +2,8 @@ export const useSubmissionStore = defineStore('submissions', () => {
   const results = ref<{ [id: string]: SurveyResults }>({})
   const submissionStatus = ref<{ [id: string]: 'idle' | 'pending' | 'success' | 'error' }>({})
 
+  const { debug } = useSurveyDebugStore()
+
   const setResults = (simulateurId: string, data: SimulationResultsAides) => {
     results.value[simulateurId] = {
       data,
@@ -15,7 +17,7 @@ export const useSubmissionStore = defineStore('submissions', () => {
     return results.value[simulateurId]
   }
 
-  const getsubmissionStatus = (simulateurId: string) => {
+  const getSubmissionStatus = (simulateurId: string) => {
     return submissionStatus.value[simulateurId] || 'idle'
   }
 
@@ -25,7 +27,7 @@ export const useSubmissionStore = defineStore('submissions', () => {
 
   const submitForm = async (simulateurId: string, answers: any) => {
     // eslint-disable-next-line no-console
-    console.log('[Results Store] submitForm', simulateurId, answers)
+    debug.log('[Submission Store] submitForm', simulateurId, answers)
 
     const questionsToApi: string[] = [
       'locapass-eligibilite',
@@ -42,11 +44,11 @@ export const useSubmissionStore = defineStore('submissions', () => {
       const request: OpenFiscaCalculationRequest = buildRequest(answers, questionsToApi)
       const openfiscaResponse: OpenFiscaCalculationResponse = await fetchOpenFiscaFranceCalculation(request)
       // eslint-disable-next-line no-console
-      console.debug('[Results Store] openfiscaResponse', openfiscaResponse)
+      debug.log('[Submission Store] openfiscaResponse', openfiscaResponse)
 
       const results: SimulationResultsAides = extractAidesResults(openfiscaResponse, questionsToApi)
       // eslint-disable-next-line no-console
-      console.debug('Results from OpenFisca:', results)
+      debug.log('Results from OpenFisca:', results)
 
       if (results) {
         setResults(simulateurId, results)
@@ -69,26 +71,26 @@ export const useSubmissionStore = defineStore('submissions', () => {
 
           if (storeResponse.success) {
             // eslint-disable-next-line no-console
-            console.debug('[Results Store] Form data stored successfully:', storeResponse)
+            debug.log('[Submission Store] Form data stored successfully:', storeResponse)
           }
           else {
-            console.error('[Results Store] Failed to store form data:', storeResponse)
+            console.error('[Submission Store] Failed to store form data:', storeResponse)
           }
         }
         catch (storageError) {
-          console.error('[Results Store] Error storing form data:', storageError)
+          console.error('[Submission Store] Error storing form data:', storageError)
         }
 
         return true
       }
 
       setSubmissionStatus(simulateurId, 'error')
-      console.error('[Results Store] No results found in OpenFisca response')
+      console.error('[Submission Store] No results found in OpenFisca response')
       return false
     }
     catch (error) {
       setSubmissionStatus(simulateurId, 'error')
-      console.error('[Results Store] Error during form submission:', error)
+      console.error('[Submission Store] Error during form submission:', error)
       return false
     }
   }
@@ -98,10 +100,14 @@ export const useSubmissionStore = defineStore('submissions', () => {
     submissionStatus,
     setResults,
     getResults,
-    getsubmissionStatus,
+    getSubmissionStatus,
     setSubmissionStatus,
     submitForm
   }
 }, {
-  persist: true
+  persist: {
+    pick: [
+      'results'
+    ],
+  }
 })

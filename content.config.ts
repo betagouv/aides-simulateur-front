@@ -14,6 +14,7 @@ export default defineContentConfig({
       source: 'simulateurs/**/*.md',
       schema: z.object({
         titre: z.string(),
+        status: z.enum(['published', 'draft', 'unlisted']),
         titreCourt: z.string(),
         description: z.string(),
         pictogramme: z.string(),

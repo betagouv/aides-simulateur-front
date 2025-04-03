@@ -1,34 +1,21 @@
 <script lang="ts" setup>
-import lightThemeSvg from '@gouvfr/dsfr/dist/artwork/pictograms/environment/sun.svg'
-
-const props = defineProps<{
+defineProps<{
   question: SurveyQuestion
-  modelValue: string | number | boolean | undefined
 }>()
 
-const emit = defineEmits<{
-  'update:modelValue': [value: string | number | boolean]
-}>()
-
-function handleChange (value: string | number | boolean) {
-  emit('update:modelValue', value)
-}
-
-// eslint-disable-next-line no-console
-console.log('--- RadioButton: modelValue = ', props.modelValue)
+const model = defineModel<string>()
 </script>
 
 <template>
   <div class="question-container">
     <DsfrRadioButtonSet
+      v-model="model"
+      :name="question.id"
       :options="question.choices?.map(choice => ({
         label: choice.title,
         value: choice.id,
-        svgPath: true,
+        svgPath: true as unknown as string, // This is a workaround to render a rich radio button
       })) || []"
-      :name="question.id"
-      :model-value="modelValue"
-      @update:model-value="handleChange"
     />
   </div>
 </template>

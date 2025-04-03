@@ -5,23 +5,16 @@ const props = defineProps<{
   simulateurId: string
 }>()
 
-const emit = defineEmits<{
-  (e: 'complete'): void
-}>()
-const simulateurId = props.simulateurId
-const { useHasValidAnswer } = useFormValidation()
-
-// Local state
-const questionContainer = ref<HTMLElement | null>(null)
+const simulateurId = toRef(() => props.simulateurId)
 
 const surveysStore = useSurveysStore()
 
 // Get simulateur-specific state
-const currentQuestion = computed(() => surveysStore.getCurrentQuestion(simulateurId))
-const surveySchema = computed(() => surveysStore.getSchema(simulateurId))
-const isLastQuestion = computed(() => surveysStore.isLastQuestion(simulateurId))
-const currentStepIndex = computed(() => surveysStore.getCurrentStepIndex(simulateurId))
-const answers = computed(() => surveysStore.getAnswers(simulateurId))
+const currentQuestion = computed(() => surveysStore.getCurrentQuestion(simulateurId.value))
+const surveySchema = computed(() => surveysStore.getSchema(simulateurId.value))
+const isLastQuestion = computed(() => surveysStore.isLastQuestion(simulateurId.value))
+const currentStepIndex = computed(() => surveysStore.getCurrentStepIndex(simulateurId.value))
+const answers = computed(() => surveysStore.getAnswers(simulateurId.value))
 
 const steps = computed(() => {
   return surveySchema.value?.steps
@@ -40,13 +33,19 @@ const autocompleteFn = computed(() => {
 })
 
 // Check if the current question has been answered
-const hasAnswer = useHasValidAnswer(currentQuestion, computed(() => answers.value))
+const hasValidAnswer = computed(() => {
+  if (!currentQuestion.value) {
+    return false
+  }
+  return isAnswerValid(currentQuestion.value, answers.value[currentQuestion.value.id])
+})
 
 // Heading levels based on iframe context
 const { isIframe } = useIframeDisplay()
 const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
 
 // Focus on the question container after navigation
+const questionContainer = ref<HTMLElement | null>(null)
 function focusRenderedQuestion () {
   nextTick(() => {
     if (questionContainer.value) {
@@ -59,40 +58,46 @@ function focusRenderedQuestion () {
   })
 }
 
-// Handle updates from question components
-function handleQuestionUpdate (questionId: string, value: any) {
-  // Pass update to parent component
-  surveysStore.setAnswer(simulateurId, questionId, value)
-}
+onMounted(() => {
+  focusRenderedQuestion()
+})
 
 // Navigate to next question or submit form
 function handleNext () {
   if (isLastQuestion.value) {
     // Submit form
-    emit('complete')
+    surveysStore.tryComplete(simulateurId.value)
   }
   else {
-    surveysStore.goToNextQuestion(simulateurId)
-    focusRenderedQuestion()
+    const wentToNext = surveysStore.goToNextQuestion(simulateurId.value)
+    if (wentToNext) {
+      focusRenderedQuestion()
+    }
   }
 }
 
 // If Enter is pressed and there's an answer, go to next question
 onKeyDown('Enter', () => {
-  if (hasAnswer.value) {
+  if (hasValidAnswer.value) {
     handleNext()
   }
 }, { target: questionContainer })
 
 // Navigate to previous question
 function handlePrevious () {
-  surveysStore.goToPreviousQuestion(simulateurId)
-  focusRenderedQuestion()
+  const wentToPrev = surveysStore.goToPreviousQuestion(simulateurId.value)
+  if (wentToPrev) {
+    focusRenderedQuestion()
+  }
+  else {
+    surveysStore.setShowWelcomeScreen(simulateurId.value, true)
+  }
 }
 
-onMounted(() => {
-  focusRenderedQuestion()
-})
+// Handle updates from question components
+function handleQuestionUpdate (questionId: string, value: any) {
+  surveysStore.setAnswer(simulateurId.value, questionId, value)
+}
 </script>
 
 <template>
@@ -134,10 +139,7 @@ onMounted(() => {
               navigateTo(`/simulateurs/${simulateurId}/${currentQuestion?.notion.id}#simulateur-title`)
             }"
           />
-          <div
-            ref="questionContainer"
-            class="question-actual-container"
-          >
+          <div ref="questionContainer">
             <RadioButtonQuestion
               v-if="currentQuestion.type === 'radio'"
               :question="currentQuestion"
@@ -187,6 +189,14 @@ onMounted(() => {
     <div class="fr-btns-group fr-btns-group--lg fr-mt-4w brand-form-actions brand-form-actions__align-end">
       <DsfrButton
         class="brand-form-actions__button"
+        label="Récapitulatif"
+        secondary
+        size="lg"
+        :icon="{ name: 'ri:menu-line', ssr: true }"
+        @click="() => navigateTo(`/simulateurs/${simulateurId}/recapitulatif`)"
+      />
+      <DsfrButton
+        class="brand-form-actions__button"
         label="Précédent"
         secondary
         size="lg"
@@ -199,7 +209,7 @@ onMounted(() => {
         :label="isLastQuestion ? 'Terminer' : 'Suivant'"
         :icon="{ name: 'ri:arrow-right-line', ssr: true }"
         icon-right
-        :disabled="!hasAnswer"
+        :disabled="!hasValidAnswer"
         @click="handleNext"
       />
     </div>

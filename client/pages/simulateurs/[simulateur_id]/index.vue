@@ -9,6 +9,7 @@ definePageMeta({
       const fromName = from.matched[0].name as string
 
       const shouldForceResume = [
+        'simulateurs-simulateur_id-recapitulatif',
         'simulateurs-simulateur_id-notion_id',
         'simulateurs-simulateur_id-resultats'
       ].includes(fromName)
