@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.19.1 [#84](https://github.com/betagouv/aides-simulateur-front/pull/84)
+* Debug
+* Détail : 
+   * Cacher crisp lors du chargement par iframe
+
 ## 0.19.0 [#83](https://github.com/betagouv/aides-simulateur-front/pull/83)
 * Ajout des modules Crisp et Statistiques
 * Détail : 
