@@ -5,15 +5,14 @@ const nuxtApp = useNuxtApp()
 const simulateur = computed(() => {
   return nuxtApp.payload.data[`simulateur-${simulateurId.value}`]
 })
+const enableDebug = computed(() => route.query.debug === 'true')
 </script>
 
 <template>
   <SharedDsfrLayout>
     <BrandBackgroundContainer>
       <BreadcrumbSectionContainer />
-      <SectionContainer
-        type="page-header"
-      >
+      <SectionContainer type="page-header">
         <div class="fr-grid-row fr-grid-row--gutters">
           <div class="pictogram-container fr-col-3 fr-col-sm-2 fr-col-lg-1">
             <DsfrPictogram
@@ -48,7 +47,18 @@ const simulateur = computed(() => {
         class="simulateur-container"
       >
         <div class="fr-grid-row fr-grid-row--gutters">
-          <div class="fr-col-12 fr-col-offset-md-1 fr-col-md-10 fr-col-offset-lg-2 fr-col-lg-8">
+          <div class="fr-col-12 fr-col-md-6">
+            <FormDebugPanel
+              v-if="enableDebug"
+              :simulateur-id="simulateurId"
+            />
+          </div>
+          <div
+            :class="[
+              { 'fr-col-12 fr-col-offset-md-1 fr-col-md-10 fr-col-offset-lg-2 fr-col-lg-8': !enableDebug },
+              { 'fr-col-12 fr-col-md-6': enableDebug },
+            ]"
+          >
             <slot />
           </div>
         </div>

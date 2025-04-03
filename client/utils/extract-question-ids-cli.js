@@ -35,15 +35,6 @@ try {
     })
   }
 
-  // Extract question IDs from triggeredQuestions
-  if (jsonData.triggeredQuestions && Array.isArray(jsonData.triggeredQuestions)) {
-    jsonData.triggeredQuestions.forEach((question) => {
-      if (question.id) {
-        questionIds.push(question.id)
-      }
-    })
-  }
-
   // Output the results
   console.warn('Question IDs:')
   console.warn(questionIds)

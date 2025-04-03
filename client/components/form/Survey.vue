@@ -6,42 +6,47 @@ const props = defineProps<{
   autocompleteFunctions?: Record<string, (query: string) => Promise<any[]>>
 }>()
 
-const formStore = useFormStore()
+// Composables
+const matomo = useMatomo()
+const { isIframe } = useIframeDisplay()
+const { useHasValidAnswer } = useFormValidation()
+const route = useRoute()
+
+// Local state
 const isLoading = ref(true)
-
 const resultsFetchState = ref<'idle' | 'loading' | 'success' | 'error'>('idle')
-
-const simulateurId = props.simulateurId
-// État pour afficher ou non l'écran de choix
 const showChoiceScreen = ref(false)
-
-// Etat pour afficher ou non l'écran de bienvenue
 const showWelcomeScreen = ref(false)
+const questionContainer = ref<HTMLElement | null>(null)
 
-// Get iframe display information
-const { isIframe, getIframeSource } = useIframeDisplay()
-
-// Use storeToRefs to maintain reactivity
+const formStore = useFormStore()
 const {
   currentQuestion,
-  surveySchema,
+  schema: surveySchema,
   answers,
   progress,
   isLastQuestion,
   currentStepIndex,
-  hasInProgressForm,
-} = storeToRefs(formStore)
-
+  hasAnswers,
+} = storeToRefs(formStore) // maintain reactivity
 const {
   loadSurveySchema,
   goToNextQuestion,
   goToPreviousQuestion,
-  goToLastAnsweredQuestion,
   resetForm,
-  setAnswer
+  setAnswer,
 } = formStore
 
-// Récupère la fonction d'autocomplétion pour la question courante
+const surveyDebugStore = useSurveyDebugStore()
+const {
+  debugMode,
+} = storeToRefs(surveyDebugStore) // maintain reactivity
+
+
+// Computed values
+const simulateurId = props.simulateurId
+
+// Get autocomplete function for current question
 const getAutocompleteFn = computed(() => {
   if (currentQuestion.value?.autocompleteFunction && props.autocompleteFunctions) {
     return props.autocompleteFunctions[currentQuestion.value.autocompleteFunction]
@@ -50,84 +55,39 @@ const getAutocompleteFn = computed(() => {
 })
 
 // Check if the current question has been answered
-const hasAnswer = computed(() => {
-  if (!currentQuestion.value) {
-    return false
-  }
+const hasAnswer = useHasValidAnswer(currentQuestion, answers)
 
-  const questionId = currentQuestion.value.id
-  const answer = answers.value[questionId]
+// Heading levels based on iframe context
+const surveyH1 = computed(() => isIframe.value ? 'h1' : 'h2')
+const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
 
-  // Different validation based on question type
-  switch (currentQuestion.value.type) {
-    case 'radio':
-    case 'date':
-      // For radio and date, any non-empty value is valid
-      return !!answer
-    case 'boolean':
-      // For boolean, both true and false are valid answers
-      return answer === true || answer === false
-    case 'checkbox':
-      // For checkbox, the answer should be an array with at least one item
-      return Array.isArray(answer) && answer.length > 0
-    case 'number':
-      // For number, we need to check if it's a number including 0
-      return answer === 0 || !!answer
-    case 'text':
-      // For text, the value should not be empty
-      return answer !== undefined && answer !== null && answer !== ''
-    default:
-      return false
-  }
-})
-
-// Focus on the question container after navigation
-const questionContainer = ref<HTMLElement | null>(null)
-function focusRenderedQuestion () {
-  nextTick(() => {
-    if (questionContainer.value) {
-      // Focus the first focusable input field inside the question container
-      const focusable = questionContainer.value.querySelector('input, select, textarea')
-      if (focusable) {
-        focusable.focus()
-      }
-    }
-  })
-}
-
-/**
- * If Enter is pressed while we are within form container
- * and there's an answer, go to next question
- */
-onKeyDown('Enter', () => {
-  if (hasAnswer.value) {
-    handleNext()
-  }
-}, { target: questionContainer })
-
+// Load form when component mounts
 onMounted(async () => {
   try {
     await loadSurveySchema(simulateurId)
     isLoading.value = false
 
     // Resume the form if the query parameter is present
-    const route = useRoute()
     const doResume = computed(() => route.query.resume === 'true')
+    // Enable debug mode if the debug parameter is present
+    const enableDebug = computed(() => route.query.debug === 'true')
+
+    if (enableDebug.value && !debugMode.value) {
+      surveyDebugStore.toggleDebugMode()
+    }
+
     if (doResume.value) {
       resumeForm()
-      route.query.resume = null
+      // Remove the query param
+      navigateTo({ query: { ...route.query, resume: undefined } })
     }
 
     // Afficher l'écran de choix si un formulaire est en cours
-    showChoiceScreen.value = hasInProgressForm.value && !doResume.value
-    showWelcomeScreen.value = !hasInProgressForm.value && !doResume.value
+    showChoiceScreen.value = hasAnswers.value && !doResume.value
+    showWelcomeScreen.value = !hasAnswers.value && !doResume.value
 
     // Track form start in Matomo
-    if (typeof window !== 'undefined' && (window as any)._paq) {
-      const source = isIframe.value ? `iframe@${getIframeSource()}` : 'website'
-      const category = `[${simulateurId}][${source}]Survey`
-        ; (window as any)._paq.push(['trackEvent', category, 'Start', `[${simulateurId}][${source}]`, 1])
-    }
+    matomo.trackSurveyStart(simulateurId)
   }
   catch (error) {
     console.error('Error loading form:', error)
@@ -135,6 +95,27 @@ onMounted(async () => {
   }
 })
 
+// Focus on the question container after navigation
+function focusRenderedQuestion () {
+  nextTick(() => {
+    if (questionContainer.value) {
+      // Focus the first focusable input field inside the question container
+      const focusable = questionContainer.value.querySelector('input, select, textarea')
+      if (focusable) {
+        (focusable as HTMLElement).focus()
+      }
+    }
+  })
+}
+
+// If Enter is pressed and there's an answer, go to next question
+onKeyDown('Enter', () => {
+  if (hasAnswer.value) {
+    handleNext()
+  }
+}, { target: questionContainer })
+
+// Scroll to element by ID
 function scrollToAnchor (anchor: string) {
   const element = document.getElementById(anchor)
   if (element) {
@@ -142,6 +123,7 @@ function scrollToAnchor (anchor: string) {
   }
 }
 
+// Start the survey
 function handleStart () {
   showWelcomeScreen.value = false
   scrollToAnchor('simulateur-title')
@@ -152,10 +134,9 @@ function handleQuestionUpdate (questionId: string, value: any) {
   setAnswer(questionId, value)
 }
 
-// Navigation functions with focus restoration
+// Navigate to next question or submit form
 function handleNext () {
   if (isLastQuestion.value) {
-    // Handle form completion, maybe redirect to results
     submitForm()
   }
   else {
@@ -164,6 +145,7 @@ function handleNext () {
   }
 }
 
+// Navigate to previous question
 function handlePrevious () {
   const prevQuestion = goToPreviousQuestion()
   if (prevQuestion === false) {
@@ -173,21 +155,38 @@ function handlePrevious () {
   focusRenderedQuestion()
 }
 
+// Resume an in-progress form
+function resumeForm () {
+  resultsFetchState.value = 'idle'
+  showChoiceScreen.value = false
+  showWelcomeScreen.value = false
+  scrollToAnchor('simulateur-title')
+  focusRenderedQuestion()
+}
+
+// Restart the form from the beginning
+function restartForm () {
+  resetForm()
+  resultsFetchState.value = 'idle'
+  showWelcomeScreen.value = true
+  showChoiceScreen.value = false
+  scrollToAnchor('simulateur-title')
+  focusRenderedQuestion()
+}
+
+// Results store for handling simulation results
 const resultStore = useResultsStore()
 
+// Submit the form for processing
 async function submitForm () {
   // Process the final form data from the answers store
-  // eslint-disable-next-line no-console
   console.log('Form submitted with answers:', answers.value)
 
-  // TODO : next step (to check with aides-calculatrice-back) = adding
-  // 'locapass', 'mobilite-master-1-eligibilite', 'mobilite-parcoursup-eligibilite'
   const questionsToApi: string[] = [
     'locapass-eligibilite',
     'mobilite-master-1',
     'mobilite-parcoursup',
     'aide-personnalisee-logement',
-    // 'aide-personnalisee-logement-eligibilite' will be deduced from 'aide-personnalisee-logement' amount
     'garantie-visale-eligibilite',
     'garantie-visale'
   ]
@@ -197,26 +196,17 @@ async function submitForm () {
     resultsFetchState.value = 'loading'
     const request: OpenFiscaCalculationRequest = buildRequest(answers.value, questionsToApi)
     const openfiscaResponse: OpenFiscaCalculationResponse = await fetchOpenFiscaFranceCalculation(request)
-    // eslint-disable-next-line no-console
-    console.debug('Réponse reçue :')
-    // eslint-disable-next-line no-console
-    console.debug(openfiscaResponse)
+    console.debug('Réponse reçue :', openfiscaResponse)
 
     const results: SimulationResultsAides = extractAidesResults(openfiscaResponse, questionsToApi)
-    // eslint-disable-next-line no-console
-    console.debug('Résulats de simulation extraits :')
-    // eslint-disable-next-line no-console
-    console.debug(results)
+    console.debug('Résulats de simulation extraits :', results)
 
     if (results) {
       handleResults(results)
     }
+
     // Track form submission in Matomo
-    if (typeof window !== 'undefined' && (window as any)._paq) {
-      const source = isIframe.value ? `iframe@${getIframeSource()}` : 'website'
-      const category = `[${simulateurId}][${source}]Survey`
-        ; (window as any)._paq.push(['trackEvent', category, 'Submit', `[${simulateurId}][${source}]`, 1])
-    }
+    matomo.trackSurveySubmit(simulateurId)
 
     // Store form data and results
     try {
@@ -230,7 +220,6 @@ async function submitForm () {
       })
 
       if (storeResponse.success) {
-        // eslint-disable-next-line no-console
         console.info('Form data stored successfully:', storeResponse.filename)
       }
       else {
@@ -243,35 +232,12 @@ async function submitForm () {
   }
   catch (error) {
     handleResultsFetchError()
-    // TODO Handle the error more professionnally and display a message to the user :)
     console.error('Erreur inattendue lors de la soumission du formulaire et de l\'appel au calcul :', error)
   }
 }
 
-// Fonctions pour le choix de l'utilisateur
-function resumeForm () {
-  goToLastAnsweredQuestion()
-  resultsFetchState.value = 'idle'
-  showChoiceScreen.value = false
-  showWelcomeScreen.value = false
-  // scrollTo anchor #simulateur-title
-  scrollToAnchor('simulateur-title')
-
-  // Focus the question after resuming
-  focusRenderedQuestion()
-}
-
-function restartForm () {
-  resetForm()
-  resultsFetchState.value = 'idle'
-  showWelcomeScreen.value = true
-  showChoiceScreen.value = false
-  scrollToAnchor('simulateur-title')
-  // Focus the question after restarting
-  focusRenderedQuestion()
-}
-
-function handleResults (results) {
+// Process successful results
+function handleResults (results: SimulationResultsAides) {
   resultsFetchState.value = 'success'
   resultStore.setResults(simulateurId, results)
   setTimeout(() => {
@@ -279,23 +245,13 @@ function handleResults (results) {
   }, 1000)
 }
 
+// Handle errors during result fetching
 function handleResultsFetchError () {
   resultsFetchState.value = 'error'
   setTimeout(() => {
     resumeForm()
   }, 1500)
 }
-
-/**
- * When this page is displayed within an iframe,
- * we need to adjust the heading levels because the h1 is not exposed within the iframe
- */
-const surveyH1 = computed(() => isIframe.value ? 'h1' : 'h2')
-const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
-// const surveyH3 = computed(() => isIframe.value ? 'h3' : 'h4')
-// const surveyH4 = computed(() => isIframe.value ? 'h4' : 'h5')
-// const surveyH5 = computed(() => isIframe.value ? 'h5' : 'h6')
-// const surveyH6 = computed(() => isIframe.value ? 'h6' : 'h6')
 </script>
 
 <template>
@@ -345,6 +301,7 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
         </div>
       </div>
     </div>
+
     <!-- Écran de bienvenue -->
     <div v-else-if="showWelcomeScreen">
       <div class="fr-card fr-card--shadow fr-p-3w">
@@ -434,6 +391,7 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
       </div>
       <template v-else-if="surveySchema">
         <DsfrStepper
+          v-if="currentStepIndex"
           :steps="surveySchema?.steps.map(step => step.title).filter(Boolean) || []"
           :current-step="currentStepIndex"
         />
