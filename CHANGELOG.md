@@ -11,7 +11,7 @@
 * Détails :
   * Passe au futur la question sur le statut d'occupation du logement pour le déménagement
 
-## 0.19.1 [#84](https://github.com/betagouv/aides-simulateur-front/pull/84)
+### 0.19.1 [#84](https://github.com/betagouv/aides-simulateur-front/pull/84)
 * Debug
 * Détail : 
    * Cacher crisp lors du chargement par iframe
