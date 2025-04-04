@@ -91,8 +91,8 @@
         },
         {
           "id": "situation-logement",
-          "title": "Êtes-vous :",
-          "description": "Sélectionnez votre situation actuelle",
+          "title": "Serez-vous :",
+          "description": "Sélectionnez votre situation à venir",
           "type": "radio",
           "choices": [
             {
