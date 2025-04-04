@@ -1,11 +1,19 @@
 # CHANGELOG
 
-## 0.19.1 [#84](https://github.com/betagouv/aides-simulateur-front/pull/84)
+### 0.19.2 [#85](https://github.com/betagouv/aides-simulateur-front/pull/85)
+
+* Amélioration de questionnaire
+* Détails :
+  * Passe au futur la question sur le statut d'occupation du logement pour le déménagement
+
+### 0.19.1 [#84](https://github.com/betagouv/aides-simulateur-front/pull/84)
+
 * Debug
 * Détail : 
    * Cacher crisp lors du chargement par iframe
 
 ## 0.19.0 [#83](https://github.com/betagouv/aides-simulateur-front/pull/83)
+
 * Ajout des modules Crisp et Statistiques
 * Détail : 
    * Ajout de la librairie DSFRCharts
@@ -13,7 +21,7 @@
    * Visualisation par simulateur des statistiques (`statistiques.vue`)
    * Intégration du script Crisp dans `app.vue`
 
-## 0.18.4 [#79](https://github.com/betagouv/aides-simulateur-front/pull/79)
+### 0.18.4 [#79](https://github.com/betagouv/aides-simulateur-front/pull/79)
 
 * Ajout de contenu et de fonctionnalité
 * Détail : 
@@ -21,7 +29,7 @@
   * Met à jour la mention de conformité dans le pied de page
   * Ajoute une redirection permanente de `/accessibilite` vers `/content/accessibilite`
 
-## 0.18.3 [#78](https://github.com/betagouv/aides-simulateur-front/pull/78)
+### 0.18.3 [#78](https://github.com/betagouv/aides-simulateur-front/pull/78)
 
 * Ajout de contenu
 * Détail : 
@@ -30,14 +38,14 @@
   * Stylisation des tableaux dans les pages statiques
   * Mise à jour des noms d'événements Mattomo
 
-## 0.18.2 [#75](https://github.com/betagouv/aides-simulateur-front/pull/75)
+### 0.18.2 [#75](https://github.com/betagouv/aides-simulateur-front/pull/75)
 
 * Ajout de contenu
 * Détail : 
   * Ajouter le contenu de la page mention-legale.md
   * Changer le layout `slug.vue` des pages statiques
 
-## 0.18.1 [#74](https://github.com/betagouv/aides-simulateur-front/pull/74)
+### 0.18.1 [#74](https://github.com/betagouv/aides-simulateur-front/pull/74)
 
 * Amélioration du calcul.
 * Détail : 
