@@ -1,5 +1,10 @@
 # CHANGELOG
 
+### 0.19.3 [#86](https://github.com/betagouv/aides-simulateur-front/pull/86)
+* Changement mineur
+* Détail : 
+   * ajout du script npm run start dans `package.json`
+
 ### 0.19.2 [#85](https://github.com/betagouv/aides-simulateur-front/pull/85)
 
 * Amélioration de questionnaire
@@ -7,7 +12,6 @@
   * Passe au futur la question sur le statut d'occupation du logement pour le déménagement
 
 ### 0.19.1 [#84](https://github.com/betagouv/aides-simulateur-front/pull/84)
-
 * Debug
 * Détail : 
    * Cacher crisp lors du chargement par iframe

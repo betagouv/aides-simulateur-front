@@ -1,13 +1,14 @@
 {
   "name": "aides-simulateur-front",
   "type": "module",
-  "version": "0.19.2",
+  "version": "0.19.3",
   "engines": {
     "node": "22"
   },
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
+    "start": "nuxt start",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
