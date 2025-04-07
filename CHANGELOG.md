@@ -1,4 +1,13 @@
 # CHANGELOG
+### 0.19.4 [#87](https://github.com/betagouv/aides-simulateur-front/pull/87)
+* Changement mineur
+* Détail : 
+   * ajout de l'autorisation de aides.beta.numerique.gouv.fr dans `nuxt.config.ts`
+
+### 0.19.3 [#86](https://github.com/betagouv/aides-simulateur-front/pull/86)
+* Changement mineur
+* Détail : 
+   * ajout du script npm run start dans `package.json`
 
 ### 0.19.3 [#86](https://github.com/betagouv/aides-simulateur-front/pull/86)
 * Changement mineur

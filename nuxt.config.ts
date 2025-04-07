@@ -2,7 +2,11 @@ import { defineNuxtConfig } from 'nuxt/config'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-
+  vite: {
+    server: {
+      allowedHosts: ['aides.beta.numerique.gouv.fr'],
+    },
+  },
   routeRules: {
     '/accessibilite': { // mandatory route
       redirect: {
