@@ -1,4 +1,10 @@
 # CHANGELOG
+## 0.20.0 [#89](https://github.com/betagouv/aides-simulateur-front/pull/89)
+* Devops
+* Détail : 
+   * Ajout de système de cache dans `nuxt.config.js` et clé de configuration de nitro
+   * Ajout de la standardisation de la date de naissance pour bénéficier du cache Nginx OpenFisca
+
 ### 0.19.4 [#87](https://github.com/betagouv/aides-simulateur-front/pull/87)
 * Changement mineur
 * Détail : 
