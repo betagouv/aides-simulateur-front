@@ -2,6 +2,9 @@ import { defineNuxtConfig } from 'nuxt/config'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  nitro: {
+    preset: 'node-cluster'
+  },
   vite: {
     server: {
       allowedHosts: ['aides.beta.numerique.gouv.fr'],
@@ -13,6 +16,9 @@ export default defineNuxtConfig({
         to: '/content/accessibilite', // content generated route
         statusCode: 308, // Redirect permanently
       },
+    },
+    '*': {
+      swr: true,
     },
   },
 
