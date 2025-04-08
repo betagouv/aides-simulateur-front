@@ -440,6 +440,22 @@ export const useSurveysStore = defineStore('surveys', () => {
     return false
   }
 
+  // Helper function for Vue 3.4 defineModel pattern - this makes the binding reactivity work correctly
+  function createQuestionModelRef (simulateurId: string, questionId: string) {
+    return customRef((track, trigger) => {
+      return {
+        get () {
+          track()
+          return getAnswer(simulateurId, questionId)
+        },
+        set (value) {
+          setAnswer(simulateurId, questionId, value)
+          trigger()
+        }
+      }
+    })
+  }
+
   /**
    * Step related methods
    */
@@ -617,6 +633,7 @@ export const useSurveysStore = defineStore('surveys', () => {
     onComplete,
     offComplete,
     tryComplete,
+    createQuestionModelRef,
   }
 }, {
   persist: {
