@@ -6,6 +6,9 @@ export function useMatomo () {
    * Track an event in Matomo
    */
   function trackEvent (category: string, action: string, name?: string, value?: number) {
+    if (import.meta.server) {
+      return
+    }
     if (typeof window === 'undefined' || !(window as any)._paq) {
       return
     }
@@ -40,8 +43,14 @@ export function useMatomo () {
    * Track an answer to a survey question
    */
   function trackSurveyAnswer (simulateurId: string, questionId: string, questionTitle: string) {
+    if (import.meta.server) {
+      return
+    }
     const category = getMatomoCategory(simulateurId)
     const name = `[${simulateurId}][${category.split(']')[1].slice(1)}]${questionId}:${questionTitle}`
+    if (import.meta.server) {
+      return
+    }
     trackEvent(category, 'Answer', name)
   }
 
@@ -49,6 +58,9 @@ export function useMatomo () {
    * Track the start of a survey
    */
   function trackSurveyStart (simulateurId: string) {
+    if (import.meta.server) {
+      return
+    }
     const category = getMatomoCategory(simulateurId)
     const name = `[${simulateurId}]${category.split(']')[1].slice(1)}`
     trackEvent(category, 'Start', name)
@@ -58,9 +70,29 @@ export function useMatomo () {
    * Track the submission of a survey
    */
   function trackSurveySubmit (simulateurId: string) {
+    if (import.meta.server) {
+      return
+    }
     const category = getMatomoCategory(simulateurId)
     const name = `[${simulateurId}]${category.split(']')[1].slice(1)}`
     trackEvent(category, 'Submit', name)
+  }
+
+  /**
+   * Track Eligibility
+   */
+  function trackEligibility (simulateurId: string, aidesLength: number) {
+    if (import.meta.server) {
+      return
+    }
+    let source = 'website'
+    const currentUrl = window.location?.href ? new URL(window.location.href) : null
+    const utmSource = currentUrl?.searchParams.get('utm_source')
+    if (utmSource) {
+      source = utmSource.replace('iframe@', '')
+    }
+    const category = `[${simulateurId}][${source}]Survey`;
+    (window as any)._paq.push(['trackEvent', category, 'Eligibility', `[${simulateurId}][${source}]`, aidesLength])
   }
 
   return {
@@ -68,6 +100,7 @@ export function useMatomo () {
     getMatomoCategory,
     trackSurveyAnswer,
     trackSurveyStart,
-    trackSurveySubmit
+    trackSurveySubmit,
+    trackEligibility
   }
 }
