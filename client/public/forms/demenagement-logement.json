@@ -52,7 +52,7 @@
             "id": "handicap",
             "buttonLabel": "En savoir plus"
           },
-          "title": "Avez-vous une reconnaissance administrative de votre situation de handicap ?",
+          "title": "Avez-vous une reconnaissance administrative d'une situation de handicap ?",
           "type": "boolean"
         }
       ]
