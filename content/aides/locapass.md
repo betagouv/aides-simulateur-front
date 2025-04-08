@@ -1,6 +1,7 @@
 ---
 titre: Avance LOCA-PASS
 type: pret
+usage: pret-garantie-logement
 instructeur: Action logement
 description: Prêt à 0% pour financer votre dépôt de garantie
 textesLoi: []

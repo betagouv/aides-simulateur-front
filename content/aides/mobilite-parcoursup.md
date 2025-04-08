@@ -1,6 +1,7 @@
 ---
 titre: Aide à la mobilité Parcoursup
-type: une-fois
+type: aide-financiere
+usage: frais-installation-logement
 montant: 500
 instructeur: Crous
 description: Aide pour les bacheliers boursiers qui s'inscrivent dans un établissement hors de leur académie

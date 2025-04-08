@@ -36,12 +36,7 @@ const hasMontants = richResults.montants.length > 0
 const hasAidesNonEligibles = richResults.aidesNonEligibles.length > 0
 const hasTextesDeLoi = richResults.textesLoi.length > 0
 
-const segmentedSetOptions: any = [
-  /**
-   * @todo Restore "Vos informations" below once the feature is implemented
-   */
-  // { label: 'Vos informations', value: 'informations', icon: 'ri:edit-box-line' }
-]
+const segmentedSetOptions: { label: string, value: string, icon: string }[] = []
 if (hasEcheances) {
   segmentedSetOptions.unshift({ label: 'Échéances estimées', value: 'echeances', icon: 'ri:calendar-2-line' })
 }
@@ -49,20 +44,13 @@ if (hasMontants) {
   segmentedSetOptions.unshift({ label: 'Montants estimés', value: 'montants', icon: 'ri:money-euro-circle-line' })
 }
 
-const visibleTabName = ref<'montants' | 'echeances' | 'informations'>('montants')
+const visibleTabName = ref<'montants' | 'echeances'>('montants')
 
 const activeAccordion = ref<number>()
 
 // stats if hasAides
 if (hasAides) {
-  let source = 'website'
-  const currentUrl = window.location.href ? new URL(window.location.href) : null
-  const utmSource = currentUrl?.searchParams.get('utm_source')
-  if (utmSource) {
-    source = utmSource.replace('iframe@', '')
-  }
-  const category = `[${simulateurId}][${source}]Survey`
-  ;(window as any)._paq.push(['trackEvent', category, 'Eligibility', `[${simulateurId}][${source}]`, richResults.aides.length])
+  useMatomo().trackEligibility(simulateurId, richResults.aides.length)
 }
 </script>
 
@@ -77,11 +65,11 @@ if (hasAides) {
             v-if="simulateurTitle"
             class="results__title"
           >
-            Vos résultats de la simulation «&nbsp;{{ simulateurTitle }}&nbsp;»
+            Résultats de votre simulation
           </h2>
           <p
             v-if="richResults.createAt?.date && richResults.createAt?.time"
-            class="results__datetime"
+            class="results__datetime fr-mt-n2w"
             :style="{ color: 'var(--text-mention-grey)' }"
           >
             Simulation terminée le {{ richResults.createAt.date }} à {{ richResults.createAt.time }}
@@ -119,19 +107,14 @@ if (hasAides) {
       fluid
       class="fr-mt-6w"
     />
-    <DsfrBadge
-      class="fr-mt-4w"
-      type="warning"
-      title="Attention, ces résultats sont des estimations, et notre service est en construction."
-      label="Attention, ces résultats sont des estimations, et notre service est en construction."
-    />
     <div class="results__content fr-mt-4w">
       <template v-if="hasAides">
         <div class="results__content-resume">
           <hgroup>
             <h3>1. En résumé</h3>
-            <p class="fr-text--xl">
-              Voici un récapitulatif des aides auxquelles vous pourriez être éligible en fonction des informations renseignées :
+            <p class="fr-text--lg">
+              Voici un récapitulatif des aides auxquelles vous pourriez être éligible en fonction des informations
+              renseignées :
             </p>
           </hgroup>
           <DsfrSegmentedSet
@@ -141,30 +124,27 @@ if (hasAides) {
             label="En résumé"
             :options="segmentedSetOptions"
           />
-          <div class="fr-mt-4w">
+          <div class="results__warning">
+            <DsfrBadge
+              type="warning"
+              small
+              label="service en construction : ces résultats sont des estimations"
+            />
+          </div>
+          <div
+            v-if="hasMontants && visibleTabName === 'montants'"
+            class="fr-card fr-p-3w fr-mt-2w results__montants"
+          >
             <div
-              v-if="hasMontants && visibleTabName === 'montants'"
-              class="fr-grid-row fr-grid-row--gutters"
+              v-for="montant in richResults.montants"
+              :key="montant.type"
+              class="results__montant"
             >
-              <div
-                v-for="montant in richResults.montants"
-                :key="montant.type"
-                class="fr-col-12 fr-col-sm-6 fr-col-xl-4"
-              >
-                <AideMontantCard v-bind="montant" />
-              </div>
+              <AideMontantCard v-bind="montant" />
             </div>
-            <div v-else-if="hasEcheances && visibleTabName === 'echeances'">
-              <p>
-                Le montant de votre aide pourrait être versé en <strong>2 fois</strong> sur une période de <strong>6
-                  mois</strong>.
-              </p>
-            </div>
-            <div v-else-if="visibleTabName === 'informations'">
-              <p>
-                Vous avez indiqué que vous déménagez pour des raisons professionnelles.
-              </p>
-            </div>
+          </div>
+          <div v-else-if="hasEcheances && visibleTabName === 'echeances'">
+            <!-- todo -->
           </div>
         </div>
         <SectionSeparator
@@ -303,3 +283,19 @@ if (hasAides) {
     </div>
   </article>
 </template>
+
+<style lang="scss" scoped>
+.results__warning {
+  display: flex;
+  justify-content: flex-end;
+}
+.results__montants {
+  display: flex;
+  gap: 1.5rem;
+
+  .results__montant:not(:last-child) {
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-default-grey);
+  }
+}
+</style>

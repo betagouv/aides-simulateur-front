@@ -1,6 +1,8 @@
 declare global {
 
-  type TypeAide = 'pret' | 'garantie' | 'caution' | 'periode' | 'une-fois' | 'reduction-impots' | 'aide-materielle' | 'financements' | 'mensuelle'
+  type TypeAide = 'pret' | 'garantie' | 'aide-financiere'
+
+  type UsageAide = 'loyer-logement' | 'frais-installation-logement' | 'caution-logement' | 'pret-garantie-logement'
 
   interface SimulationResultsAides { [aidesSimplifieesKey: string]: boolean | number }
 
@@ -29,23 +31,23 @@ declare global {
     eligibilite: boolean
     instructeur: string
     montant: number
+    usage: UsageAide
     type: TypeAide
     textesLoi: TexteLoi[]
     description: string
   }
 
   interface RichMontant {
-    type: TypeAide
+    usageAide: UsageAide
     montant: number
-    prefix?: string
-    suffix?: string
+    periode?: string
   }
 
   interface RichEcheance {
     type: TypeAide
     montant: number
-    dateStart: Date // Changed from 'date' to 'Date'
-    dateEnd: Date // Changed from 'date' to 'Date'
+    dateStart: Date
+    dateEnd: Date
   }
 
   interface RichSimulationResults {

@@ -1,6 +1,7 @@
 ---
 titre: Garantie Visale
-type: caution
+type: garantie
+usage: caution-logement
 instructeur: Action logement
 description: Caution locative gratuite qui couvre les loyers impayés
 textesLoi: []

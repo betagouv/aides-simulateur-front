@@ -26,7 +26,6 @@ export const useSubmissionStore = defineStore('submissions', () => {
   }
 
   const submitForm = async (simulateurId: string, answers: any) => {
-    // eslint-disable-next-line no-console
     debug.log('[Submission Store] submitForm', simulateurId, answers)
 
     const questionsToApi: string[] = [
@@ -43,11 +42,11 @@ export const useSubmissionStore = defineStore('submissions', () => {
       setSubmissionStatus(simulateurId, 'pending')
       const request: OpenFiscaCalculationRequest = buildRequest(answers, questionsToApi)
       const openfiscaResponse: OpenFiscaCalculationResponse = await fetchOpenFiscaFranceCalculation(request)
-      // eslint-disable-next-line no-console
+
       debug.log('[Submission Store] openfiscaResponse', openfiscaResponse)
 
       const results: SimulationResultsAides = extractAidesResults(openfiscaResponse, questionsToApi)
-      // eslint-disable-next-line no-console
+
       debug.log('Results from OpenFisca:', results)
 
       if (results) {
@@ -70,7 +69,6 @@ export const useSubmissionStore = defineStore('submissions', () => {
           })
 
           if (storeResponse.success) {
-            // eslint-disable-next-line no-console
             debug.log('[Submission Store] Form data stored successfully:', storeResponse)
           }
           else {

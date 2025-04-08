@@ -38,7 +38,7 @@ const currentPageAides = computed(() => {
     <div
       v-for="aide in currentPageAides"
       :key="aide.id"
-      class="fr-col-12 fr-col-md-6"
+      class="fr-col-12"
     >
       <AideCard
         :link="aide.link"

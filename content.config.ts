@@ -46,6 +46,12 @@ export default defineContentConfig({
             }).nullable(),
           ]),
         ),
+        usage: z.enum([
+          'loyer-logement',
+          'frais-installation-logement',
+          'caution-logement',
+          'pret-garantie-logement',
+        ]),
         type: z.enum([
           'pret',
           'garantie',
