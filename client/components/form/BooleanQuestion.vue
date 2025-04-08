@@ -1,48 +1,49 @@
 <script lang="ts" setup>
-defineProps<{
+const props = defineProps<{
   question: SurveyQuestion
-  modelValue: boolean | undefined
 }>()
 
-const emit = defineEmits<{
-  'update:modelValue': [value: boolean]
-}>()
-
-function handleChange (value: string | number | boolean) {
-  // Convert value to boolean
-  if (typeof value === 'string') {
-    emit('update:modelValue', value === 'true')
-  }
-  else if (typeof value === 'boolean') {
-    emit('update:modelValue', value)
-  }
-  else {
-    // Handle number case by treating non-zero as true
-    emit('update:modelValue', value !== 0)
-  }
+const question = {
+  ...props.question,
+  choices: [
+    { title: 'Oui', id: 'true' },
+    { title: 'Non', id: 'false' },
+  ],
 }
+
+/**
+ * We expose a boolean model up to the parent component
+ */
+const booleanModel = defineModel<boolean | undefined>()
+
+/**
+ * We pass a string model down to the DSFR input component
+ */
+const stringModel = customRef((track, trigger) => {
+  return {
+    get () {
+      return booleanModel.value === true ? 'true' : booleanModel.value === false ? 'false' : undefined
+    },
+    set (value: string | undefined) {
+      track()
+      if (value === 'true') {
+        booleanModel.value = true
+      }
+      else if (value === 'false') {
+        booleanModel.value = false
+      }
+      else {
+        booleanModel.value = undefined
+      }
+      trigger()
+    },
+  }
+})
 </script>
 
 <template>
-  <div class="question-container">
-    <DsfrRadioButtonSet
-      :options="[
-        { label: 'Oui', value: 'true' },
-        { label: 'Non', value: 'false' },
-      ].map(choice => ({
-        label: choice.label,
-        value: choice.value,
-        svgPath: true,
-      }))"
-      :name="question.id"
-      :model-value="modelValue?.toString()"
-      @update:model-value="handleChange"
-    />
-  </div>
+  <RadioButtonQuestion
+    v-model="stringModel"
+    :question="question"
+  />
 </template>
-
-<style scoped lang="scss">
-.question-container:deep(.fr-radio-rich__pictogram) {
-  display: none;
-}
-</style>

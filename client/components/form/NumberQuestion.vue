@@ -1,42 +1,42 @@
 <script lang="ts" setup>
 defineProps<{
   question: SurveyQuestion
-  modelValue: number | undefined
 }>()
 
-const emit = defineEmits<{
-  'update:modelValue': [value: number | undefined]
-}>()
+/**
+ * We expose a number model up to the parent component
+ */
+const numberModel = defineModel<number | undefined>()
 
-function handleChange (value: number | string) {
-  // Handle empty input
-  if (value === '' || value === null || value === undefined) {
-    emit('update:modelValue', undefined)
-    return
+/**
+ * We pass a string model down to the DSFR input component
+ */
+const stringModel = customRef((track, trigger) => {
+  return {
+    get () {
+      return numberModel.value === undefined ? undefined : String(numberModel.value)
+    },
+    set (value: string | undefined) {
+      track()
+      if (value === undefined || value === '') {
+        numberModel.value = undefined
+      }
+      else {
+        numberModel.value = Number(value)
+      }
+      trigger()
+    },
   }
-
-  // Convert string value to number
-  if (typeof value === 'string') {
-    const numValue = Number.parseFloat(value)
-    if (!Number.isNaN(numValue)) {
-      emit('update:modelValue', numValue)
-    }
-  }
-  else if (typeof value === 'number') {
-    emit('update:modelValue', value)
-  }
-}
+})
 </script>
 
 <template>
-  <div class="question-container fr-mb-4w">
-    <DsfrInputGroup
-      :model-value="modelValue"
-      type="number"
-      :name="question.id"
-      :label="question.title"
-      :label-visible="false"
-      @update:model-value="handleChange"
-    />
-  </div>
+  <DsfrInputGroup
+    v-model="stringModel"
+    class="fr-mb-4w"
+    type="number"
+    :name="question.id"
+    :label="question.title"
+    :label-visible="false"
+  />
 </template>

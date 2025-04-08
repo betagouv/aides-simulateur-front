@@ -69,11 +69,15 @@ const progress = computed(() => surveysStore.getProgress(simulateurId.value))
             }"
             :title="question.title"
           >
-            {{ question.id }}
+            <span>
+              {{ question.id }}
+            </span>
             <span
               v-if="question.answer !== null && question.answer !== undefined"
               class="debug-panel__answered fr-icon-success-line fr-icon--sm"
-            />
+            >
+              "{{ surveysStore.formatAnswer(simulateurId, question.id, question.answer) }}"
+            </span>
           </li>
         </ul>
       </div>

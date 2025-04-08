@@ -1,15 +1,11 @@
 <script lang="ts" setup>
 const props = defineProps<{
   question: SurveyQuestion
-  modelValue: string | undefined
   autocompleteFn?: (value: string) => Promise<Array<{ code: string, autocompletion: string, [key: string]: any }>>
 }>()
 
-const emit = defineEmits<{
-  'update:modelValue': [value: string]
-}>()
+const model = defineModel<string | undefined>()
 
-const inputValue = ref<string>(props.modelValue || '')
 const suggestions = ref<Array<{ code: string, autocompletion: string, [key: string]: any }>>([])
 const showSuggestions = ref(false)
 const loading = ref(false)
@@ -21,17 +17,17 @@ const isTagSelected = ref(false)
 const selectedTag = ref<{ code: string, autocompletion: string, libelle: string } | null>(null)
 
 // Met à jour inputValue quand modelValue change (pour les cas où la valeur est définie en dehors)
-watch(() => props.modelValue, (newValue) => {
+watch(() => model.value, (newValue) => {
   if (newValue !== undefined) {
     // Si nous avons un modelValue mais pas de tag sélectionné,
     // il faut vérifier si c'est un code connu et retrouver l'autocomplétion
     if (!isTagSelected.value && props.autocompleteFn && newValue) {
-      inputValue.value = newValue
+      model.value = newValue
       // On pourrait ici faire une requête à l'API pour obtenir l'autocomplétion
       // Mais pour l'instant on laisse juste le code comme valeur
     }
     else {
-      inputValue.value = newValue
+      model.value = newValue
     }
   }
 })
@@ -39,10 +35,10 @@ watch(() => props.modelValue, (newValue) => {
 // Fonction pour gérer l'entrée de l'utilisateur
 async function handleInput (event: Event) {
   const value = (event.target as HTMLInputElement).value
-  inputValue.value = value
+  model.value = value
 
   // Émettre la valeur immédiatement (mais sans le code encore)
-  emit('update:modelValue', value)
+  model.value = value
 
   if (value.trim() === '') {
     suggestions.value = []
@@ -78,7 +74,7 @@ async function handleInput (event: Event) {
 function selectSuggestion (suggestion: { code: string, autocompletion: string }) {
   selectedTag.value = suggestion
   isTagSelected.value = true
-  emit('update:modelValue', suggestion.code) // On émet le code comme valeur
+  model.value = suggestion.code // On émet le code comme valeur
   showSuggestions.value = false
 }
 
@@ -86,8 +82,8 @@ function selectSuggestion (suggestion: { code: string, autocompletion: string })
 function removeTag () {
   selectedTag.value = null
   isTagSelected.value = false
-  inputValue.value = ''
-  emit('update:modelValue', '')
+  model.value = ''
+  model.value = ''
 }
 
 // Gestion des touches clavier pour naviguer dans les suggestions
@@ -142,10 +138,10 @@ onMounted(() => {
   document.addEventListener('click', handleClickOutside)
 
   // Si on a déjà une valeur, on essaie de la retrouver dans les suggestions
-  if (props.modelValue && props.autocompleteFn) {
-    props.autocompleteFn(props.modelValue).then((results) => {
+  if (model.value && props.autocompleteFn) {
+    props.autocompleteFn(model.value).then((results) => {
       // Si on trouve une correspondance exacte, on sélectionne ce tag
-      const match = results.find(item => item.code === props.modelValue)
+      const match = results.find(item => item.code === model.value)
       if (match) {
         selectedTag.value = match
         isTagSelected.value = true
@@ -170,7 +166,7 @@ onUnmounted(() => {
       <!-- Afficher soit l'input, soit le tag sélectionné -->
       <template v-if="!isTagSelected">
         <DsfrInputGroup
-          :model-value="inputValue"
+          :model-value="model"
           type="text"
           :name="question.id"
           :label="question.title"
