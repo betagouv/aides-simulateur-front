@@ -27,7 +27,8 @@ export async function transformSimulationResults (
   const route = useRoute()
   if (route.fullPath.includes('mock=true')) {
     calculationResponse = mockCalculationResponse
-    console.log("!!!!!!!!------ This is a hardcoded mock test ---------!!!!!!!!")
+    // eslint-disable-next-line no-console
+    console.log('!!!!!!!!------ This is a hardcoded mock test ---------!!!!!!!!')
   }
 
   const rawAides: RawAide[] = Object.entries(calculationResponse)
