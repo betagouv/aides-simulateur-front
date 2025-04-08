@@ -3,7 +3,9 @@ const props = defineProps<{
   question: SurveyQuestion
 }>()
 
-const model = defineModel<string[]>('modelValue', { default: () => [] })
+const model = defineModel<string[]>({
+  default: () => []
+})
 
 // Convert question choices to DsfrCheckboxSet options format
 const checkboxOptions = computed(() => {

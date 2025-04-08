@@ -1,4 +1,12 @@
 <script lang="ts" setup>
+import {
+  BooleanQuestion,
+  DateQuestion,
+  MultiSelectQuestion,
+  NumberQuestion,
+  RadioButtonQuestion,
+  TextQuestion,
+} from '#components'
 import { onKeyDown } from '@vueuse/core'
 
 const props = defineProps<{
@@ -89,10 +97,37 @@ function handlePrevious () {
   }
 }
 
-// Handle updates from question components
-function handleQuestionUpdate (questionId: string, value: any) {
-  surveysStore.setAnswer(simulateurId.value, questionId, value)
-}
+const questionModel = customRef((track, trigger) => {
+  return {
+    get () {
+      track()
+      if (!currentQuestion.value) {
+        return undefined
+      }
+      return surveysStore.getAnswer(simulateurId.value, currentQuestion.value?.id)
+    },
+    set (value) {
+      if (!currentQuestion.value) {
+        return
+      }
+      surveysStore.setAnswer(simulateurId.value, currentQuestion.value?.id, value)
+      trigger()
+    }
+  }
+})
+const questionComponent = computed(() => {
+  if (!currentQuestion.value) {
+    return undefined
+  }
+  return {
+    radio: RadioButtonQuestion,
+    boolean: BooleanQuestion,
+    checkbox: MultiSelectQuestion,
+    number: NumberQuestion,
+    date: DateQuestion,
+    text: TextQuestion,
+  }[currentQuestion.value.type] || TextQuestion
+})
 
 function handleComplete () {
   surveysStore.tryComplete(simulateurId.value)
@@ -138,50 +173,14 @@ function handleComplete () {
               navigateTo(`/simulateurs/${simulateurId}/${currentQuestion?.notion.id}#simulateur-title`)
             }"
           />
-          <div ref="questionContainer">
-            <RadioButtonQuestion
-              v-if="currentQuestion.type === 'radio'"
-              :question="currentQuestion"
-              :model-value="(answers[currentQuestion.id] as string)"
-              @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
-            />
-
-            <BooleanQuestion
-              v-else-if="currentQuestion.type === 'boolean'"
-              :question="currentQuestion"
-              :model-value="(answers[currentQuestion.id] as boolean)"
-              @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
-            />
-
-            <MultiSelectQuestion
-              v-else-if="currentQuestion.type === 'checkbox'"
-              :question="currentQuestion"
-              :model-value="(answers[currentQuestion.id] as string[])"
-              @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
-            />
-
-            <NumberQuestion
-              v-else-if="currentQuestion.type === 'number'"
-              :question="currentQuestion"
-              :model-value="(answers[currentQuestion.id] as number)"
-              @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
-            />
-
-            <DateQuestion
-              v-else-if="currentQuestion.type === 'date'"
-              :question="currentQuestion"
-              :model-value="(answers[currentQuestion.id] as string)"
-              @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
-            />
-
-            <TextQuestion
-              v-else-if="currentQuestion.type === 'text'"
-              :question="currentQuestion"
-              :model-value="(answers[currentQuestion.id] as string)"
-              :autocomplete-fn="autocompleteFn"
-              @update:model-value="value => currentQuestion && handleQuestionUpdate(currentQuestion.id, value)"
-            />
-          </div>
+          <component
+            :is="questionComponent"
+            ref="questionContainer"
+            :key="currentQuestion.id"
+            v-model="questionModel"
+            :question="currentQuestion"
+            :autocomplete-fn="autocompleteFn"
+          />
         </template>
       </div>
     </div>
