@@ -80,18 +80,18 @@ if (hasAides) {
             Vos résultats de la simulation «&nbsp;{{ simulateurTitle }}&nbsp;»
           </h2>
           <p
-            v-if="richResults.simulationDateTime?.date && richResults.simulationDateTime?.time"
+            v-if="richResults.createAt?.date && richResults.createAt?.time"
             class="results__datetime"
             :style="{ color: 'var(--text-mention-grey)' }"
           >
-            Simulation terminée le {{ richResults.simulationDateTime.date }} à {{ richResults.simulationDateTime.time }}
+            Simulation terminée le {{ richResults.createAt.date }} à {{ richResults.createAt.time }}
           </p>
         </hgroup>
         <DsfrLink
           class="results__backlink"
           icon-before
           label="Reprendre ma simulation"
-          :to="`/simulateurs/${simulateurId}#simulateur-title`"
+          :to="`/simulateurs/${simulateurId}/recapitulatif/#simulateur-title`"
           :icon="{ name: 'ri:arrow-left-line', ssr: true }"
         />
       </div>

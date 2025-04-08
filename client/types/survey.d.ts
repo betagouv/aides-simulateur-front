@@ -10,21 +10,23 @@ declare global {
     title: string
     description?: string
     type: 'radio' | 'checkbox' | 'number' | 'date' | 'text' | 'boolean'
+    visibleWhen?: string
     notion: {
       id: string
       buttonLabel: string
     }
     autocompleteFunction?: string
     choices?: SurveyChoice[]
-    nextQuestion?: string
-    bypassToQuestion?: Array<{
-      condition: string
-      question: string
-    }>
   }
 
-  interface SurveyAnswers {
-    [key: string]: string | string[] | number | boolean | undefined
+  interface QuestionGroup {
+    title: string
+    questions: {
+      id: string
+      title: string
+      answer?: unknown
+      visible: boolean
+    }[]
   }
 
   interface SurveyStep {
@@ -33,14 +35,26 @@ declare global {
     questions: SurveyQuestion[]
   }
 
+  interface SurveyTest {
+    id: string
+    description: string
+    questionsToApi: string[]
+    answers: Record<string, any>
+    results: Record<string, any>
+  }
+
   interface SurveySchema {
+    version: string
+    forceRefresh: boolean
     id: string
     title: string
     description: string
-    version: string
-    forceRefresh?: boolean
     steps: SurveyStep[]
-    triggeredQuestions?: SurveyQuestion[]
+    tests?: SurveyTest[]
+  }
+
+  interface SurveyAnswers {
+    [key: string]: string | string[] | number | boolean | undefined
   }
 
   interface SurveyResults {
