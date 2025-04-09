@@ -5,7 +5,6 @@ const props = defineProps<{
 const simulateurId = toRef(props.simulateurId)
 
 const surveysStore = useSurveysStore()
-
 const groupedQuestions = computed(() => surveysStore.getGroupedQuestions(simulateurId.value))
 const currentQuestionId = computed(() => surveysStore.getCurrentQuestionId(simulateurId.value))
 const currentStepId = computed(() => surveysStore.getCurrentStepId(simulateurId.value))
