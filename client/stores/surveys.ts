@@ -119,10 +119,10 @@ export const useSurveysStore = defineStore('surveys', () => {
     const currentAnswers = getAnswers(simulateurId)
     const answer = currentAnswers[questionId]
     if (answer === undefined) {
-      debug.warn(`[Surveys store][${simulateurId}] Answer not found for ${questionId}`)
+      // debug.warn(`[Surveys store][${simulateurId}] Answer not found for ${questionId}`)
       return null
     }
-    debug.log(`[Surveys store][${simulateurId}] Answer for ${questionId}:`, answer)
+    // debug.log(`[Surveys store][${simulateurId}] Answer for ${questionId}:`, answer)
     return answer
   }
 
@@ -130,10 +130,10 @@ export const useSurveysStore = defineStore('surveys', () => {
     const currentAnswers = getAnswers(simulateurId)
     const answer = currentAnswers[questionId]
     if (answer === undefined) {
-      debug.warn(`[Surveys store][${simulateurId}] Answer not found for ${questionId}`)
+      // debug.warn(`[Surveys store][${simulateurId}] Answer not found for ${questionId}`)
       return false
     }
-    debug.log(`[Surveys store][${simulateurId}] Answer for ${questionId}:`, answer)
+    // debug.log(`[Surveys store][${simulateurId}] Answer for ${questionId}:`, answer)
     return true
   }
 
@@ -411,7 +411,7 @@ export const useSurveysStore = defineStore('surveys', () => {
     if (question.visibleWhen) {
       const isVisible = evaluateCondition(question.visibleWhen, currentAnswers)
 
-      debug.log(`[surveysStore][${simulateurId}] Visibility check for ${questionId}: ${isVisible} (condition: ${question.visibleWhen})`)
+      // debug.log(`[surveysStore][${simulateurId}] Visibility check for ${questionId}: ${isVisible} (condition: ${question.visibleWhen})`)
 
       return isVisible
     }

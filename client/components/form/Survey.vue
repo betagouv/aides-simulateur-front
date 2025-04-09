@@ -101,78 +101,62 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
       Votre simulation
     </component>
 
-    <!-- Form loading status panel -->
-    <template v-if="schemaStatus === 'pending'">
-      <div class="status-panel fr-card fr-p-3w">
-        <p class="loading-indicator fr-text--xl fr-mt-3w">
-          <span
-            class="fr-icon-refresh-line fr-icon fr-icon--md fr-mr-2w"
-            aria-hidden="true"
-          />Chargement du formulaire...
-        </p>
-      </div>
-    </template>
-
-    <!-- Form error status panel -->
-    <div
+    <LoadingSpinner v-if="schemaStatus === 'pending'" />
+    <DsfrAlert
       v-else-if="schemaStatus === 'error'"
-      class="fr-card fr-py-5w fr-text--center"
-    >
-      <p>Erreur lors du chargement du formulaire</p>
-    </div>
+      aria-live="assertive"
+      type="error"
+      title="Erreur lors du chargement du formulaire"
+    />
 
-    <!-- Form success status -->
     <template v-else-if="schemaStatus === 'success'">
       <!-- Choice screen for resuming or restarting -->
       <div v-if="showChoiceScreen">
-        <div class="fr-card fr-p-3w">
+        <div class="fr-card fr-p-4w">
           <component
             :is="surveyH2"
             class="fr-h4"
           >
-            <VIcon
-              name="ri:information-line"
-              ssr
-            />
-            Vous avez un formulaire en cours
+            Vous avez déjà commencé une simulation
           </component>
           <DsfrBadge
             class="fr-mt-n1w fr-mb-2w"
             type="info"
             :label="`Progression : ${progress}%`"
           />
-          <p class="fr-text--lg">
-            Souhaitez-vous reprendre votre formulaire là où vous vous êtes arrêté ou recommencer à zéro ?
+          <p class="fr-text--lg fr-mb-0">
+            Souhaitez-vous reprendre votre simulation ou la recommencer ?
           </p>
-          <div class="fr-btns-group brand-form-actions fr-mt-1w">
-            <DsfrButton
-              class="brand-form-actions__button"
-              label="Reprendre"
-              :icon="{ name: 'ri:play-line', ssr: true }"
-              @click="resumeForm"
-            />
-            <DsfrButton
-              class="brand-form-actions__button"
-              label="Recommencer"
-              secondary
-              :icon="{ name: 'ri:restart-line', ssr: true }"
-              @click="restartForm"
-            />
-          </div>
         </div>
+        <DsfrButtonGroup
+          class="fr-mt-3w"
+          align="right"
+          size="lg"
+          inline-layout-when="md"
+          :buttons="[
+            {
+              label: 'Recommencer',
+              secondary: true,
+              icon: { name: 'ri:refresh-line', ssr: true },
+              onClick: restartForm,
+            },
+            {
+              label: 'Reprendre',
+              iconRight: true,
+              icon: { name: 'ri:arrow-right-line', ssr: true },
+              onClick: resumeForm,
+            },
+          ]"
+        />
       </div>
 
       <!-- Welcome screen for starting the survey -->
       <div v-else-if="showWelcomeScreen">
-        <div class="fr-card fr-p-3w">
+        <div class="fr-card fr-p-4w">
           <component
             :is="surveyH2"
             class="fr-h4"
           >
-            <VIcon
-              name="ri:information-line"
-              ssr
-            />
             Un simulateur en construction
           </component>
           <p>
@@ -220,16 +204,22 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
               target="_blank"
             />
           </p>
-
-          <div class="fr-btns-group brand-form-actions">
-            <DsfrButton
-              class="brand-form-actions__button fr-mt-1w"
-              label="Commencer la simulation"
-              :icon="{ name: 'ri:play-line', ssr: true }"
-              @click="resumeForm"
-            />
-          </div>
         </div>
+
+        <DsfrButtonGroup
+          class="fr-mt-4w"
+          inline-layout-when="md"
+          size="lg"
+          align="right"
+          :buttons="[
+            {
+              label: 'Commencer la simulation',
+              iconRight: true,
+              icon: { name: 'ri:arrow-right-line', ssr: true },
+              onClick: resumeForm,
+            },
+          ]"
+        />
       </div>
 
       <!-- Results status panel -->
@@ -237,16 +227,11 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
         v-else-if="resultsFetchStatus !== 'idle'"
         class="status-panel"
       >
-        <p
+        <LoadingSpinner
           v-if="resultsFetchStatus === 'pending'"
-          class="loading-indicator fr-text--xl fr-mt-3w"
-        >
-          <span
-            class="fr-icon-refresh-line fr-icon fr-icon--md fr-mr-1v"
-            aria-hidden="true"
-          />Estimation en
-          cours...
-        </p>
+          text="Estimation en cours..."
+          size="lg"
+        />
         <DsfrBadge
           v-if="resultsFetchStatus === 'error' || resultsFetchStatus === 'success'"
           class="survey-fetch-status-badge"

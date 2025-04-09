@@ -77,7 +77,7 @@ const currentQuestionId = computed(() => surveysStore.getCurrentQuestionId(simul
                 label="Question en cours"
               />
               <p
-                v-if="question.answer"
+                v-if="surveysStore.hasAnswer(simulateurId, question.id)"
                 class="fr-hint-text fr-text--sm"
               >
                 "{{ surveysStore.formatAnswer(simulateurId, question.id, question.answer) }}"
@@ -85,7 +85,7 @@ const currentQuestionId = computed(() => surveysStore.getCurrentQuestionId(simul
             </div>
             <DsfrButton
               tertiary
-              small
+              size="sm"
               no-outline
               :icon="{ name: 'ri:edit-line', ssr: true }"
               icon-right
