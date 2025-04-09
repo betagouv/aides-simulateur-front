@@ -1,4 +1,9 @@
 # CHANGELOG
+## 0.20.1 [#91](https://github.com/betagouv/aides-simulateur-front/pull/91)
+* Devops
+* Détail :
+   * Ajout de la standardisation des champs de type number du formulaire pour bénéficier du cache Nginx OpenFisca, dans la méthode standardizeFinancialAmountsForCache de `calculate-aides.ts`
+
 ## 0.20.0 [#89](https://github.com/betagouv/aides-simulateur-front/pull/89)
 * Devops
 * Détail : 
