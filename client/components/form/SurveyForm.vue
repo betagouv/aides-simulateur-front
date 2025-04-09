@@ -23,7 +23,13 @@ const surveySchema = computed(() => surveysStore.getSchema(simulateurId.value))
 const isLastQuestion = computed(() => surveysStore.isLastQuestion(simulateurId.value))
 const areAllRequiredQuestionsAnswered = computed(() => surveysStore.areAllRequiredQuestionsAnswered(simulateurId.value))
 const currentStepIndex = computed(() => surveysStore.getCurrentStepIndex(simulateurId.value))
-const answers = computed(() => surveysStore.getAnswers(simulateurId.value))
+// Check if the current question has been answered
+const hasValidAnswer = computed(() => {
+  if (!currentQuestion.value) {
+    return false
+  }
+  return isAnswerValid(currentQuestion.value, surveysStore.getAnswer(simulateurId.value, currentQuestion.value.id))
+})
 
 const stepTitles = computed(() => {
   return surveySchema.value?.steps
@@ -53,35 +59,40 @@ const autocompleteConfig = computed(() => {
   return undefined
 })
 
-// Check if the current question has been answered
-const hasValidAnswer = computed(() => {
-  if (!currentQuestion.value) {
-    return false
-  }
-  return isAnswerValid(currentQuestion.value, answers.value[currentQuestion.value.id])
-})
-
 // Heading levels based on iframe context
 const { isIframe } = useIframeDisplay()
 const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
 
 // Focus on the question container after navigation
 const questionContainer = ref<HTMLElement | null>(null)
+const questionChangeAnnouncer = ref<HTMLElement | null>(null)
+
 function focusRenderedQuestion () {
   nextTick(() => {
     if (questionContainer.value) {
-      // Focus the first focusable input field inside the question container
-      const focusable = questionContainer.value.querySelector('input, select, textarea')
-      if (focusable) {
-        (focusable as HTMLElement).focus()
-      }
+      questionContainer.value.focus()
+    }
+
+    // Announce to screen readers that a new question is displayed
+    if (questionChangeAnnouncer.value && currentQuestion.value) {
+      questionChangeAnnouncer.value.textContent = `Question : ${currentQuestion.value.title}`
     }
   })
 }
-
 onMounted(() => {
   focusRenderedQuestion()
 })
+
+onKeyDown('Enter', (event: KeyboardEvent) => {
+  if (hasValidAnswer.value && !isLastQuestion.value) {
+    // Only trigger if the source is not a button or textarea
+    if (!(event.target instanceof HTMLButtonElement)
+      && !(event.target instanceof HTMLTextAreaElement)) {
+      event.preventDefault()
+      handleNext()
+    }
+  }
+}, { target: questionContainer })
 
 // Navigate to next question or submit form
 function handleNext () {
@@ -90,13 +101,6 @@ function handleNext () {
     focusRenderedQuestion()
   }
 }
-
-// If Enter is pressed and there's an answer, go to next question
-// onKeyDown('Enter', () => {
-//   if (hasValidAnswer.value) {
-//     handleNext()
-//   }
-// }, { target: questionContainer })
 
 // Navigate to previous question
 function handlePrevious () {
@@ -149,6 +153,15 @@ function handleComplete () {
 
 <template>
   <div>
+    <!-- Live region for announcing question changes to screen readers -->
+    <div
+      id="question-change-announcer"
+      ref="questionChangeAnnouncer"
+      class="fr-sr-only"
+      aria-live="polite"
+      aria-atomic="true"
+    />
+
     <DsfrStepper
       v-if="currentStepIndex"
       :steps="stepTitles"
@@ -156,48 +169,48 @@ function handleComplete () {
     />
     <div
       v-if="surveySchema && currentQuestion"
-      class="form-container fr-card fr-p-3w"
+      ref="questionContainer"
+      tabindex="-1"
+      class="fr-card fr-p-4w"
     >
-      <div class="fr-form-group">
-        <hgroup class="fr-mb-3w">
-          <component
-            :is="surveyH2"
-            :id="`question-${currentQuestion.id}`"
-            class="fr-h5 fr-mb-1w"
-          >
-            {{ currentQuestion?.title }}
-          </component>
-          <p
-            v-if="currentQuestion?.description"
-            class="fr-hint-text fr-text--sm"
-          >
-            {{ currentQuestion?.description }}
-          </p>
-        </hgroup>
-        <!-- Question component based on type -->
-        <template v-if="currentQuestion">
-          <DsfrButton
-            v-if="currentQuestion?.notion"
-            :label="currentQuestion?.notion.buttonLabel"
-            icon="ri:information-line"
-            secondary
-            icon-right
-            class="fr-mb-2w"
-            @click="() => {
-              navigateTo(`/simulateurs/${simulateurId}/${currentQuestion?.notion.id}#simulateur-title`)
-            }"
-          />
-          <component
-            :is="questionComponent"
-            ref="questionContainer"
-            :key="currentQuestion.id"
-            v-model="questionModel"
-            :question="currentQuestion"
-            :autocomplete-config="autocompleteConfig"
-            :autocomplete-fn="autocompleteFn"
-          />
-        </template>
-      </div>
+      <hgroup
+        :id="`question-${currentQuestion.id}`"
+        class="fr-mb-3w"
+      >
+        <component
+          :is="surveyH2"
+          class="fr-h5 fr-mb-1w"
+          :aria-describedby="currentQuestion?.description ? `question-description-${currentQuestion.id}` : undefined"
+        >
+          {{ currentQuestion?.title }}
+        </component>
+        <p
+          v-if="currentQuestion?.description"
+          :id="`question-description-${currentQuestion.id}`"
+          class="fr-hint-text fr-text--sm fr-mb-0"
+        >
+          {{ currentQuestion?.description }}
+        </p>
+      </hgroup>
+      <DsfrButton
+        v-if="currentQuestion?.notion"
+        :label="currentQuestion?.notion.buttonLabel"
+        icon="ri:information-line"
+        secondary
+        icon-right
+        class="fr-mb-2w"
+        @click="() => {
+          navigateTo(`/simulateurs/${simulateurId}/${currentQuestion?.notion.id}#simulateur-title`)
+        }"
+      />
+      <component
+        :is="questionComponent"
+        :key="currentQuestion.id"
+        v-model="questionModel"
+        :question="currentQuestion"
+        :autocomplete-config="autocompleteConfig"
+        :autocomplete-fn="autocompleteFn"
+      />
     </div>
     <div class="fr-btns-group fr-btns-group--lg fr-mt-4w brand-form-actions brand-form-actions__align-end">
       <DsfrButton
@@ -240,6 +253,13 @@ function handleComplete () {
 </template>
 
 <style scoped lang="scss">
+:deep(.fr-fieldset) {
+  margin-bottom: 0;
+
+  .fr-fieldset__element:last-child {
+    margin-bottom: 0;
+  }
+}
 .brand-form-actions {
   display: flex;
 
