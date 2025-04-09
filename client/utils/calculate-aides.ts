@@ -536,6 +536,9 @@ export async function fetchOpenFiscaFranceCalculation (
   // Standardiser la date de naissance pour optimiser le cache
   standardizeBirthDateForCache(request)
 
+  // Standardiser les montants financiers pour optimiser le cache
+  standardizeFinancialAmountsForCache(request)
+
   // eslint-disable-next-line no-console
   console.debug(`Requête à transmettre à ${config.public.apiEndpointOpenFiscaFranceCalculate} :`)
   // eslint-disable-next-line no-console
@@ -605,6 +608,75 @@ function standardizeBirthDateForCache (request: OpenFiscaCalculationRequest): vo
 
         // Remplacer la date de naissance dans la requête
         individu.date_naissance[period] = standardizedDate
+      }
+    }
+  }
+}
+
+/**
+ * Standardise les montants financiers pour optimiser le cache Nginx
+ * Arrondit les montants à des paliers intelligents selon leur nature
+ */
+function standardizeFinancialAmountsForCache (request: OpenFiscaCalculationRequest): void {
+  // Définir les paliers d'arrondi selon le type de montant
+  const roundingRules = {
+    loyer: 50, // menages.menage_usager.loyer
+    charges_locatives: 20, // menages.menage_usager.charges_locatives
+    salaire_imposable: 100, // individus.usager.salaire_imposable
+    chomage_imposable: 100, // individus.usager.chomage_imposable
+    bourse_lycee: 10, // familles.famille_usager.bourse_lycee
+    bourse_superieur: 10, // familles.famille_usager.bourse_superieur
+    bourse_criteres_sociaux: 10, // individus.usager.bourse_criteres_sociaux
+    rpns_imposables: 100, // individus.usager.rpns_imposables
+    montant_parents: 1000 // ??
+  }
+
+  // Fonction d'arrondi intelligente
+  const roundAmount = (amount: number, step: number): number => {
+    // Arrondir au palier le plus proche
+    return Math.round(amount / step) * step
+  }
+
+  // Parcourir tous les individus et ménages
+  for (const individuId in request.individus) {
+    const individu = request.individus[individuId]
+    standardizeAmountsForEntity(individu, roundingRules, roundAmount)
+  }
+
+  for (const menageId in request.menages) {
+    const menage = request.menages[menageId]
+    standardizeAmountsForEntity(menage, roundingRules, roundAmount)
+  }
+
+  for (const familleId in request.familles) {
+    const famille = request.familles[familleId]
+    standardizeAmountsForEntity(famille, roundingRules, roundAmount)
+  }
+}
+
+/**
+ * Standardise les montants pour une entité donnée
+ */
+function standardizeAmountsForEntity (
+  entity: Record<string, any>,
+  roundingRules: Record<string, number>,
+  roundAmount: (amount: number, step: number) => number
+): void {
+  for (const [key, value] of Object.entries(entity)) {
+    // Vérifier si la clé correspond à un montant à standardiser
+    const matchingRule = Object.entries(roundingRules).find(([ruleKey]) =>
+      key.toLowerCase().includes(ruleKey.toLowerCase())
+    )
+
+    if (matchingRule) {
+      const [_, step] = matchingRule
+      const period = Object.keys(value)[0]
+      const originalAmount = value[period]
+
+      if (typeof originalAmount === 'number' && !isNaN(originalAmount)) {
+        // Arrondir le montant
+        const standardizedAmount = roundAmount(originalAmount, step)
+        entity[key][period] = standardizedAmount
       }
     }
   }
