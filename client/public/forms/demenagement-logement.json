@@ -62,7 +62,7 @@
         },
         {
           "id": "boursier",
-          "title": "Etes vous boursier ?",
+          "title": "Êtes-vous boursier ?",
           "type": "boolean",
           "visibleWhen": "etudiant-mobilite=parcoursup-nouvelle-region||etudiant-mobilite=master-nouvelle-zone"
         },
@@ -78,7 +78,7 @@
             "id": "handicap",
             "buttonLabel": "En savoir plus"
           },
-          "title": "Avez-vous une reconnaissance administrative de votre situation de handicap ?",
+          "title": "Avez-vous une reconnaissance administrative d'une situation de handicap ?",
           "type": "boolean"
         }
       ]
@@ -99,7 +99,7 @@
             { "id": "divorce", "title": "Divorcé(e)" },
             { "id": "veuf", "title": "Veuf(ve)" },
             { "id": "jeune_veuf", "title": "Veuf(ve) d'un(e) conjoint(e) décédé(e) dans l'année" },
-            { "id": "non_renseigne", "title": "Je préfère ne pas renseigner" }
+            { "id": "non_renseigne", "title": "Je préfère ne pas renseigner cette information" }
           ]
         }
       ]
@@ -111,7 +111,7 @@
         {
           "id": "code-postal-nouvelle-ville",
           "title": "Dans quelle ville allez-vous résider ?",
-          "description": "Veuillez saisir le code postal ou le nom de la commune de la ville dans laquelle vous allez résider. Nous saisirons alors automatiquement le code INSEE pour vous.",
+          "description": "Veuillez saisir le nom ou le code postal de la commune dans laquelle vous allez résider.",
           "type": "text",
           "autocompleteFunction": "getInseeNumber"
         },
