@@ -5,6 +5,19 @@ declare global {
     title: string
   }
 
+  interface SurveyQuestionAutocompleteConfig {
+    placeholder?: string
+    buttonText?: string
+    loadingText?: string
+    selectLabel?: string
+    selectHint?: string | ((query: string) => string)
+    noResultsText?: string
+    errorTitle?: string
+    errorDescription?: string
+    defaultUnselectedText?: string
+    resetButtonLabel?: string
+  }
+
   interface SurveyQuestion {
     id: string
     title: string
@@ -16,6 +29,7 @@ declare global {
       buttonLabel: string
     }
     autocompleteFunction?: string
+    autocompleteConfig?: SurveyQuestionAutocompleteConfig
     choices?: SurveyChoice[]
     min?: number
     max?: number
