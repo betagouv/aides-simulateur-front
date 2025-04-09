@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import type { DsfrButtonProps } from '@gouvminint/vue-dsfr'
 import {
   BooleanQuestion,
   DateQuestion,
@@ -85,9 +86,13 @@ onMounted(() => {
 
 onKeyDown('Enter', (event: KeyboardEvent) => {
   if (hasValidAnswer.value && !isLastQuestion.value) {
-    // Only trigger if the source is not a button or textarea
-    if (!(event.target instanceof HTMLButtonElement)
-      && !(event.target instanceof HTMLTextAreaElement)) {
+    // Only trigger if the source is not a button or textarea or [type="search"] input or select
+    if (
+      !(event.target instanceof HTMLButtonElement)
+      && !(event.target instanceof HTMLTextAreaElement)
+      && !(event.target instanceof HTMLInputElement && event.target.type === 'search')
+      && !(event.target instanceof HTMLSelectElement)
+    ) {
       event.preventDefault()
       handleNext()
     }
@@ -171,7 +176,7 @@ function handleComplete () {
       v-if="surveySchema && currentQuestion"
       ref="questionContainer"
       tabindex="-1"
-      class="fr-card fr-p-4w"
+      class="fr-card fr-p-4w fr-mb-3w"
     >
       <hgroup
         :id="`question-${currentQuestion.id}`"
@@ -212,43 +217,38 @@ function handleComplete () {
         :autocomplete-fn="autocompleteFn"
       />
     </div>
-    <div class="fr-btns-group fr-btns-group--lg fr-mt-4w brand-form-actions brand-form-actions__align-end">
-      <DsfrButton
-        class="brand-form-actions__button"
-        label="Récapitulatif"
-        secondary
-        size="lg"
-        :icon="{ name: 'ri:menu-line', ssr: true }"
-        @click="() => navigateTo(`/simulateurs/${simulateurId}/recapitulatif`)"
-      />
-      <DsfrButton
-        class="brand-form-actions__button"
-        label="Précédent"
-        secondary
-        size="lg"
-        :icon="{ name: 'ri:arrow-left-line', ssr: true }"
-        @click="handlePrevious"
-      />
-      <DsfrButton
-        size="lg"
-        class="brand-form-actions__button"
-        label="Suivant"
-        :secondary="areAllRequiredQuestionsAnswered"
-        :icon="{ name: 'ri:arrow-right-line', ssr: true }"
-        icon-right
-        :disabled="isLastQuestion || !hasValidAnswer"
-        @click="handleNext"
-      />
-      <DsfrButton
-        v-if="areAllRequiredQuestionsAnswered"
-        size="lg"
-        class="brand-form-actions__button"
-        label="Terminer"
-        :icon="{ name: 'ri:arrow-right-line', ssr: true }"
-        icon-right
-        @click="handleComplete"
-      />
-    </div>
+    <DsfrButtonGroup
+      size="lg"
+      inline-layout-when="md"
+      align="right"
+      :buttons="([
+        {
+          label: 'Récapitulatif',
+          secondary: true,
+          icon: { name: 'ri:menu-line', ssr: true },
+          onClick: () => navigateTo(`/simulateurs/${simulateurId}/recapitulatif`),
+        },
+        {
+          label: 'Précédent',
+          secondary: true,
+          icon: { name: 'ri:arrow-left-line', ssr: true },
+          onClick: handlePrevious,
+        },
+        !isLastQuestion && {
+          label: 'Suivant',
+          iconRight: true,
+          icon: { name: 'ri:arrow-right-line', ssr: true },
+          disabled: !hasValidAnswer,
+          onClick: handleNext,
+        },
+        areAllRequiredQuestionsAnswered && {
+          label: 'Terminer',
+          iconRight: true,
+          icon: { name: 'ri:arrow-right-line', ssr: true },
+          onClick: handleComplete,
+        },
+      ].filter(Boolean) as DsfrButtonProps[])"
+    />
   </div>
 </template>
 
@@ -260,19 +260,11 @@ function handleComplete () {
     margin-bottom: 0;
   }
 }
-.brand-form-actions {
-  display: flex;
 
-  &.brand-form-actions__align-end {
-    justify-content: flex-end;
-  }
-
-  .brand-form-actions__button {
-    flex-basis: 100%;
-
-    @media (min-width: 36em) {
-      flex-basis: calc(25% - 1rem);
-    }
+:deep(.fr-btns-group li) {
+  flex: 1;
+  .fr-btn {
+    width: 100%;
   }
 }
 </style>

@@ -10,7 +10,7 @@ withDefaults(defineProps<{
 
 <template>
   <div
-    class="state-panel"
+    class="status-panel"
     aria-busy="true"
     aria-live="polite"
   >
@@ -32,14 +32,13 @@ withDefaults(defineProps<{
 </template>
 
 <style scoped lang="scss">
-.state-panel {
+.status-panel {
   display: flex;
   width: 100%;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  // min-height: 10em;
 }
 
 .loading-indicator {
