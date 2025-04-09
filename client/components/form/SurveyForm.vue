@@ -41,6 +41,18 @@ const autocompleteFn = computed(() => {
   return undefined
 })
 
+// Get autocomplete configuration for current question
+const autocompleteConfig = computed(() => {
+  if (currentQuestion.value?.autocompleteFunction) {
+    // Merge default config with any custom config from question
+    return {
+      ...autocompleteConfigs[currentQuestion.value.autocompleteFunction],
+      ...currentQuestion.value.autocompleteConfig || {},
+    }
+  }
+  return undefined
+})
+
 // Check if the current question has been answered
 const hasValidAnswer = computed(() => {
   if (!currentQuestion.value) {
@@ -80,11 +92,11 @@ function handleNext () {
 }
 
 // If Enter is pressed and there's an answer, go to next question
-onKeyDown('Enter', () => {
-  if (hasValidAnswer.value) {
-    handleNext()
-  }
-}, { target: questionContainer })
+// onKeyDown('Enter', () => {
+//   if (hasValidAnswer.value) {
+//     handleNext()
+//   }
+// }, { target: questionContainer })
 
 // Navigate to previous question
 function handlePrevious () {
@@ -115,6 +127,7 @@ const questionModel = customRef((track, trigger) => {
     }
   }
 })
+
 const questionComponent = computed(() => {
   if (!currentQuestion.value) {
     return undefined
@@ -180,6 +193,7 @@ function handleComplete () {
             :key="currentQuestion.id"
             v-model="questionModel"
             :question="currentQuestion"
+            :autocomplete-config="autocompleteConfig"
             :autocomplete-fn="autocompleteFn"
           />
         </template>

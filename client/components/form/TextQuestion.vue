@@ -1,315 +1,287 @@
-<script lang="ts" setup>
-const props = defineProps<{
+<script lang="ts" setup generic="T, U">
+const props = withDefaults(defineProps<{
   question: SurveyQuestion
-  autocompleteFn?: (value: string) => Promise<Array<{ code: string, autocompletion: string, [key: string]: any }>>
-}>()
+  autocompleteFn: AutocompleteFn
+  autocompleteConfig?: SurveyQuestionAutocompleteConfig
+}>(), {
+  autocompleteConfig: () => ({})
+})
+
+const defaultConfig = {
+  placeholder: 'Rechercher',
+  buttonText: 'Rechercher',
+  loadingText: 'Chargement des suggestions...',
+  selectLabel: 'Sélectionner une option dans la liste ci-dessous',
+  selectHint: (query: string) => `Il s'agit des options proches de votre recherche : « ${query} »`,
+  noResultsText: 'Aucun résultat trouvé pour votre recherche',
+  errorTitle: 'Erreur lors de la recherche',
+  errorDescription: 'Veuillez réessayer plus tard.',
+  defaultUnselectedText: 'Sélectionner une option',
+  resetButtonLabel: 'Réinitialiser',
+}
+
+const config = {
+  ...defaultConfig,
+  ...props.autocompleteConfig
+}
 
 const model = defineModel<string | undefined>()
+const query = ref<string>('') // state for the input field
+const lastSentQuery = ref<string>('') // state for the last sent query
+const searchResultsId = `search-results-${props.question.id}`
+const searchInputId = `search-input-${props.question.id}`
+const selectId = `options-${props.question.id}`
 
-const suggestions = ref<Array<{ code: string, autocompletion: string, [key: string]: any }>>([])
-const showSuggestions = ref(false)
-const loading = ref(false)
-const debounceTimeout = ref<NodeJS.Timeout | null>(null)
-const selectedIndex = ref(-1)
-const suggestionListRef = ref<HTMLUListElement | null>(null)
+// Reference to elements for focus management
+const selectElement = ref<HTMLElement | null>(null)
+const searchInput = ref<ComponentPublicInstance | null>(null)
+const noResultsAlert = ref<HTMLElement | null>(null)
 
-const isTagSelected = ref(false)
-const selectedTag = ref<{ code: string, autocompletion: string, libelle: string } | null>(null)
+// Add a new ref for tracking the active option in the dropdown
+const activeDescendant = ref<string | null>(null)
+const optionsContainerId = `options-list-${props.question.id}`
+const comboboxId = `combobox-${props.question.id}`
 
-// Met à jour inputValue quand modelValue change (pour les cas où la valeur est définie en dehors)
-watch(() => model.value, (newValue) => {
-  if (newValue !== undefined) {
-    // Si nous avons un modelValue mais pas de tag sélectionné,
-    // il faut vérifier si c'est un code connu et retrouver l'autocomplétion
-    if (!isTagSelected.value && props.autocompleteFn && newValue) {
-      model.value = newValue
-      // On pourrait ici faire une requête à l'API pour obtenir l'autocomplétion
-      // Mais pour l'instant on laisse juste le code comme valeur
-    }
-    else {
-      model.value = newValue
+const { data: selectOptions, status, refresh, clear } = useAsyncData(
+  `autocomplete-${props.question.id}`,
+  () => props.autocompleteFn(query.value),
+  {
+    lazy: true,
+    immediate: false,
+    default: () => [],
+  }
+)
+
+const debounceStatus = ref<'idle' | 'pending' | 'success' | 'error'>('idle')
+const statusMessage = ref<string>('')
+
+watch(status, (newStatus) => {
+  if (newStatus === 'success') {
+    setTimeout(() => {
+      debounceStatus.value = 'success' // Set to success after a delay to allow for UI updates
+      if (selectOptions.value.length > 0) {
+        statusMessage.value = `${selectOptions.value.length} options trouvées pour votre recherche "${lastSentQuery.value}"`
+        // Move focus to the select element when results appear
+        nextTick(() => {
+          if (selectElement.value) {
+            selectElement.value.focus()
+          }
+        })
+      }
+      else {
+        statusMessage.value = config.noResultsText
+      }
+    }, 400)
+  }
+  else if (newStatus === 'error') {
+    debounceStatus.value = newStatus
+    statusMessage.value = `${config.errorTitle}. ${config.errorDescription}`
+  }
+  else {
+    debounceStatus.value = newStatus
+    if (newStatus === 'pending') {
+      statusMessage.value = config.loadingText
     }
   }
 })
 
-// Fonction pour gérer l'entrée de l'utilisateur
-async function handleInput (event: Event) {
-  const value = (event.target as HTMLInputElement).value
-  model.value = value
-
-  // Émettre la valeur immédiatement (mais sans le code encore)
-  model.value = value
-
-  if (value.trim() === '') {
-    suggestions.value = []
-    showSuggestions.value = false
-    return
-  }
-
-  // Debounce la requête d'autocomplétion
-  if (debounceTimeout.value) {
-    clearTimeout(debounceTimeout.value)
-  }
-
-  debounceTimeout.value = setTimeout(async () => {
-    if (props.autocompleteFn) {
-      try {
-        loading.value = true
-        selectedIndex.value = -1
-        const result = await props.autocompleteFn(value)
-        suggestions.value = result
-        showSuggestions.value = result.length > 0
-      }
-      catch (error) {
-        console.error('Erreur lors de l\'autocomplétion:', error)
-      }
-      finally {
-        loading.value = false
-      }
-    }
-  }, 300) // 300ms de debounce
-}
-
-// Fonction pour sélectionner une suggestion
-function selectSuggestion (suggestion: { code: string, autocompletion: string }) {
-  selectedTag.value = suggestion
-  isTagSelected.value = true
-  model.value = suggestion.code // On émet le code comme valeur
-  showSuggestions.value = false
-}
-
-// Fonction pour supprimer le tag sélectionné
-function removeTag () {
-  selectedTag.value = null
-  isTagSelected.value = false
-  model.value = ''
-  model.value = ''
-}
-
-// Gestion des touches clavier pour naviguer dans les suggestions
-function handleKeyDown (event: KeyboardEvent) {
-  if (!showSuggestions.value) {
-    return
-  }
-
-  switch (event.key) {
-    case 'ArrowDown':
-      event.preventDefault()
-      selectedIndex.value = Math.min(selectedIndex.value + 1, suggestions.value.length - 1)
-      scrollToSelectedItem()
-      break
-    case 'ArrowUp':
-      event.preventDefault()
-      selectedIndex.value = Math.max(selectedIndex.value - 1, -1)
-      scrollToSelectedItem()
-      break
-    case 'Enter':
-      event.preventDefault()
-      if (selectedIndex.value >= 0 && selectedIndex.value < suggestions.value.length) {
-        selectSuggestion(suggestions.value[selectedIndex.value])
-      }
-      break
-    case 'Escape':
-      showSuggestions.value = false
-      break
+function handleSearch () {
+  if (query.value.trim()) {
+    refresh()
+    lastSentQuery.value = query.value
   }
 }
 
-// Faire défiler pour voir l'élément sélectionné
-function scrollToSelectedItem () {
-  if (selectedIndex.value >= 0 && suggestionListRef.value) {
-    const selectedItem = suggestionListRef.value.children[selectedIndex.value] as HTMLElement
-    if (selectedItem) {
-      selectedItem.scrollIntoView({ block: 'nearest' })
-    }
-  }
+function clearInput () {
+  query.value = ''
+  model.value = undefined
+  clear()
+  statusMessage.value = 'Recherche réinitialisée'
+  // Return focus to search input after clearing
+  nextTick(() => {
+    searchInput.value?.$el?.querySelector?.('input')?.focus()
+  })
 }
 
-// Fermer les suggestions si on clique ailleurs
-function handleClickOutside (event: MouseEvent) {
-  const target = event.target as HTMLElement
-  // Vérifier si le clic est en dehors de la liste de suggestions
-  if (showSuggestions.value && !target.closest('.autocomplete-container')) {
-    showSuggestions.value = false
-  }
+// Enhanced focus management for autocomplete list
+function handleOptionFocus (optionId: string) {
+  activeDescendant.value = optionId
 }
 
-onMounted(() => {
-  document.addEventListener('click', handleClickOutside)
-
-  // Si on a déjà une valeur, on essaie de la retrouver dans les suggestions
-  if (model.value && props.autocompleteFn) {
-    props.autocompleteFn(model.value).then((results) => {
-      // Si on trouve une correspondance exacte, on sélectionne ce tag
-      const match = results.find(item => item.code === model.value)
-      if (match) {
-        selectedTag.value = match
-        isTagSelected.value = true
-      }
-    }).catch((error) => {
-      console.error('Erreur lors de la récupération de l\'autocomplétion initiale:', error)
-    })
+const { getHistory, addHistory } = useAutoCompleteHistoryStore()
+// Track when options are selected
+function handleOptionSelect (value: string | number) {
+  const option = selectOptions.value.find((opt) => {
+    return (opt as { value: string, text: string }).value === value
+  }) as { value: string, text: string }
+  addHistory(props.question.id, value, option.text)
+  statusMessage.value = `Option "${value}" sélectionnée`
+}
+const selectedValue = computed(() => {
+  if (model.value) {
+    return getHistory(props.question.id, model.value)
   }
-})
-
-onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside)
-  if (debounceTimeout.value) {
-    clearTimeout(debounceTimeout.value)
-  }
+  return null
 })
 </script>
 
 <template>
-  <div class="question-container fr-mb-4w">
-    <div class="autocomplete-container">
-      <!-- Afficher soit l'input, soit le tag sélectionné -->
-      <template v-if="!isTagSelected">
-        <DsfrInputGroup
-          :model-value="model"
-          type="text"
-          :name="question.id"
-          :label="question.title"
-          :label-visible="false"
-          autocomplete="off"
-          @input="handleInput"
-          @keydown="handleKeyDown"
+  <div
+    :id="comboboxId"
+    role="combobox"
+    :aria-expanded="debounceStatus === 'success' && selectOptions.length > 0"
+    :aria-owns="optionsContainerId"
+    aria-haspopup="listbox"
+    aria-autocomplete="list"
+  >
+    <DsfrSearchBar
+      :id="searchInputId"
+      ref="searchInput"
+      v-model="query"
+      :label="question.title"
+      :placeholder="config.placeholder"
+      :button-text="config.buttonText"
+      :aria-label="`${config.buttonText} pour ${question.title}`"
+      :aria-controls="searchResultsId"
+      :aria-activedescendant="activeDescendant"
+      role="searchbox"
+      autocomplete="off"
+      @search="handleSearch"
+    />
+
+    <!-- Status announcer for screen readers -->
+    <div
+      aria-live="polite"
+      class="sr-only"
+      role="status"
+    >
+      {{ statusMessage }}
+    </div>
+
+    <!-- Results region -->
+    <div
+      :id="searchResultsId"
+      aria-atomic="true"
+    >
+      <div
+        v-if="debounceStatus === 'pending'"
+        class="fr-mt-6w fr-mb-2w"
+      >
+        <LoadingSpinner :text="config.loadingText" />
+      </div>
+
+      <div
+        v-else-if="debounceStatus === 'error'"
+        class="fr-mt-3w"
+        aria-live="assertive"
+      >
+        <DsfrAlert
+          :id="`error-${question.id}`"
+          type="error"
+          :title="config.errorTitle"
+          :description="config.errorDescription"
         />
+      </div>
 
-        <!-- Indicateur de chargement -->
+      <div
+        v-else-if="debounceStatus === 'success' && selectOptions.length > 0"
+        :id="optionsContainerId"
+        ref="selectElement"
+        class="fr-mt-3w"
+        role="listbox"
+        tabindex="-1"
+      >
+        <DsfrSelect
+          :id="selectId"
+          v-model="model"
+          :options="selectOptions"
+          :label="config.selectLabel"
+          :hint="typeof config.selectHint === 'function' ? config.selectHint(lastSentQuery) : config.selectHint"
+          :default-unselected-text="config.defaultUnselectedText"
+          aria-required="false"
+          @update:model-value="handleOptionSelect"
+          @focus-option="handleOptionFocus"
+        />
+      </div>
+
+      <div
+        v-else-if="debounceStatus === 'success' && selectOptions.length === 0 && lastSentQuery"
+        ref="noResultsAlert"
+        class="fr-mt-3w"
+        aria-live="polite"
+      >
+        <DsfrAlert
+          :id="`no-results-${question.id}`"
+          type="info"
+          :description="config.noResultsText"
+        />
+      </div>
+      <template
+        v-if="debounceStatus === 'idle' && model"
+      >
         <div
-          v-if="loading"
-          class="loading-indicator"
+          class="fr-mt-3w"
         >
-          <span
-            class="fr-icon-refresh-line fr-icon--sm"
-            aria-hidden="true"
+          <DsfrInput
+            aria-hidden
+            type="text"
+            label="Sélection actuelle"
+            label-visible
+            :model-value="selectedValue"
+            disabled
           />
-          Chargement...
-        </div>
-
-        <!-- Liste des suggestions -->
-        <div
-          v-if="showSuggestions"
-          class="suggestions-container"
-        >
-          <ul
-            ref="suggestionListRef"
-            class="suggestions-list fr-mt-1w"
-          >
-            <li
-              v-for="(suggestion, index) in suggestions"
-              :key="suggestion.code"
-              class="suggestion-item"
-              :class="{ selected: index === selectedIndex }"
-              @click="selectSuggestion(suggestion)"
-              @mouseover="selectedIndex = index"
-            >
-              <div class="suggestion-content">
-                <span>{{ suggestion.autocompletion }}</span>
-                <span class="select-indicator">
-                  <span
-                    class="fr-icon-check-line fr-icon--sm"
-                    aria-hidden="true"
-                  />
-                  Sélectionner
-                </span>
-              </div>
-            </li>
-          </ul>
+          <p class="fr-sr-only">
+            Votre sélection actuelle est : {{ selectedValue }}
+          </p>
         </div>
       </template>
-
-      <!-- Affichage du tag sélectionné -->
       <div
-        v-else
-        class="selected-tag-container fr-mt-2w"
+        v-if="(
+          debounceStatus === 'error'
+          || model
+        )"
       >
-        <button
-          class="fr-tag fr-tag--dismiss"
-          aria-label="Supprimer la sélection"
-          @click="removeTag"
-        >
-          {{ selectedTag?.libelle }}
-        </button>
+        <DsfrButton
+          :label="config.resetButtonLabel"
+          class="fr-mt-2w"
+          size="sm"
+          secondary
+          icon="fr-icon-close-line"
+          icon-right
+          :aria-label="`${config.resetButtonLabel} la recherche`"
+          @click="clearInput"
+        />
       </div>
     </div>
   </div>
 </template>
 
-<style scoped>
-.autocomplete-container {
-  position: relative;
-  width: 100%;
-}
-
-.suggestions-container {
-  position: absolute;
-  width: 100%;
-  max-height: 200px;
-  overflow-y: auto;
-  background-color: white;
-  border: 1px solid var(--border-default-grey);
-  border-radius: 0 0 4px 4px;
-  z-index: 10;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.suggestions-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.suggestion-item {
-  padding: 8px 16px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.suggestion-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.select-indicator {
-  color: var(--text-action-high-blue-france);
-  font-size: 0.8rem;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-
-.suggestion-item:hover .select-indicator,
-.suggestion-item.selected .select-indicator {
-  opacity: 1;
-}
-
-.suggestion-item:hover, .suggestion-item.selected {
-  background-color: var(--background-alt-grey);
-}
-
-.loading-indicator {
-  position: absolute;
-  right: 10px;
-  bottom: 0px;
-  transform: translateY(-50%);
-  font-size: 0.8rem;
-  color: var(--text-mention-grey);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.loading-indicator .fr-icon--sm {
+<style scoped lang="scss">
+.fr-spin-anim {
+  display: inline-block;
   animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.sr-only,
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 </style>
