@@ -16,6 +16,7 @@ const options = props.question.choices
 <template>
   <DsfrRadioButtonSet
     v-model="model"
+    :title-id="`question-${question.id}`"
     class="custom-rich-radio-button"
     :options="options"
     :name="question.id"
