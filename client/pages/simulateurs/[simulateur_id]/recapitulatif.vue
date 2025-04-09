@@ -89,7 +89,7 @@ const currentQuestionId = computed(() => surveysStore.getCurrentQuestionId(simul
               no-outline
               :icon="{ name: 'ri:edit-line', ssr: true }"
               icon-right
-              :label="surveysStore.hasAnswer(simulateurId, question.id) ? 'Modifier' : 'Ajouter'"
+              :label="surveysStore.hasAnswer(simulateurId, question.id) ? 'Modifier' : 'Répondre'"
               @click.prevent="() => {
                 surveysStore.setCurrentQuestionId(simulateurId, question.id)
                 navigateTo(`/simulateurs/${simulateurId}#simulateur-title`)

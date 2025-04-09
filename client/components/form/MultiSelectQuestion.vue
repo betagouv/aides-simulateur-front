@@ -1,14 +1,20 @@
 <script lang="ts" setup>
+import type { DsfrCheckboxSetProps } from '@gouvminint/vue-dsfr'
+
 const props = defineProps<{
   question: SurveyQuestion
 }>()
-
-const model = defineModel<string[]>({
-  default: () => []
+const model = defineModel<string[] | undefined>()
+const _model = ref<string[]>(model.value ?? [])
+watch(_model, (newValue) => {
+  if (newValue.length === 0) {
+    model.value = undefined
+  }
+  else {
+    model.value = newValue
+  }
 })
-
-// Convert question choices to DsfrCheckboxSet options format
-const checkboxOptions = computed(() => {
+const options = computed<DsfrCheckboxSetProps['options']>(() => {
   return props.question.choices
     ?.map(choice => ({
       id: `${props.question.id}-${choice.id}`,
@@ -21,12 +27,13 @@ const checkboxOptions = computed(() => {
 </script>
 
 <template>
-  <div class="question-container">
-    <DsfrCheckboxSet
-      v-model="model"
-      :options="checkboxOptions"
-    />
-  </div>
+  <DsfrCheckboxSet
+    v-model="_model"
+    :title-id="`question-${question.id}`"
+    class="custom-rich-checkbox"
+    :name="question.id"
+    :options="options"
+  />
 </template>
 
 <style scoped lang="scss">
