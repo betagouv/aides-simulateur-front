@@ -4,8 +4,15 @@ import type { DsfrCheckboxSetProps } from '@gouvminint/vue-dsfr'
 const props = defineProps<{
   question: SurveyQuestion
 }>()
-const model = defineModel<string[]>({
-  default: () => [],
+const model = defineModel<string[]>()
+const _model = ref<string[]>(model.value && model.value.length > 0 ? model.value : [])
+watch(_model, (newValue) => {
+  if (newValue.length === 0) {
+    model.value = undefined
+  }
+  else {
+    model.value = newValue
+  }
 })
 
 // Convert question choices to DsfrCheckboxSet options format
@@ -20,7 +27,7 @@ const options: DsfrCheckboxSetProps['options'] = props.question.choices
 
 <template>
   <DsfrCheckboxSet
-    v-model="model"
+    v-model="_model"
     :title-id="`question-${question.id}`"
     class="custom-rich-checkbox"
     :name="question.id"
