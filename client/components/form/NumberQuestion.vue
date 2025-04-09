@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-defineProps<{
+const props = defineProps<{
   question: SurveyQuestion
 }>()
 
@@ -7,6 +7,20 @@ defineProps<{
  * We expose a number model up to the parent component
  */
 const numberModel = defineModel<number | undefined>()
+
+if (props.question.default !== undefined) {
+  numberModel.value = Number(props.question.default)
+}
+
+/**
+ * Prevent non-numeric characters from being entered
+ */
+function onKeypress (e: KeyboardEvent) {
+  const chars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+  if (!chars.includes(e.key)) {
+    e.preventDefault()
+  }
+}
 
 /**
  * We pass a string model down to the DSFR input component
@@ -22,7 +36,11 @@ const stringModel = customRef((track, trigger) => {
         numberModel.value = undefined
       }
       else {
-        numberModel.value = Number(value)
+        // Ensure the value is a valid number
+        const num = Number(value)
+        if (!Number.isNaN(num)) {
+          numberModel.value = num
+        }
       }
       trigger()
     },
@@ -35,8 +53,12 @@ const stringModel = customRef((track, trigger) => {
     v-model="stringModel"
     class="fr-mb-4w"
     type="number"
+    :min="question.min"
+    :max="question.max"
+    :step="question.step"
     :name="question.id"
     :label="question.title"
     :label-visible="false"
+    @keypress="onKeypress"
   />
 </template>

@@ -179,6 +179,8 @@
           "id": "nombre-personnes-logement",
           "title": "Combien de personnes habiteront dans le logement (y compris vous-même) ?",
           "type": "number",
+          "min": 1,
+          "default": 1,
           "visibleWhen": "situation-logement=locataire"
         },
         {
@@ -233,8 +235,8 @@
         },
         {
           "id": "salaire-imposable",
-          "title": "Salaire : montant total sur les 12 derniers mois (dont primes et indemnités de fin de contrat)",
-          "description": "Indiquez le montant en euros de vos revenus d'activité salariale au cours des 12 derniers mois avant impôts.",
+          "title": "Salaire net imposable : montant total sur les 12 derniers mois (dont primes et indemnités de fin de contrat)",
+          "description": "Indiquez le montant en euros de vos revenus d'activité salariale au cours des 12 derniers mois, net avant impôts.",
           "notion": {
             "id": "salaire-imposable",
             "buttonLabel": "En savoir plus"

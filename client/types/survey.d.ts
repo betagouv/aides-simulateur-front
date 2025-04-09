@@ -17,6 +17,10 @@ declare global {
     }
     autocompleteFunction?: string
     choices?: SurveyChoice[]
+    min?: number
+    max?: number
+    step?: number
+    default?: string | number | boolean
   }
 
   interface QuestionGroup {
