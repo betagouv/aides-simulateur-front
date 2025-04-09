@@ -149,6 +149,7 @@ function handleComplete () {
         <hgroup class="fr-mb-3w">
           <component
             :is="surveyH2"
+            :id="`question-${currentQuestion.id}`"
             class="fr-h5 fr-mb-1w"
           >
             {{ currentQuestion?.title }}

@@ -4,31 +4,23 @@ import type { DsfrCheckboxSetProps } from '@gouvminint/vue-dsfr'
 const props = defineProps<{
   question: SurveyQuestion
 }>()
-const model = defineModel<string[] | undefined>()
-const _model = ref<string[]>(model.value ?? [])
-watch(_model, (newValue) => {
-  if (newValue.length === 0) {
-    model.value = undefined
-  }
-  else {
-    model.value = newValue
-  }
+const model = defineModel<string[]>({
+  default: () => [],
 })
-const options = computed<DsfrCheckboxSetProps['options']>(() => {
-  return props.question.choices
-    ?.map(choice => ({
-      id: `${props.question.id}-${choice.id}`,
-      name: `${props.question.id}-${choice.id}`,
-      value: choice.id,
-      label: choice.title,
-    }))
-    ?? []
-})
+
+// Convert question choices to DsfrCheckboxSet options format
+const options: DsfrCheckboxSetProps['options'] = props.question.choices
+  ?.map(choice => ({
+    name: `${props.question.id}-${choice.id}`,
+    value: choice.id,
+    label: choice.title,
+  }))
+  ?? []
 </script>
 
 <template>
   <DsfrCheckboxSet
-    v-model="_model"
+    v-model="model"
     :title-id="`question-${question.id}`"
     class="custom-rich-checkbox"
     :name="question.id"
@@ -38,7 +30,7 @@ const options = computed<DsfrCheckboxSetProps['options']>(() => {
 
 <style scoped lang="scss">
 // Custom styling for DsfrCheckboxSet, based on dsfr rich radio button
-.question-container:deep(.fr-checkbox-group) {
+.custom-rich-checkbox:deep(.fr-checkbox-group) {
   label {
     --idle: transparent;
     --hover: var(--background-default-grey-hover);
