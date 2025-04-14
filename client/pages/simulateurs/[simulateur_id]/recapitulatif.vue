@@ -29,6 +29,14 @@ const groupedQuestions = computed(() => surveysStore.getGroupedAnsweredQuestions
 const currentQuestionId = computed(() => surveysStore.getCurrentQuestionId(simulateurId))
 // const currentStepId = computed(() => surveysStore.getCurrentStepId(simulateurId.value))
 // const progress = computed(() => surveysStore.getProgress(simulateurId.value))
+const activeQuestionGroupIndex = computed(() => {
+  const questionGroups = groupedQuestions.value
+  const currentQuestionIdValue = currentQuestionId.value
+  return questionGroups.findIndex(group =>
+    group.questions.some(question => question.id === currentQuestionIdValue)
+  )
+})
+const activeAccordion = ref<number>(activeQuestionGroupIndex.value)
 </script>
 
 <template>
@@ -50,54 +58,54 @@ const currentQuestionId = computed(() => surveysStore.getCurrentQuestionId(simul
     <div
       class="fr-card fr-p-3w"
     >
-      <template
-        v-for="(group, i) in groupedQuestions"
-        :key="group.title"
-      >
-        <div
-          v-if="group.questions.length"
+      <DsfrAccordionsGroup v-model="activeAccordion">
+        <template
+          v-for="(group, i) in groupedQuestions"
+          :key="group.title"
         >
-          <h2 class="fr-h6 fr-mb-1w">
-            {{ i + 1 }}. {{ group.title }}
-          </h2>
-          <div
-            v-for="question in group.questions"
-            :key="question.id"
-            class="question-row fr-mb-2w"
+          <DsfrAccordion
+            v-if="group.questions.length"
+            :title="`${i + 1}. ${group.title}`"
           >
-            <div>
-              <p class="fr-text--bold">
-                {{ question.title }}
-              </p>
-              <DsfrBadge
-                v-if="question.id === currentQuestionId"
-                class="fr-mt-1w"
-                type="info"
-                small
-                label="Question en cours"
+            <div
+              v-for="question in group.questions"
+              :key="question.id"
+              class="question-row fr-mb-2w"
+            >
+              <div>
+                <p class="fr-text--bold">
+                  {{ question.title }}
+                </p>
+                <DsfrBadge
+                  v-if="question.id === currentQuestionId"
+                  class="fr-mt-1w"
+                  type="info"
+                  small
+                  label="Question en cours"
+                />
+                <p
+                  v-if="surveysStore.hasAnswer(simulateurId, question.id)"
+                  class="fr-hint-text fr-text--sm"
+                >
+                  "{{ surveysStore.formatAnswer(simulateurId, question.id, question.answer) }}"
+                </p>
+              </div>
+              <DsfrButton
+                tertiary
+                size="sm"
+                no-outline
+                :icon="{ name: 'ri:edit-line', ssr: true }"
+                icon-right
+                :label="surveysStore.hasAnswer(simulateurId, question.id) ? 'Modifier' : 'Répondre'"
+                @click.prevent="() => {
+                  surveysStore.setCurrentQuestionId(simulateurId, question.id)
+                  navigateTo(`/simulateurs/${simulateurId}#simulateur-title`)
+                }"
               />
-              <p
-                v-if="surveysStore.hasAnswer(simulateurId, question.id)"
-                class="fr-hint-text fr-text--sm"
-              >
-                "{{ surveysStore.formatAnswer(simulateurId, question.id, question.answer) }}"
-              </p>
             </div>
-            <DsfrButton
-              tertiary
-              size="sm"
-              no-outline
-              :icon="{ name: 'ri:edit-line', ssr: true }"
-              icon-right
-              :label="surveysStore.hasAnswer(simulateurId, question.id) ? 'Modifier' : 'Répondre'"
-              @click.prevent="() => {
-                surveysStore.setCurrentQuestionId(simulateurId, question.id)
-                navigateTo(`/simulateurs/${simulateurId}#simulateur-title`)
-              }"
-            />
-          </div>
-        </div>
-      </template>
+          </DsfrAccordion>
+        </template>
+      </DsfrAccordionsGroup>
     </div>
   </div>
 </template>

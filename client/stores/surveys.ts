@@ -154,13 +154,40 @@ export const useSurveysStore = defineStore('surveys', () => {
     }
   }
 
+  const { getHistory } = useAutoCompleteHistoryStore()
   const formatAnswer = (simulateurId: string, questionId: string, value: any): string => {
     // get choice title
     const question = findQuestionById(simulateurId, questionId)
     if (question) {
-      const choice = question.choices?.find((choice) => {
-        return choice.id === value
-      })
+      switch (question.type) {
+        case 'boolean': {
+          return value ? 'Oui' : 'Non'
+        }
+        case 'number': {
+          return value?.toString() ?? ''
+        }
+        case 'checkbox': {
+          const choices = question.choices
+            ?.filter((choice) => {
+              return value.includes(choice.id)
+            })
+            .map((choice) => {
+              return choice.title
+            })
+          return choices?.join(', ') ?? ''
+        }
+        case 'combobox': {
+          const history = getHistory(questionId, value)
+          if (history) {
+            return history as string
+          }
+          break
+        }
+      }
+      const choice = question.choices
+        ?.find((choice) => {
+          return choice.id === value
+        })
       if (choice?.title) {
         return choice.title
       }
