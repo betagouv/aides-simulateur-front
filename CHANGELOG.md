@@ -1,4 +1,12 @@
 # CHANGELOG
+
+## 0.21.0 [#81](https://github.com/betagouv/aides-simulateur-front/pull/81)
+* Testing
+* Détail :
+  * Installe et configure les outils de tests unitaires et e2e
+  * Implémente les premiers tests e2e liés à l'app en général et au parcours de simulation
+  * Implémente un premier test unitaire concernant le formattage du moment de la simulation terminée
+
 ## 0.20.0 [#89](https://github.com/betagouv/aides-simulateur-front/pull/89)
 * Devops
 * Détail : 
