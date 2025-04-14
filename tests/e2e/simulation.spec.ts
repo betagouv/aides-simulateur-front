@@ -22,7 +22,7 @@ test.describe('Subsidy simulator form', () => {
     await page.getByRole('button', { name: 'Commencer la simulation' }).click()
 
     // Verify the first question is displayed
-    await expect(page.locator('.question-actual-container')).toBeVisible()
+    await expect(page.getByTestId('question-container')).toBeVisible()
   })
 
   /**
@@ -160,40 +160,29 @@ test.describe('Subsidy simulator form', () => {
     // Mock commune autocomplete API
     await page.route('**/communes/autocomplete**', async (route) => {
       // Mock response for communes autocomplete
-      const mockSuggestions = [
-        {
-          code: '75056',
-          autocompletion: 'Paris (75001)',
-          libelle: 'Paris',
-          code_departement: '75',
-          code_region: '11',
-          population: 2165423,
-          codesPostaux: ['75001', '75002', '75003', '75004', '75005']
-        },
-        {
-          code: '13055',
-          autocompletion: 'Marseille (13001)',
-          libelle: 'Marseille',
-          code_departement: '13',
-          code_region: '93',
-          population: 861635,
-          codesPostaux: ['13001', '13002', '13003', '13004', '13005']
-        },
-        {
-          code: '69123',
-          autocompletion: 'Lyon (69001)',
-          libelle: 'Lyon',
-          code_departement: '69',
-          code_region: '84',
-          population: 513275,
-          codesPostaux: ['69001', '69002', '69003', '69004', '69005']
-        }
-      ]
+      const mockSuggestions = {
+        suggestions: [
+          {
+            code: '12345',
+            libelle: 'Paris',
+            distributions_postales: [
+              { code_postal: '75000' }
+            ]
+          },
+          {
+            code: '67890',
+            libelle: 'Lyon',
+            distributions_postales: [
+              { code_postal: '69000' }
+            ]
+          }
+        ]
+      }
 
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify({ suggestions: mockSuggestions })
+        body: JSON.stringify(mockSuggestions)
       })
     })
 
@@ -203,7 +192,7 @@ test.describe('Subsidy simulator form', () => {
     // Function to answer the current question based on its type
     async function answerCurrentQuestion () {
       // Wait for question container to be visible
-      await page.waitForSelector('.question-container', { state: 'visible' })
+      await page.waitForSelector('[data-testid="question-container"]', { state: 'visible' })
 
       // Determine question type and answer accordingly
       if (await page.locator('input[type="radio"]').count() > 0) {
@@ -234,40 +223,28 @@ test.describe('Subsidy simulator form', () => {
         await page.locator('input[type="date"]').scrollIntoViewIfNeeded()
         await page.locator('input[type="date"]').fill('1980-01-01')
       }
+      else if (await page.getByTestId('combobox').count() > 0) {
+        // Fill the text field to trigger autocomplete
+        const textInput = page.locator('[role="combobox"] input[type="search"]').first()
+        await textInput.fill('Paris')
+
+        // click on the search button
+        const searchButton = page.locator('[role="combobox"] [role="searchbox"] button').first()
+        await searchButton.click()
+
+        // Wait for suggestions to appear
+        const listBox = page.locator('[role="listbox"] select').first()
+        await listBox.waitFor({ state: 'visible' })
+
+        // Select the first suggestion
+        await listBox.selectOption({ index: 0 })
+        // console.log('Successfully selected commune from autocomplete')
+      }
       else if (await page.locator('input[type="text"]').count() > 0) {
-        // Wait to ensure field is ready
+        // Regular text field
         await page.waitForSelector('input[type="text"]', { state: 'visible' })
         await page.locator('input[type="text"]').scrollIntoViewIfNeeded()
-        // Check if this is a text field with autocomplete (commune selection)
-        const isAutocompleteField = await page.locator('.autocomplete-container').count() > 0
-
-        if (isAutocompleteField) {
-          try {
-            // This is a commune selection field with autocomplete
-            // console.log('Found autocomplete field, handling it...')
-
-            // Fill the text field to trigger autocomplete
-            const textInput = page.locator('.autocomplete-container input[type="text"]')
-            await textInput.fill('Paris')
-
-            // Wait for suggestions to appear
-            await page.waitForSelector('.suggestions-container', { state: 'visible', timeout: 1000 })
-
-            // Click on the first suggestion
-            await page.locator('.suggestion-item').first().click()
-
-            // Verify a tag was selected
-            await page.waitForSelector('.selected-tag-container', { state: 'visible' })
-            // console.log('Successfully selected commune from autocomplete')
-          }
-          catch (error) {
-            console.error('Error handling autocomplete:', error)
-          }
-        }
-        else {
-          // Regular text field
-          await page.locator('input[type="text"]').fill('Test response')
-        }
+        await page.locator('input[type="text"]').fill('Test response')
       }
 
       // Click next button to proceed to next question or results page
@@ -287,7 +264,6 @@ test.describe('Subsidy simulator form', () => {
     while (!isCompleted && questionCount < maxQuestions) {
       try {
         await answerCurrentQuestion()
-        console.log('Completed question ', questionCount)
         await page.screenshot({ path: `./tests/e2e/screenshots/question-${questionCount}.png` })
         await page.waitForTimeout(500)
         questionCount++
@@ -298,9 +274,7 @@ test.describe('Subsidy simulator form', () => {
 
         // Check if we've been redirected to results page
         if (page.url().includes('/resultats')) {
-          console.log('Reached results page!')
           isCompleted = true
-          console.log('Reached results page!')
           break
         }
 
@@ -311,7 +285,6 @@ test.describe('Subsidy simulator form', () => {
           // console.log('Found loading state, waiting for results page...')
           // Wait for redirect to results page
           await page.waitForURL(`**/simulateurs/${simulateurId}/resultats**`, { timeout: 10000 })
-            .catch(err => console.log('Timeout waiting for results page:', err))
 
           isCompleted = true
           break
