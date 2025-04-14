@@ -1,6 +1,7 @@
 ---
 titre: Fond de solidarité pour le logement (FSL)
-type: une-fois
+usage: frais-installation-logement
+type: aide-financiere
 instructeur: Votre département
 description: Aide financière pour accéder ou se maintenir dans un logement
 textesLoi: []

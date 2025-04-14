@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## 1.0.0 [#93](https://github.com/betagouv/aides-simulateur-front/pull/93)
+* Ajouts de fonctionnalité.
+* Détail :
+  * Ajoute un schéma de test court
+  * Ajoute un statut de publication aux schémas
+  * Implémente un nouveau schéma de description de formulaire
+  * Implémente un menu de navigation transversal du formulaire
+  * Implémente un panneau de debug du formulaire
+  * Met à jour le rendu des résultats de la simulation
+  * Isole les fonctionnalités de tracking matomo
+  * Améliore la gestion réactive des composants de question
+  * Améliore l'accessibilité du formulaire
+
 ## 0.21.0 [#81](https://github.com/betagouv/aides-simulateur-front/pull/81)
 * Testing
 * Détail :

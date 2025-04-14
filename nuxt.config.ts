@@ -9,7 +9,14 @@ export default defineNuxtConfig({
     server: {
       allowedHosts: ['aides.beta.numerique.gouv.fr'],
     },
+    build: {
+      sourcemap: true,
+    },
+    css: {
+      devSourcemap: true
+    }
   },
+
   routeRules: {
     '/accessibilite': { // mandatory route
       redirect: {
@@ -49,15 +56,6 @@ export default defineNuxtConfig({
   content: {
     renderer: {
       anchorLinks: false
-    }
-  },
-
-  vite: {
-    build: {
-      sourcemap: true,
-    },
-    css: {
-      devSourcemap: true
     }
   },
 

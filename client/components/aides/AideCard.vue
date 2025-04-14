@@ -10,7 +10,9 @@ type AideCardProps = {
   instructeur: string
 } & Pick<DsfrCardProps, 'horizontal' | 'size' | 'titleTag'>
 
-defineProps<AideCardProps>()
+const props = defineProps<AideCardProps>()
+
+const periode = props.titre?.match('APL') ? '/mois' : undefined
 </script>
 
 <template>
@@ -40,10 +42,17 @@ defineProps<AideCardProps>()
           v-if="montant"
           class="brand-aide-card__details-right"
         >
+          <span class="fr-mr-3v">jusqu'à</span>
           <AideMontant
             :montant="montant"
             :size="size"
           />
+          <p
+            v-if="periode"
+            class="brand-montant-periode fr-mb-n1v fr-text--bold fr-text--alt"
+          >
+            {{ periode }}
+          </p>
         </div>
       </div>
     </template>
@@ -59,5 +68,9 @@ defineProps<AideCardProps>()
 
 :deep(.fr-card__detail svg) {
   margin-right: .5rem;
+}
+
+.brand-montant-periode {
+  display: inline-block;
 }
 </style>

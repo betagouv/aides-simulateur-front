@@ -1,31 +1,44 @@
 <script setup lang="ts">
 withDefaults(defineProps<{
   text?: string
+  size?: 'sm' | 'md' | 'lg'
 }>(), {
-  text: 'Chargement...'
+  text: 'Chargement...',
+  size: 'md'
 })
 </script>
 
 <template>
-  <div class="state-panel">
-    <p class="loading-indicator fr-text--xl fr-mt-3w">
-      <span
-        class="fr-icon-refresh-line fr-icon fr-icon--md fr-mr-1v"
-        aria-hidden="true"
+  <div
+    class="status-panel"
+    aria-busy="true"
+    aria-live="polite"
+  >
+    <p
+      class="loading-indicator"
+      :class="[
+        { 'fr-text--xl': size === 'lg' },
+        { 'fr-text--md': size === 'md' },
+        { 'fr-text--sm': size === 'sm' },
+      ]"
+    >
+      <VIcon
+        class="fr-icon"
+        name="ri:refresh-line"
+        ssr
       />{{ text }}
     </p>
   </div>
 </template>
 
 <style scoped lang="scss">
-.state-panel {
+.status-panel {
   display: flex;
   width: 100%;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  min-height: 10em;
 }
 
 .loading-indicator {
@@ -37,7 +50,7 @@ withDefaults(defineProps<{
   gap: .5rem;
 }
 
-.loading-indicator .fr-icon {
+.loading-indicator:deep(.fr-icon) {
   animation: spin 1s linear infinite;
 }
 

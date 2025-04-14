@@ -1,6 +1,7 @@
 ---
 titre: Aide Personnalisée au Logement (APL)
-type: mensuelle
+type: aide-financiere
+usage: loyer-logement
 instructeur: CAF ou MSA
 description: Aide financière pour réduire le montant du loyer ou des mensualités d'emprunt
 textesLoi:

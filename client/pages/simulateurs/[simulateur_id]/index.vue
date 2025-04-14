@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { autocompleteFunctions } from '@/utils/autocompleteFunctions'
-
 definePageMeta({
   layout: 'user-simulation',
   middleware: [
@@ -11,6 +9,7 @@ definePageMeta({
       const fromName = from.matched[0].name as string
 
       const shouldForceResume = [
+        'simulateurs-simulateur_id-recapitulatif',
         'simulateurs-simulateur_id-notion_id',
         'simulateurs-simulateur_id-resultats'
       ].includes(fromName)
@@ -74,9 +73,6 @@ onMounted(() => {
 
 <template>
   <template v-if="simulateur">
-    <Survey
-      :simulateur-id="simulateurId"
-      :autocomplete-functions="autocompleteFunctions"
-    />
+    <Survey :simulateur-id="simulateurId" />
   </template>
 </template>
