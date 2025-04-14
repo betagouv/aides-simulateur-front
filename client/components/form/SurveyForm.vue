@@ -2,11 +2,11 @@
 import type { DsfrButtonProps } from '@gouvminint/vue-dsfr'
 import {
   BooleanQuestion,
+  ComboboxQuestion,
   DateQuestion,
   MultiSelectQuestion,
   NumberQuestion,
   RadioButtonQuestion,
-  TextQuestion,
 } from '#components'
 import { onKeyDown } from '@vueuse/core'
 
@@ -147,8 +147,8 @@ const questionComponent = computed(() => {
     checkbox: MultiSelectQuestion,
     number: NumberQuestion,
     date: DateQuestion,
-    text: TextQuestion,
-  }[currentQuestion.value.type] || TextQuestion
+    combobox: ComboboxQuestion,
+  }[currentQuestion.value.type] || ComboboxQuestion
 })
 
 function handleComplete () {
@@ -175,6 +175,7 @@ function handleComplete () {
     <div
       v-if="surveySchema && currentQuestion"
       ref="questionContainer"
+      data-testid="question-container"
       tabindex="-1"
       class="fr-card fr-p-4w fr-mb-3w"
     >
@@ -226,7 +227,7 @@ function handleComplete () {
           label: 'Récapitulatif',
           secondary: true,
           icon: { name: 'ri:menu-line', ssr: true },
-          onClick: () => navigateTo(`/simulateurs/${simulateurId}/recapitulatif`),
+          onClick: () => navigateTo(`/simulateurs/${simulateurId}/recapitulatif#simulateur-title`),
         },
         {
           label: 'Précédent',

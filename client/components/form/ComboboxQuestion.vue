@@ -89,6 +89,7 @@ function handleSearch () {
   if (query.value.trim()) {
     refresh()
     lastSentQuery.value = query.value
+    model.value = undefined
   }
 }
 
@@ -129,6 +130,7 @@ const selectedValue = computed(() => {
   <div
     :id="comboboxId"
     role="combobox"
+    data-testid="combobox"
     :aria-expanded="debounceStatus === 'success' && selectOptions.length > 0"
     :aria-owns="optionsContainerId"
     aria-haspopup="listbox"
@@ -238,7 +240,8 @@ const selectedValue = computed(() => {
       <div
         v-if="(
           debounceStatus === 'error'
-          || model
+          || (debounceStatus === 'idle' && model)
+          || (debounceStatus === 'success' && model && lastSentQuery)
         )"
       >
         <DsfrButton

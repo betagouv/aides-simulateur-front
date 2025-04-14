@@ -18,7 +18,7 @@ export function isAnswerValid (question: SurveyQuestion, answer: any): boolean {
     case 'number':
       // For number, we need to check if it's a number including 0
       return answer === 0 || !!answer
-    case 'text':
+    case 'combobox':
       // For text, the value should not be empty
       return answer !== undefined && answer !== null && answer !== ''
     default:

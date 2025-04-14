@@ -112,7 +112,7 @@
           "id": "code-postal-nouvelle-ville",
           "title": "Dans quelle ville allez-vous résider ?",
           "description": "Veuillez saisir le nom ou le code postal de la commune dans laquelle vous allez résider.",
-          "type": "text",
+          "type": "combobox",
           "autocompleteFunction": "getInseeNumber"
         },
         {
