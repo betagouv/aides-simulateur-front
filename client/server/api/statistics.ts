@@ -206,7 +206,7 @@ export default defineEventHandler(async (event) => {
             statistics[simulatorId].completions += action.nb_events || 1
           }
           else if (isEligibility) {
-            statistics[simulatorId].eligibilities += action.nb_events || 1
+            statistics[simulatorId].eligibilities += action.nb_visits || 1
           }
 
           // Update weekly stats
@@ -223,7 +223,7 @@ export default defineEventHandler(async (event) => {
             weekStat.completions += action.nb_events || 1
           }
           else if (isEligibility) {
-            weekStat.eligibilities += action.nb_events || 1
+            weekStat.eligibilities += action.nb_visits || 1
           }
         }
       }

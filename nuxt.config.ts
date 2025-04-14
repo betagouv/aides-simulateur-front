@@ -40,7 +40,8 @@ export default defineNuxtConfig({
 
     public: {
       // apiEndpointOpenFiscaFranceCalculate: 'http://127.0.0.1:5000/calculate',
-      apiEndpointOpenFiscaFranceCalculate: 'https://aides-calculatrice-back.osc-fr1.scalingo.io/calculate',
+      apiEndpointOpenFiscaFranceCalculate: process.env.OPENFISCA_URL || 'https://aides-calculatrice-back.osc-fr1.scalingo.io/calculate',
+      leximpactUrl: process.env.LEXIMPACT_URL || 'https://territoires.leximpact.dev',
       matomo: {
         host: 'https://stats.beta.gouv.fr/',
         siteId: 199,
