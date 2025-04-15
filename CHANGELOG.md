@@ -1,6 +1,12 @@
 # CHANGELOG
 
-## 1.0.0 [#93](https://github.com/betagouv/aides-simulateur-front/pull/93)
+### 1.0.1 [#94](https://github.com/betagouv/aides-simulateur-front/pull/94)
+* Ajouts de fonctionnalité.
+* Détail : 
+  * Correction des stats pour afficher le nombre de simulations effectuées uniques par sessions
+  * Ajout des url de proxy, passage par une reqûete backend intermédiaire pour requetter OpenFisca et LexImpact^
+
+# 1.0.0 [#93](https://github.com/betagouv/aides-simulateur-front/pull/93)
 * Ajouts de fonctionnalité.
 * Détail :
   * Ajoute un schéma de test court
