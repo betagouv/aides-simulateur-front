@@ -117,8 +117,8 @@
         },
         {
           "id": "situation-logement",
-          "title": "Serez-vous :",
-          "description": "Sélectionnez votre situation à venir",
+          "title": "Dans quelle situation locative serez-vous lors de votre emménagement ?",
+          "description": "Sélectionnez votre situation au moment de votre emménagement (ou au moment où vous ferez votre demande d’aide).",
           "type": "radio",
           "choices": [
             {
