@@ -286,8 +286,8 @@
         },
         {
           "id": "montant-parents",
-          "title": "Ressources des parents au cours des 12 derniers mois",
-          "description": "Indiquez le montant total des ressources de vos parents au cours des 12 derniers mois, si vous êtes rattaché(e) à leur foyer fiscal et que vous ne déclarez pas vos propres revenus.",
+          "title": "Quel a été le montant total des ressources de vos parents au cours des 12 derniers mois ?",
+          "description": "Indiquez ce montant si vous êtes rattaché(e) à leur foyer fiscal et que vous ne déclarez pas vos propres revenus. En cas de doute, vous pouvez leur demander : ces informations figurent sur leur avis d’imposition.",
           "type": "number",
           "visibleWhen": "type-revenus.includes('revenus-parents')",
           "notion": {
