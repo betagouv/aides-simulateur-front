@@ -221,8 +221,8 @@
       "questions": [
         {
           "id": "type-revenus",
-          "title": "Quels sont les types de revenus qui s'appliquent à votre situation ? (plusieurs choix possibles)",
-          "description": "Sélectionnez tous les types de revenus que vous avez perçus dans les 12 derniers mois. Vous pourrez ensuite saisir les montants.",
+          "title": "Quels sont les types de revenus qui s'appliquent à votre situation ? Plusieurs choix possibles.",
+          "description": "Sélectionnez tous les types de revenus que vous avez perçus au cours des 12 derniers mois. Vous pourrez ensuite saisir les montants.\Si vous n'avez pas fait votre propre déclaration d'impôts et que vous êtes rattaché(e) à vos parents, sélectionnez Ressources des parents.",
           "type": "checkbox",
           "choices": [
             { "id": "revenus-activite", "title": "Revenus d'activité (salaires, primes)" },
