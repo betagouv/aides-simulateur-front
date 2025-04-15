@@ -1,4 +1,5 @@
 import type { DsfrSelectProps } from '@gouvminint/vue-dsfr'
+import { useRuntimeConfig } from '#app'
 
 /**
  * Fonctions d'autocomplétion pour les formulaires
@@ -44,16 +45,8 @@ async function getInseeNumber (query: string) {
     // Encodage de la requête pour l'URL
     const encodedQuery = encodeURIComponent(query)
 
-    // Appel à l'API avec la requête
-    const response = await fetch(
-      `https://territoires.leximpact.dev/communes/autocomplete?q=${encodedQuery}&field=commune&field=distributions_postales`,
-      {
-        headers: {
-          'Accept': 'application/json',
-          'X-Client-ID': 'aides-simplifiees'
-        }
-      }
-    )
+    // Appel à notre API serveur (qui est toujours exécuté côté serveur)
+    const response = await fetch(`/api/communes?q=${encodedQuery}`)
 
     // Si la réponse n'est pas OK, lever une erreur
     if (!response.ok) {

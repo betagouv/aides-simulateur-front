@@ -37,10 +37,11 @@ export default defineNuxtConfig({
       token: process.env.MATOMO_TOKEN || '',
       siteId: process.env.MATOMO_SITE_ID || '199',
     },
+    leximpactUrl: process.env.LEXIMPACT_URL || 'https://territoires.leximpact.dev',
+    apiEndpointOpenFiscaFranceCalculate: process.env.OPENFISCA_URL || 'https://aides-calculatrice-back.osc-fr1.scalingo.io/calculate',
 
     public: {
       // apiEndpointOpenFiscaFranceCalculate: 'http://127.0.0.1:5000/calculate',
-      apiEndpointOpenFiscaFranceCalculate: 'https://aides-calculatrice-back.osc-fr1.scalingo.io/calculate',
       matomo: {
         host: 'https://stats.beta.gouv.fr/',
         siteId: 199,

@@ -8,7 +8,7 @@ const question = {
   choices: [
     { title: 'Oui', id: 'true' },
     { title: 'Non', id: 'false' },
-  ],
+  ]
 }
 
 /**

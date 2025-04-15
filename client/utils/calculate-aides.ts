@@ -141,7 +141,7 @@ export function dispatchSituationLogement (
     throw new UnknownPeriodError(answerKey)
   }
 
-  let openfiscaVariableName = 'statut_occupation_logement'
+  const openfiscaVariableName = 'statut_occupation_logement'
   // possible values: https://legislation.fr.openfisca.org/statut_occupation_logement
 
   if (answerValue == 'locataire') {
@@ -178,7 +178,7 @@ export function dispatchTypeLogement (
     throw new UnknownPeriodError(answerKey)
   }
 
-  let openfiscaVariableName = 'statut_occupation_logement'
+  const openfiscaVariableName = 'statut_occupation_logement'
   if (answerValue == 'logement-non-meuble') {
     return formatSurveyAnswerToRequest(openfiscaVariableName, period, 'locataire_vide')
   }
@@ -308,12 +308,12 @@ function addSurveyAnswerToRequest (
       throw new UnknownEntityError(answerKey)
     }
 
-    let formattedVariableName = Object.keys(formattedAnswer)[0]
+    const formattedVariableName = Object.keys(formattedAnswer)[0]
     if (request[entity][entityId][formattedVariableName]) {
       // MANAGING VERY SPECIFIC CASE 🙀
       // a value already exists in the request for formattedVariableName
       // we expect it to be at the same period as, for now, we set each variable once (for one period only)
-      let existingValue = request[entity][entityId][formattedVariableName][period]
+      const existingValue = request[entity][entityId][formattedVariableName][period]
       if (formattedVariableName == 'statut_occupation_logement' && existingValue == 'locataire_vide') {
         // expected: one of dispatchSituationLogement or dispatchTypeLogement already updated the value once
         // we allow updates as 'locataire_vide' is kind of a default value for 'locataire'
@@ -531,13 +531,11 @@ export function buildRequest (answers: SurveyAnswers, questions: string[]): Open
 export async function fetchOpenFiscaFranceCalculation (
   request: OpenFiscaCalculationRequest,
 ): Promise<OpenFiscaCalculationResponse> {
-  const config = useRuntimeConfig()
-
   // Standardiser la date de naissance pour optimiser le cache
   standardizeBirthDateForCache(request)
 
   // eslint-disable-next-line no-console
-  console.debug(`Requête à transmettre à ${config.public.apiEndpointOpenFiscaFranceCalculate} :`)
+  console.debug('Requête à transmettre au serveur :')
   // eslint-disable-next-line no-console
   console.debug(request)
 
@@ -550,10 +548,8 @@ export async function fetchOpenFiscaFranceCalculation (
     body: JSON.stringify(request),
   }
 
-  const response = await fetch(
-    config.public.apiEndpointOpenFiscaFranceCalculate,
-    requestSettings,
-  )
+  // Utiliser notre API serveur pour faire la requête
+  const response = await fetch('/api/calculate', requestSettings)
 
   let result = await response.json()
   if (!response.ok) {
