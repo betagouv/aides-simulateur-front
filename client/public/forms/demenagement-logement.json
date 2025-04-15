@@ -11,7 +11,7 @@
       "questions": [
         {
           "id": "statut-professionnel",
-          "title": "Dans quelle situation professionnelle vous trouvez-vous ?",
+          "title": "Dans quelle situation professionnelle êtes-vous ?",
           "description": "Sélectionnez votre situation au moment de votre emménagement (ou au moment où vous ferez votre demande d’aide).",
           "type": "radio",
           "choices": [
@@ -117,8 +117,8 @@
         },
         {
           "id": "situation-logement",
-          "title": "Dans quelle situation locative serez-vous lors de votre emménagement ?",
-          "description": "Sélectionnez votre situation au moment de votre emménagement (ou au moment où vous ferez votre demande d’aide).",
+          "title": "Quelle sera votre situation dans votre futur logement ?",
+          "description": "Choisissez si vous serez locataire, propriétaire, hébergé(e) gratuitement, etc., dans le logement concerné par cette simulation",
           "type": "radio",
           "choices": [
             {
