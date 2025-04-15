@@ -11,8 +11,8 @@
       "questions": [
         {
           "id": "statut-professionnel",
-          "title": "Êtes-vous :",
-          "description": "Sélectionnez votre situation actuelle",
+          "title": "Dans quelle situation professionnelle vous trouvez-vous ?",
+          "description": "Sélectionnez votre situation au moment de votre emménagement (ou au moment où vous ferez votre demande d’aide).",
           "type": "radio",
           "choices": [
             {
