@@ -24,9 +24,9 @@ export default defineNuxtConfig({
     '/contact': { prerender: true },
     '/integrer-nos-simulateurs': { prerender: true },
     '/partenaires': { prerender: true },
+    '/cookies': { prerender: true },
     '/content/accessibilite': { prerender: true },
     '/content/mentions-legales': { prerender: true },
-    '/content/cookies': { prerender: true },
     '/content/cgu': { prerender: true },
     'simulateurs/[simulateur_id]/**': {
       ssr: false,

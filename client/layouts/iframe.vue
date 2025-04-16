@@ -4,7 +4,6 @@
     role="main"
     tabindex="-1"
   >
-    <MatomoOptOut />
     <slot />
   </main>
 </template>

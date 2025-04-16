@@ -1,5 +1,11 @@
 # CHANGELOG
 
+### 1.0.3 [#97](https://github.com/betagouv/aides-simulateur-front/pull/97)
+* Ajout de fonctionnalité
+* Détail : 
+  * Créé une page cookies permettant d'opt-out du tracking matomo dans le cas général
+  * Intègre la checkbox d'opt-out à l'écran d'introduction du formulaire dans le cas de l'affichage via iframe
+
 ### 1.0.2 [#95](https://github.com/betagouv/aides-simulateur-front/pull/95)
 * Configuration
 * Détail : 

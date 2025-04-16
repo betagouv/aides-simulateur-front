@@ -1,3 +1,0 @@
----
-titre: Cookies
----
