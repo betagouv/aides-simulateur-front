@@ -57,6 +57,7 @@ const stringModel = customRef((track, trigger) => {
     :max="question.max"
     :step="question.step"
     :name="question.id"
+    :placeholder="question.placeholder"
     :label="question.title"
     :label-visible="false"
     @keypress="onKeypress"

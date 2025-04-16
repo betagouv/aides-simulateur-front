@@ -22,6 +22,7 @@ declare global {
     id: string
     title: string
     description?: string
+    placeholder?: string
     type: 'radio' | 'checkbox' | 'number' | 'date' | 'combobox' | 'boolean'
     visibleWhen?: string
     notion: {
