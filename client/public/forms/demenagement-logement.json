@@ -154,7 +154,7 @@
         {
           "id": "logement-conventionne",
           "title": "Votre logement est-il conventionné pour les Aides Personnalisées au Logement (APL) ?",
-          "description": "Les logements conventionnés sont des logements collectifs ou des logements individuels qui ont fait l'objet d'une convention avec l'État pour recevoir des aides financières.",
+          "description": "Les logements conventionnés sont des logements individuels ou collectifs qui ont fait l'objet d'une convention avec l'État pour recevoir des aides financières. Les logements sociaux, étudiants ou en résidence CROUS sont généralement conventionnés. Dans le parc privé, ce n’est pas toujours le cas. Si vous n’êtes pas sûr(e), vous pouvez choisir \"Oui\".",
           "type": "boolean",
           "visibleWhen": "situation-logement=locataire",
           "notion": {
