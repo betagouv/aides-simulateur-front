@@ -151,61 +151,8 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
       </div>
 
       <!-- Welcome screen for starting the survey -->
-      <div v-else-if="showWelcomeScreen">
-        <div class="fr-card fr-p-4w">
-          <component
-            :is="surveyH2"
-            class="fr-h4"
-          >
-            Un simulateur en construction
-          </component>
-          <p>
-            <span class="fr-text--bold">Bienvenue !</span>
-            Ce simulateur vous permet d'estimer 5 aides financières pour le logement et le déménagement, en particulier
-            destinées aux étudiants.
-            <DsfrLink
-              to="/aides"
-              target="_blank"
-              label="Consulter la liste des aides couvertes."
-              :icon="{ name: 'ri:arrow-right-line', ssr: true }"
-            />
-          </p>
-          <p>
-            Nous continuons à l'améliorer. Vos retours sont précieux :
-          </p>
-          <ul class="fr-mt-n2w fr-mb-2w">
-            <li>
-              Par mail à l'adresse
-              <DsfrLink
-                to="mailto:aides.simplifiees@numerique.gouv.fr"
-                :icon="{ name: 'ri:mail-line', ssr: true }"
-                label="aides.simplifiees@numerique.gouv.fr"
-              />
-            </li>
-            <li>
-              Via
-              <DsfrLink
-                :icon="{ name: 'ri:external-link-line', ssr: true }"
-                to="https://tally.so/r/w27b9D"
-                target="_blank"
-                label="le questionnaire de satisfaction"
-              />
-            </li>
-          </ul>
-          <p>
-            Merci pour votre aide !
-          </p>
-          <p>
-            En accédant à ce service, vous reconnaissez avoir pris connaissance et accepté les
-            <DsfrLink
-              :icon="{ name: 'ri:external-link-line', ssr: true }"
-              to="/content/cgu"
-              label="Conditions Générales d'Utilisation"
-              target="_blank"
-            />
-          </p>
-        </div>
-
+      <template v-else-if="showWelcomeScreen">
+        <SurveyWelcomeScreen />
         <DsfrButtonGroup
           class="fr-mt-4w"
           inline-layout-when="md"
@@ -220,7 +167,7 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
             },
           ]"
         />
-      </div>
+      </template>
 
       <!-- Results status panel -->
       <div

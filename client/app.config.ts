@@ -30,7 +30,7 @@ export default defineAppConfig({
     homeLink: '/',
     legalLink: '/content/mentions-legales',
     personalDataLink: '/content/donnees-personnelles',
-    cookiesLink: '/content/cookies',
+    cookiesLink: '/cookies',
     a11yComplianceLink: '/content/accessibilite',
     ecosystemLinks: [
       {
