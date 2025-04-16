@@ -89,11 +89,16 @@ onUnmounted(() => {
 // Heading levels based on iframe context
 const { isIframe } = useIframeDisplay()
 const surveyH1 = computed(() => isIframe.value ? 'h1' : 'h2')
-const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
 </script>
 
 <template>
-  <div>
+  <div
+    class="survey"
+    :class="{
+      'survey--iframe': isIframe,
+      'survey--no-iframe': !isIframe,
+    }"
+  >
     <component
       :is="surveyH1"
       class="fr-sr-only"
@@ -111,28 +116,9 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
 
     <template v-else-if="schemaStatus === 'success'">
       <!-- Choice screen for resuming or restarting -->
-      <div v-if="showChoiceScreen">
-        <div class="fr-card fr-p-4w">
-          <component
-            :is="surveyH2"
-            class="fr-h4"
-          >
-            Vous avez déjà commencé une simulation
-          </component>
-          <DsfrBadge
-            class="fr-mt-n1w fr-mb-2w"
-            type="info"
-            :label="`Progression : ${progress}%`"
-          />
-          <p class="fr-text--lg fr-mb-0">
-            Souhaitez-vous reprendre votre simulation ou la recommencer ?
-          </p>
-        </div>
-        <DsfrButtonGroup
-          class="fr-mt-3w"
-          align="right"
-          size="lg"
-          inline-layout-when="md"
+      <template v-if="showChoiceScreen">
+        <SurveyChoiceScreen :progress="progress" />
+        <SurveyNavigation
           :buttons="[
             {
               label: 'Recommencer',
@@ -148,16 +134,12 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
             },
           ]"
         />
-      </div>
+      </template>
 
       <!-- Welcome screen for starting the survey -->
       <template v-else-if="showWelcomeScreen">
         <SurveyWelcomeScreen />
-        <DsfrButtonGroup
-          class="fr-mt-4w"
-          inline-layout-when="md"
-          size="lg"
-          align="right"
+        <SurveyNavigation
           :buttons="[
             {
               label: 'Commencer la simulation',
@@ -180,17 +162,12 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
           size="lg"
         />
         <DsfrBadge
-          v-if="resultsFetchStatus === 'error' || resultsFetchStatus === 'success'"
-          class="survey-fetch-status-badge"
+          v-else-if="resultsFetchStatus === 'success' || resultsFetchStatus === 'error'"
           :type="({
-            // idle: 'info',
-            loading: 'info',
             success: 'success',
             error: 'error',
           }[resultsFetchStatus] as 'info' | 'success' | 'error')"
           :label="{
-            // idle: `progression : ${progress}%`,
-            loading: 'Estimation en cours...',
             success: 'Estimation terminée',
             error: 'Erreur lors de l\'estimation',
           }[resultsFetchStatus]"
@@ -207,6 +184,12 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
 </template>
 
 <style scoped lang="scss">
+.survey {
+  &--iframe {
+    padding-bottom: 4rem; // make sure crisp button is not overlapping our action buttons
+  }
+}
+
 .status-panel {
   display: flex;
   width: 100%;
@@ -215,28 +198,5 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
   justify-content: center;
   gap: 1rem;
   min-height: 10em;
-}
-
-.loading-indicator {
-  color: var(--text-mention-grey);
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: .5rem;
-}
-
-.loading-indicator .fr-icon {
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
 }
 </style>

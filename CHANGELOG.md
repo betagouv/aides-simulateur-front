@@ -1,5 +1,11 @@
 # CHANGELOG
 
+### 1.0.5 [#99](https://github.com/betagouv/aides-simulateur-front/pull/99)
+* Ajout de fonctionnalité
+* Détail : 
+  * Réactive crisp dans l'utilisation via iframe avec un padding pour éviter la superposition
+  * Améliorations UI
+
 ### 1.0.4 [#98](https://github.com/betagouv/aides-simulateur-front/pull/98)
 * Mise à jour de contenu
 * Détail : 

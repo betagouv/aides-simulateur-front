@@ -218,10 +218,7 @@ function handleComplete () {
         :autocomplete-fn="autocompleteFn"
       />
     </div>
-    <DsfrButtonGroup
-      size="lg"
-      inline-layout-when="md"
-      align="right"
+    <SurveyNavigation
       :buttons="([
         {
           label: 'Récapitulatif',
@@ -243,6 +240,7 @@ function handleComplete () {
           onClick: handleNext,
         },
         areAllRequiredQuestionsAnswered && {
+          vIf: isLastQuestion,
           label: 'Terminer',
           iconRight: true,
           icon: { name: 'ri:arrow-right-line', ssr: true },
@@ -259,13 +257,6 @@ function handleComplete () {
 
   .fr-fieldset__element:last-child {
     margin-bottom: 0;
-  }
-}
-
-:deep(.fr-btns-group li) {
-  flex: 1;
-  .fr-btn {
-    width: 100%;
   }
 }
 </style>
