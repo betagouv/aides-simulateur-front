@@ -93,7 +93,13 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
 </script>
 
 <template>
-  <div>
+  <div
+    class="survey"
+    :class="{
+      'survey--iframe': isIframe,
+      'survey--no-iframe': !isIframe,
+    }"
+  >
     <component
       :is="surveyH1"
       class="fr-sr-only"
@@ -207,6 +213,13 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
 </template>
 
 <style scoped lang="scss">
+.survey {
+
+  &--iframe {
+    padding-bottom: 4rem; // make sure crisp button is not overlapping our action buttons
+  }
+}
+
 .status-panel {
   display: flex;
   width: 100%;
@@ -215,28 +228,5 @@ const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
   justify-content: center;
   gap: 1rem;
   min-height: 10em;
-}
-
-.loading-indicator {
-  color: var(--text-mention-grey);
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: .5rem;
-}
-
-.loading-indicator .fr-icon {
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
 }
 </style>
