@@ -1,5 +1,7 @@
 <script lang="ts" setup>
+// Heading levels based on iframe context
 const { isIframe } = useIframeDisplay()
+const surveyH2 = computed(() => isIframe.value ? 'h2' : 'h3')
 </script>
 
 <template>
