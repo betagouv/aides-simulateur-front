@@ -111,7 +111,7 @@
         {
           "id": "code-postal-nouvelle-ville",
           "title": "Dans quelle ville allez-vous résider ?",
-          "description": "Veuillez saisir le nom ou le code postal de la commune dans laquelle vous allez résider. Une fois que vous avez saisi le nom ou le code postal, cliquez sur "Entrée" ou sur l'icône loupe pour confirmer la commune de votre choix parmi la liste qui s'affiche. Nous vous recommandons d'utiliser votre futur code postal.",
+          "description": "Veuillez saisir le nom ou le code postal de la commune dans laquelle vous allez résider. Une fois que vous avez saisi le nom ou le code postal, cliquez sur \"Entrée\" ou sur l'icône loupe pour confirmer la commune de votre choix parmi la liste qui s'affiche. Nous vous recommandons d'utiliser votre futur code postal.",
           "type": "combobox",
           "autocompleteFunction": "getInseeNumber"
         },
@@ -222,7 +222,7 @@
         {
           "id": "type-revenus",
           "title": "Quels sont les types de revenus qui s'appliquent à votre situation ? Plusieurs choix possibles.",
-          "description": "Sélectionnez tous les types de revenus que vous avez perçus au cours des 12 derniers mois. Vous pourrez ensuite saisir les montants.\Si vous n'avez pas fait votre propre déclaration d'impôts et que vous êtes rattaché(e) à vos parents, sélectionnez Ressources des parents.",
+          "description": "Sélectionnez tous les types de revenus que vous avez perçus au cours des 12 derniers mois. Vous pourrez ensuite saisir les montants. Si vous n'avez pas fait votre propre déclaration d'impôts et que vous êtes rattaché(e) à vos parents, sélectionnez Ressources des parents.",
           "type": "checkbox",
           "choices": [
             { "id": "revenus-activite", "title": "Revenus d'activité (salaires, primes)" },
