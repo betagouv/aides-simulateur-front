@@ -111,6 +111,24 @@ export const useSurveysStore = defineStore('surveys', () => {
     return answers.value[simulateurId] || {}
   }
 
+  const getVisibleAnswers = (simulateurId: string): SurveyAnswers => {
+    const currentAnswers = getAnswers(simulateurId)
+    return Object.entries(currentAnswers)
+      .filter(([questionId, answer]) => {
+        const question = findQuestionById(simulateurId, questionId)
+        if (!question) {
+          return false
+        }
+        // Check if the question is visible
+        const isVisible = isQuestionVisible(simulateurId, questionId)
+        return isVisible && answer !== undefined
+      })
+      .reduce((acc, [questionId, answer]) => {
+        acc[questionId] = answer
+        return acc
+      }, {} as SurveyAnswers)
+  }
+
   const hasAnswers = (simulateurId: string): boolean => {
     return Object.keys(getAnswers(simulateurId)).length > 0
   }
@@ -616,6 +634,7 @@ export const useSurveysStore = defineStore('surveys', () => {
     loadSurveySchema,
     hasAnswers,
     getAnswers,
+    getVisibleAnswers,
     getAnswer,
     hasAnswer,
     setAnswer,
