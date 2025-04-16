@@ -11,8 +11,8 @@
       "questions": [
         {
           "id": "statut-professionnel",
-          "title": "Êtes-vous :",
-          "description": "Sélectionnez votre situation actuelle",
+          "title": "Dans quelle situation professionnelle êtes-vous ?",
+          "description": "Sélectionnez votre situation au moment de votre emménagement (ou au moment où vous ferez votre demande d’aide).",
           "type": "radio",
           "choices": [
             {
@@ -111,14 +111,14 @@
         {
           "id": "code-postal-nouvelle-ville",
           "title": "Dans quelle ville allez-vous résider ?",
-          "description": "Veuillez saisir le nom ou le code postal de la commune dans laquelle vous allez résider.",
+          "description": "Veuillez saisir le nom ou le code postal de la commune dans laquelle vous allez résider. Une fois que vous avez saisi le nom ou le code postal, cliquez sur \"Entrée\" ou sur l'icône loupe pour confirmer la commune de votre choix parmi la liste qui s'affiche. Nous vous recommandons d'utiliser votre futur code postal.",
           "type": "combobox",
           "autocompleteFunction": "getInseeNumber"
         },
         {
           "id": "situation-logement",
-          "title": "Serez-vous :",
-          "description": "Sélectionnez votre situation à venir",
+          "title": "Quelle sera votre situation dans votre futur logement ?",
+          "description": "Choisissez si vous serez locataire, propriétaire, hébergé(e) gratuitement, etc., dans le logement concerné par cette simulation",
           "type": "radio",
           "choices": [
             {
@@ -154,7 +154,7 @@
         {
           "id": "logement-conventionne",
           "title": "Votre logement est-il conventionné pour les Aides Personnalisées au Logement (APL) ?",
-          "description": "Les logements conventionnés sont des logements collectifs ou des logements individuels qui ont fait l'objet d'une convention avec l'État pour recevoir des aides financières.",
+          "description": "Les logements conventionnés sont des logements individuels ou collectifs qui ont fait l'objet d'une convention avec l'État pour recevoir des aides financières. Les logements sociaux, étudiants ou en résidence CROUS sont généralement conventionnés. Dans le parc privé, ce n’est pas toujours le cas. Si vous n’êtes pas sûr(e), vous pouvez choisir \"Oui\".",
           "type": "boolean",
           "visibleWhen": "situation-logement=locataire",
           "notion": {
@@ -188,6 +188,7 @@
           "title": "Quel est le montant de votre part du loyer (charges non comprises) ?",
           "description": "Indiquez le montant en euros par mois, sans déduire vos aides au logement si vous en recevez.",
           "type": "number",
+          "placeholder": "Montant en euros",
           "visibleWhen": "situation-logement=locataire"
         },
         {
@@ -199,6 +200,7 @@
           "title": "Quel est le montant des charges locatives ?",
           "description": "Indiquez le montant en euros par mois. Cela peut inclure l'eau froide, le chauffage collectif, l'entretien des parties communes.",
           "type": "number",
+          "placeholder": "Montant en euros",
           "visibleWhen": "situation-logement=locataire"
         },
         {
@@ -221,8 +223,8 @@
       "questions": [
         {
           "id": "type-revenus",
-          "title": "Quels sont les types de revenus qui s'appliquent à votre situation ? (plusieurs choix possibles)",
-          "description": "Sélectionnez tous les types de revenus que vous avez perçus dans les 12 derniers mois. Vous pourrez ensuite saisir les montants.",
+          "title": "Quels sont les types de revenus qui s'appliquent à votre situation ? Plusieurs choix possibles.",
+          "description": "Sélectionnez tous les types de revenus que vous avez perçus au cours des 12 derniers mois. Vous pourrez ensuite saisir les montants. Si vous n'avez pas fait votre propre déclaration d'impôts et que vous êtes rattaché(e) à vos parents, sélectionnez Ressources des parents.",
           "type": "checkbox",
           "choices": [
             { "id": "revenus-activite", "title": "Revenus d'activité (salaires, primes)" },
@@ -241,6 +243,7 @@
             "id": "salaire-imposable",
             "buttonLabel": "En savoir plus"
           },
+          "placeholder": "Montant en euros",
           "type": "number",
           "visibleWhen": "type-revenus.includes('revenus-activite')"
         },
@@ -250,6 +253,7 @@
           "description": "Indiquez le montant total des allocations chômage (Allocation de Retour à l'Emploi (ARE), Allocation de Solidarité Spécifique (ASS)) que vous avez perçues au cours des 12 derniers mois.",
           "type": "number",
           "visibleWhen": "type-revenus.includes('revenus-chomage')",
+          "placeholder": "Montant en euros",
           "notion": {
             "id": "montant-chomage",
             "buttonLabel": "En savoir plus"
@@ -260,6 +264,7 @@
           "title": "Bourses de lycée perçues au cours des 12 derniers mois",
           "description": "Indiquez le montant total des bourses de lycée que vous avez perçues au cours des 12 derniers mois. Indiquez 0 si vous n'en avez pas perçu. Si vous n'avez pas perçu de bourse de lycée, mais une bourse d'enseignement supérieur, veuillez indiquer 0 et passer à la question suivante.",
           "type": "number",
+          "placeholder": "Montant en euros",
           "visibleWhen": "type-revenus.includes('revenus-bourses')"
         },
         {
@@ -268,6 +273,7 @@
           "description": "Indiquez le montant total des bourses d'enseignement supérieur que vous avez perçues au cours des 12 derniers mois. Indiquez 0 si vous n'en avez pas perçu.",
           "type": "number",
           "visibleWhen": "type-revenus.includes('revenus-bourses')",
+          "placeholder": "Montant en euros",
           "notion": {
             "id": "montant-chomage",
             "buttonLabel": "En savoir plus"
@@ -279,6 +285,7 @@
           "description": "Indiquez le dernier chiffre d'affaires annuel déclaré au service des impôts.",
           "type": "number",
           "visibleWhen": "type-revenus.includes('revenus-entreprise')",
+          "placeholder": "Montant en euros",
           "notion": {
             "id": "montant-ca-micro-entreprise",
             "buttonLabel": "En savoir plus"
@@ -286,10 +293,11 @@
         },
         {
           "id": "montant-parents",
-          "title": "Ressources des parents au cours des 12 derniers mois",
-          "description": "Indiquez le montant total des ressources de vos parents au cours des 12 derniers mois, si vous êtes rattaché(e) à leur foyer fiscal et que vous ne déclarez pas vos propres revenus.",
+          "title": "Quel a été le montant total des ressources de vos parents au cours des 12 derniers mois ?",
+          "description": "Indiquez ce montant si vous êtes rattaché(e) à leur foyer fiscal et que vous ne déclarez pas vos propres revenus. En cas de doute, vous pouvez leur demander : ces informations figurent sur leur avis d’imposition.",
           "type": "number",
           "visibleWhen": "type-revenus.includes('revenus-parents')",
+          "placeholder": "Montant en euros",
           "notion": {
             "id": "montant-parents",
             "buttonLabel": "En savoir plus"

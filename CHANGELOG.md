@@ -1,5 +1,10 @@
 # CHANGELOG
 
+### 1.0.4 [#98](https://github.com/betagouv/aides-simulateur-front/pull/98)
+* Mise à jour de contenu
+* Détail : 
+  * Améliorations du contenu du formulaire déménagement-logement
+
 ### 1.0.3 [#97](https://github.com/betagouv/aides-simulateur-front/pull/97)
 * Ajout de fonctionnalité
 * Détail : 
