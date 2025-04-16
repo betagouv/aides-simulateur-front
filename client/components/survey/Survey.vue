@@ -64,8 +64,8 @@ function restartForm () {
 
 // Submit the form for processing
 function handleFormComplete () {
-  const simulateurAnswers = surveysStore.getAnswers(simulateurId.value)
-  submissionStore.submitForm(simulateurId.value, simulateurAnswers)
+  const simulateurVisibleAnswers = surveysStore.getVisibleAnswers(simulateurId.value)
+  submissionStore.submitForm(simulateurId.value, simulateurVisibleAnswers)
     .then((success) => {
       if (success) {
         setTimeout(() => {

@@ -6,7 +6,6 @@ defineProps<{
 
 <template>
   <ul
-    :key="index"
     class="survey-btns fr-btns-group fr-btns-group--lg fr-mt-4w"
     :class="{
       [`survey-btns--length-${buttons.length}`]: true,
