@@ -1,5 +1,10 @@
 # CHANGELOG
 
+### 1.0.2 [#95](https://github.com/betagouv/aides-simulateur-front/pull/95)
+* Configuration
+* Détail : 
+  * Configuration page par page des modes de rendu
+
 ### 1.0.1 [#94](https://github.com/betagouv/aides-simulateur-front/pull/94)
 * Ajouts de fonctionnalité.
 * Détail : 

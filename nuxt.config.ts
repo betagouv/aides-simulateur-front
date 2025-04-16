@@ -2,6 +2,8 @@ import { defineNuxtConfig } from 'nuxt/config'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  devtools: { enabled: !import.meta.test },
+  srcDir: 'client/',
   nitro: {
     preset: 'node-cluster'
   },
@@ -18,27 +20,47 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
+    '/': { prerender: true },
+    '/contact': { prerender: true },
+    '/integrer-nos-simulateurs': { prerender: true },
+    '/partenaires': { prerender: true },
+    '/content/accessibilite': { prerender: true },
+    '/content/mentions-legales': { prerender: true },
+    '/content/cookies': { prerender: true },
+    '/content/cgu': { prerender: true },
+    'simulateurs/[simulateur_id]/**': {
+      ssr: false,
+    },
+    'simulateurs/demenagement-logement': {
+      prerender: true,
+    },
+    'notions/': {
+      prerender: true,
+    },
+    'aides/': {
+      prerender: true,
+    },
+    'simulateurs/': {
+      prerender: true,
+    },
     '/accessibilite': { // mandatory route
       redirect: {
         to: '/content/accessibilite', // content generated route
         statusCode: 308, // Redirect permanently
       },
     },
-    '*': {
-      swr: true,
-    },
   },
 
   runtimeConfig: {
     // Variables serveur privées (accessibles uniquement côté serveur)
-    adminPassword: process.env.ADMIN_PASSWORD || '',
+    adminPassword: import.meta.env.ADMIN_PASSWORD || '',
     matomo: {
-      url: process.env.MATOMO_URL || 'https://stats.beta.gouv.fr/',
-      token: process.env.MATOMO_TOKEN || '',
-      siteId: process.env.MATOMO_SITE_ID || '199',
+      url: import.meta.env.MATOMO_URL || 'https://stats.beta.gouv.fr/',
+      token: import.meta.env.MATOMO_TOKEN || '',
+      siteId: import.meta.env.MATOMO_SITE_ID || '199',
     },
-    leximpactUrl: process.env.LEXIMPACT_URL || 'https://territoires.leximpact.dev',
-    apiEndpointOpenFiscaFranceCalculate: process.env.OPENFISCA_URL || 'https://aides-calculatrice-back.osc-fr1.scalingo.io/calculate',
+    leximpactUrl: import.meta.env.LEXIMPACT_URL || 'https://territoires.leximpact.dev',
+    apiEndpointOpenFiscaFranceCalculate: import.meta.env.OPENFISCA_URL || 'https://aides-calculatrice-back.osc-fr1.scalingo.io/calculate',
 
     public: {
       // apiEndpointOpenFiscaFranceCalculate: 'http://127.0.0.1:5000/calculate',
@@ -85,10 +107,6 @@ export default defineNuxtConfig({
       ],
     },
   },
-
-  devtools: { enabled: false },
-  ssr: true,
-  srcDir: 'client/',
 
   modules: [
     'vue-dsfr-nuxt-module',
