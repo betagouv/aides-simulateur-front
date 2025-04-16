@@ -89,7 +89,7 @@
       "questions": [
         {
           "id": "statut-marital",
-          "title": "Êtes-vous :",
+          "title": "Dans quelle situation maritale êtes-vous ?",
           "description": "Sélectionnez votre situation actuelle",
           "type": "radio",
           "choices": [
