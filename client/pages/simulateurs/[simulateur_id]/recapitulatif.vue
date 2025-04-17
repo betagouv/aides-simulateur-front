@@ -25,7 +25,7 @@ setBreadcrumbs([
 const surveysStore = useSurveysStore()
 surveysStore.loadSurveySchema(simulateurId)
 
-const groupedQuestions = computed(() => surveysStore.getGroupedAnsweredQuestions(simulateurId))
+const groupedQuestions = computed(() => surveysStore.getGroupedPastAnsweredQuestions(simulateurId))
 const currentQuestionId = computed(() => surveysStore.getCurrentQuestionId(simulateurId))
 // const currentStepId = computed(() => surveysStore.getCurrentStepId(simulateurId.value))
 // const progress = computed(() => surveysStore.getProgress(simulateurId.value))
