@@ -185,7 +185,7 @@
         },
         {
           "id": "loyer-montant-mensuel",
-          "title": "Quel est le montant de votre part du loyer (charges non comprises) ?",
+          "title": "Quel sera le montant de votre part du loyer (hors charges) dans votre futur logement ?",
           "description": "Indiquez le montant en euros par mois, sans déduire vos aides au logement si vous en recevez.",
           "type": "number",
           "placeholder": "Montant en euros",
