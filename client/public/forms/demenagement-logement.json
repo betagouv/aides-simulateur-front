@@ -171,7 +171,7 @@
         {
           "id": "logement-parente-proprietaire",
           "title": "Avez-vous un lien de parenté direct avec le propriétaire ?",
-          "description": "Est-il un(e) ascendant(e) ou un(e) descendant(e) de vous ou de votre conjoint(e), par exemple, enfant ou grand-parent ?",
+          "description": "Est-il un(e) ascendant(e) ou un(e) descendant(e) de vous ou de votre conjoint(e), par exemple, parent ou grand-parent ?",
           "type": "boolean",
           "visibleWhen": "situation-logement=locataire"
         },
