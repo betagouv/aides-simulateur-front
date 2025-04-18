@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { useMutationObserver } from '@vueuse/core'
+
 const props = withDefaults(defineProps<{
-  showIntro?: boolean,
+  showIntro?: boolean
 }>(), {
   showIntro: true,
 })
@@ -30,16 +31,17 @@ useMutationObserver(matomoOptOut, (mutations) => {
   }
   ignoreMutation = true // Ignore mutations until the next tick to avoid infinite loop
   mutations.forEach((mutation) => {
-      const input = mutation.target.querySelector('input[type="checkbox"]')
-      const label = mutation.target.querySelector('label')
-      if (input && label) {
-        const wrapper = document.createElement('div')
-        wrapper.className = 'fr-checkbox-group fr-checkbox-group--sm'
-        label.className = 'fr-label'
-        wrapper.appendChild(input)
-        wrapper.appendChild(label)
-        mutation.target.appendChild(wrapper)
-      }
+    const target = mutation.target as HTMLElement
+    const input = target.querySelector('input[type="checkbox"]')
+    const label = target.querySelector('label')
+    if (input && label) {
+      const wrapper = document.createElement('div')
+      wrapper.className = 'fr-checkbox-group fr-checkbox-group--sm'
+      label.className = 'fr-label'
+      wrapper.appendChild(input)
+      wrapper.appendChild(label)
+      mutation.target.appendChild(wrapper)
+    }
   })
   nextTick(() => {
     ignoreMutation = false // Observe mutations again
@@ -48,5 +50,8 @@ useMutationObserver(matomoOptOut, (mutations) => {
 </script>
 
 <template>
-  <div id="matomo-opt-out" ref="matomoOptOut" />
+  <div
+    id="matomo-opt-out"
+    ref="matomoOptOut"
+  />
 </template>

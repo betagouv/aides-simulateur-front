@@ -20,6 +20,12 @@ importers:
       '@iconify-json/ri':
         specifier: ^1.2.5
         version: 1.2.5
+      '@iframe-resizer/child':
+        specifier: ^5.4.5
+        version: 5.4.5
+      '@iframe-resizer/parent':
+        specifier: ^5.4.5
+        version: 5.4.5
       '@nuxt/content':
         specifier: ^3.3.0
         version: 3.4.0(@libsql/client@0.14.0)(magicast@0.3.5)(typescript@5.8.2)
@@ -32,9 +38,9 @@ importers:
       axios:
         specifier: ^1.8.4
         version: 1.8.4
-      iframe-resizer:
-        specifier: ^5.3.3
-        version: 5.3.3
+      crisp-sdk-web:
+        specifier: ^1.0.25
+        version: 1.0.25
       lockfile:
         specifier: ^1.0.4
         version: 1.0.4
@@ -596,17 +602,14 @@ packages:
     peerDependencies:
       vue: '>=3'
 
-  '@iframe-resizer/child@5.3.3':
-    resolution: {integrity: sha512-A+avzzQ6R5AaK0RQ/v0sxrN/S7zeS0U7TE/Jcc2Wln0gpVHpkEMHLOYVBAS2ho8ZA6yhbyZeNoDCh3RMtCp14w==}
+  '@iframe-resizer/child@5.4.5':
+    resolution: {integrity: sha512-VgTq7YkfjHgv3Iqr4+Px3dp2NdBVM4AyS3qpaYGL5vThXCEEKDwq4k/XxxcyiyMrUfEOawQqfKLAfEWh3O9cwg==}
 
-  '@iframe-resizer/core@5.3.3':
-    resolution: {integrity: sha512-DnR8PwoG5Nmv8Xgzop39cIRMeOg3bLsvsApw+LlKqfmN6I8miUAlFXB+vpuYm62l/jWjaQ6r8sTsvBHBof8Esg==}
+  '@iframe-resizer/core@5.4.5':
+    resolution: {integrity: sha512-Z5euppksu94VgJ+kM15eE3H0LDHpYjEq9Hh64HpswL2N3dt9i0ryD4AKAq0AcqJMDAUls4tkRfS9bGd1ZC+t4w==}
 
-  '@iframe-resizer/jquery@5.3.3':
-    resolution: {integrity: sha512-hiqD3RmsQ8vUp1YAOse+juw21zBUO8oo1FxL5AhtQ414/7RDtAAgkwQCX48Fl2j8cfTdoHxGcjDwFbWYYOaDsg==}
-
-  '@iframe-resizer/parent@5.3.3':
-    resolution: {integrity: sha512-iLB3Vf7PbO9RwPAsPz0YZyGNFcqEqG4F2R6xJPLOSvclpgUwuNpkCeF+JtM9K8gYQ8Ox8bxUvEvGLdD0yjak5A==}
+  '@iframe-resizer/parent@5.4.5':
+    resolution: {integrity: sha512-pyukh5DJILIylEiEvWTKdsN2bS9z75QAObkAGXxEbeXEwUvSsHC/CR06W3yW9J3WIYgdven6V4GlEVoAfnK/9g==}
 
   '@ioredis/commands@1.2.0':
     resolution: {integrity: sha512-Sx1pU8EM64o2BrqNpEO1CNLtKQwyhuXuqyfH7oGKCk+1a33d2r5saW8zNwm3j6BTExtjrv2BxTgzzkMwts6vGg==}
@@ -1745,6 +1748,9 @@ packages:
   asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
 
+  auto-console-group@1.2.9:
+    resolution: {integrity: sha512-YGJqZByv1SFIq8viTpKFmI0eNHIoa9hllKP3487VbIN4zjRcsKKoouu2TiQ189oscvwCSKTndfAe6wf6izbSMA==}
+
   autoprefixer@10.4.21:
     resolution: {integrity: sha512-O+A6LWV5LDHSJD3LjHYoNi4VLsj/Whi7k6zG12xTYaU4cQ8oxQGckXNX8cRHK5yOZ/ppVHe0ZBXGzSV9jXdVbQ==}
     engines: {node: ^10 || ^12 || >=14}
@@ -2026,6 +2032,9 @@ packages:
   crc32-stream@6.0.0:
     resolution: {integrity: sha512-piICUB6ei4IlTv1+653yq5+KoqfBYmj9bw6LqXoOneTMDXk5nM1qt12mFW1caG3LlJXEKW1Bp0WggEmIfQB34g==}
     engines: {node: '>= 14'}
+
+  crisp-sdk-web@1.0.25:
+    resolution: {integrity: sha512-CWTHFFeHRV0oqiXoPh/aIAKhFs6xcIM4NenGPnClAMCZUDQgQsF1OWmZWmnVNjJriXUmWRgDfeUxcxygS0dCRA==}
 
   croner@9.0.0:
     resolution: {integrity: sha512-onMB0OkDjkXunhdW9htFjEhqrD54+M94i6ackoUkjHKbRnXdyEyKRelp4nJ1kAz32+s27jP1FsebpJCVl0BsvA==}
@@ -2978,9 +2987,6 @@ packages:
 
   ieee754@1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
-
-  iframe-resizer@5.3.3:
-    resolution: {integrity: sha512-BkLzUECwy7C4rO+HHgH7A9Tmiad/TEwkH5RrPsRBiu5aVxxEAKDB+JYbjAFLrvmMXG3UfJXxza0XKXqVY6b5sQ==}
 
   ignore@5.3.2:
     resolution: {integrity: sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g==}
@@ -5962,17 +5968,18 @@ snapshots:
       '@iconify/types': 2.0.0
       vue: 3.5.13(typescript@5.8.2)
 
-  '@iframe-resizer/child@5.3.3': {}
-
-  '@iframe-resizer/core@5.3.3': {}
-
-  '@iframe-resizer/jquery@5.3.3':
+  '@iframe-resizer/child@5.4.5':
     dependencies:
-      '@iframe-resizer/core': 5.3.3
+      auto-console-group: 1.2.9
 
-  '@iframe-resizer/parent@5.3.3':
+  '@iframe-resizer/core@5.4.5':
     dependencies:
-      '@iframe-resizer/core': 5.3.3
+      auto-console-group: 1.2.9
+
+  '@iframe-resizer/parent@5.4.5':
+    dependencies:
+      '@iframe-resizer/core': 5.4.5
+      auto-console-group: 1.2.9
 
   '@ioredis/commands@1.2.0': {}
 
@@ -7397,6 +7404,8 @@ snapshots:
 
   asynckit@0.4.0: {}
 
+  auto-console-group@1.2.9: {}
+
   autoprefixer@10.4.21(postcss@8.5.3):
     dependencies:
       browserslist: 4.24.4
@@ -7677,6 +7686,8 @@ snapshots:
     dependencies:
       crc-32: 1.2.2
       readable-stream: 4.7.0
+
+  crisp-sdk-web@1.0.25: {}
 
   croner@9.0.0: {}
 
@@ -8797,12 +8808,6 @@ snapshots:
   human-signals@5.0.0: {}
 
   ieee754@1.2.1: {}
-
-  iframe-resizer@5.3.3:
-    dependencies:
-      '@iframe-resizer/child': 5.3.3
-      '@iframe-resizer/jquery': 5.3.3
-      '@iframe-resizer/parent': 5.3.3
 
   ignore@5.3.2: {}
 

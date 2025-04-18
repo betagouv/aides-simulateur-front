@@ -1,4 +1,8 @@
+import { resolve } from 'node:path'
 import { defineNuxtConfig } from 'nuxt/config'
+
+// Use the package version for the iframe integration script
+const IFRAME_SCRIPT_VERSION = '1.0.0'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -16,6 +20,38 @@ export default defineNuxtConfig({
     },
     css: {
       devSourcemap: true
+    },
+  },
+
+  hooks: {
+    'build:before': async () => {
+      // Build the iframe-integration script separately
+      try {
+        const { build } = await import('vite')
+        await build({
+          build: {
+            lib: {
+              entry: resolve(__dirname, 'client/scripts/iframe-integration.js'),
+              name: 'IframeIntegration',
+              fileName: () => `iframe-integration@${IFRAME_SCRIPT_VERSION}.js`,
+              formats: ['umd'],
+            },
+            outDir: resolve(__dirname, 'client/public'),
+            emptyOutDir: false,
+            rollupOptions: {
+              external: [],
+              output: {
+                inlineDynamicImports: true,
+              },
+            },
+            minify: true,
+          },
+        })
+        console.log(`Iframe integration script built successfully (v${IFRAME_SCRIPT_VERSION})`)
+      }
+      catch (error) {
+        console.error('Error building iframe integration script:', error)
+      }
     }
   },
 
@@ -46,6 +82,12 @@ export default defineNuxtConfig({
     '/accessibilite': { // mandatory route
       redirect: {
         to: '/content/accessibilite', // content generated route
+        statusCode: 308, // Redirect permanently
+      },
+    },
+    '/iframe-integration.js': {
+      redirect: {
+        to: `/iframe-integration@${IFRAME_SCRIPT_VERSION}.js`,
         statusCode: 308, // Redirect permanently
       },
     },
