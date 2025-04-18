@@ -1,5 +1,13 @@
 # CHANGELOG
 
+### 1.1.0 [#111](https://github.com/betagouv/aides-simulateur-front/pull/111)
+* Mise à jour de contenu
+* Détail : 
+  * Mise à jour de la fonctionnalité de redimensionnement de l'iframe
+  * Montée de version des dépendances du script de redimensionnement
+  * Modifie les options de réutilisation de l'iframe
+  * Mise à jour de l'affichage du bouton crisp (utilisation d'un bouton customisé)
+
 ### 1.0.7 [#111](https://github.com/betagouv/aides-simulateur-front/pull/111)
 * Mise à jour de contenu
 * Détail : 
