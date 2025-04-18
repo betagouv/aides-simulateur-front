@@ -73,5 +73,15 @@ const noticeMessage = 'Ce site est en cours de développement. Certaines fonctio
     tabindex="-1"
     v-bind="footerProps"
   />
+  <CrispButton class="crisp-button" />
   <SchemeModal />
 </template>
+
+<style scoped lang="scss">
+.crisp-button {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 9999;
+}
+</style>

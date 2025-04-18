@@ -184,12 +184,6 @@ const surveyH1 = computed(() => isIframe.value ? 'h1' : 'h2')
 </template>
 
 <style scoped lang="scss">
-.survey {
-  &--iframe {
-    padding-bottom: 4rem; // make sure crisp button is not overlapping our action buttons
-  }
-}
-
 .status-panel {
   display: flex;
   width: 100%;

@@ -13,18 +13,6 @@ watch(route, () => {
 onMounted(() => {
   backToTop.value?.focus()
 })
-
-useHead({
-  script: [
-    {
-      children: 'window.$crisp=[];window.CRISP_WEBSITE_ID="b50374f8-3b29-4704-8022-7640e7e73fc3";',
-    },
-    {
-      src: 'https://client.crisp.chat/l.js',
-      async: true,
-    }
-  ]
-})
 </script>
 
 <template>
