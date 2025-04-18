@@ -21,7 +21,7 @@
           "choices": [
             {
               "id": "etudiant",
-              "title": "En études ou en alternance"
+              "title": "En études ou en formation (lycée, BTS, université, alternance...)"
             },
             {
               "id": "actif",

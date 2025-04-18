@@ -17,7 +17,7 @@
           "choices": [
             {
               "id": "etudiant",
-              "title": "En études ou en alternance"
+              "title": "En études ou en formation (lycée, BTS, université, alternance...)"
             },
             {
               "id": "actif",
@@ -171,13 +171,13 @@
         {
           "id": "logement-parente-proprietaire",
           "title": "Avez-vous un lien de parenté direct avec le propriétaire ?",
-          "description": "Est-il un(e) ascendant(e) ou un(e) descendant(e) de vous ou de votre conjoint(e), par exemple, enfant ou grand-parent ?",
+          "description": "Est-il un(e) ascendant(e) ou un(e) descendant(e) de vous ou de votre conjoint(e), par exemple, parent ou grand-parent ?",
           "type": "boolean",
           "visibleWhen": "situation-logement=locataire"
         },
         {
           "id": "nombre-personnes-logement",
-          "title": "Combien de personnes habiteront dans le logement (y compris vous-même) ?",
+          "title": "Combien de personnes habiteront dans le logement, y compris vous-même ?",
           "type": "number",
           "min": 1,
           "default": 1,
@@ -185,7 +185,7 @@
         },
         {
           "id": "loyer-montant-mensuel",
-          "title": "Quel est le montant de votre part du loyer (charges non comprises) ?",
+          "title": "Quel sera le montant de votre part du loyer (hors charges) dans votre futur logement ?",
           "description": "Indiquez le montant en euros par mois, sans déduire vos aides au logement si vous en recevez.",
           "type": "number",
           "placeholder": "Montant en euros",
