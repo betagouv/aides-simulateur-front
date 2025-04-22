@@ -1,12 +1,22 @@
+<script setup lang="ts">
+const crispStore = useCrispStore()
+const { isChatOpen } = storeToRefs(crispStore)
+</script>
+
 <template>
   <main
     id="content"
     role="main"
     tabindex="-1"
     class="main-iframe"
+    :class="{
+      'main-iframe--has-chat': isChatOpen,
+    }"
   >
     <slot />
-    <CrispButton class="crisp-button" />
+    <CrispButton
+      class="crisp-button"
+    />
   </main>
 </template>
 
@@ -14,14 +24,16 @@
 #crisp-chatbox>div>div {
   top: 56px !important;
   right: 8px !important;
-  bottom: none !important;
+  bottom: auto !important;
 }
 </style>
 
 <style scoped lang="scss">
 .main-iframe {
-  // min-height: 600px;
   padding: 8px; // make sure focus outline is visible
+  &.main-iframe--has-chat {
+    height: 600px;
+  }
 }
 
 .crisp-button {
