@@ -20,7 +20,7 @@
 
 <style scoped lang="scss">
 .main-iframe {
-  min-height: 600px;
+  // min-height: 600px;
   padding: 8px; // make sure focus outline is visible
 }
 
