@@ -1,5 +1,10 @@
 # CHANGELOG
 
+### 1.1.2 [#114](https://github.com/betagouv/aides-simulateur-front/pull/114)
+* Ajout de fonctionnalité
+* Détail : 
+  * Créé un store pour gerer crisp
+
 ### 1.1.1 [#112](https://github.com/betagouv/aides-simulateur-front/pull/112)
 * Correction de style mineure
 * Détail : 
