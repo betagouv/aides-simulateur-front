@@ -1,6 +1,11 @@
 # CHANGELOG
 
-### 1.1.0 [#111](https://github.com/betagouv/aides-simulateur-front/pull/111)
+### 1.1.1 [#112](https://github.com/betagouv/aides-simulateur-front/pull/112)
+* Correction de style mineure
+* Détail : 
+  * Supprime la hauteur minimale de l'iframe
+
+## 1.1.0 [#111](https://github.com/betagouv/aides-simulateur-front/pull/111)
 * Mise à jour de contenu
 * Détail : 
   * Mise à jour de la fonctionnalité de redimensionnement de l'iframe
