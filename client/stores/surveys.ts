@@ -269,11 +269,13 @@ export const useSurveysStore = defineStore('surveys', () => {
   const getGroupedAnsweredQuestions = (simulateurId: string): QuestionGroup[] => {
     const currentSchema = getSchema(simulateurId)
     const currentAnswers = getAnswers(simulateurId)
+    const currentQuestionId = getCurrentQuestionId(simulateurId)
+
     return currentSchema?.steps.map((step) => {
       const questions = step.questions
         .filter((question) => {
           // Check if the question is answered or is the current question
-          return hasAnswer(simulateurId, question.id) || currentQuestionId.value[simulateurId] === question.id
+          return hasAnswer(simulateurId, question.id) || question.id === currentQuestionId
         })
         .map((question) => {
           const answer = currentAnswers[question.id]
@@ -289,6 +291,49 @@ export const useSurveysStore = defineStore('surveys', () => {
         questions,
       }
     }) ?? []
+  }
+
+  const getQuestionIndex = (simulateurId: string, questionId: string): number => {
+    const questions = getQuestions(simulateurId)
+    const questionIndex = questions
+      .findIndex((question) => {
+        return question.id === questionId
+      })
+    if (questionIndex === -1) {
+      debug.warn(`[Surveys store][${simulateurId}] Question ${questionId} not found in ordered list`)
+      return -1
+    }
+    return questionIndex
+  }
+
+  /**
+   * Like getGroupedAnsweredQuestions but only for questions preceding the current question
+   */
+  const getGroupedPastAnsweredQuestions = (simulateurId: string): QuestionGroup[] => {
+    const currentQuestionIndex = getQuestionIndex(simulateurId, getCurrentQuestionId(simulateurId) ?? '')
+    const groupedAnsweredQuestions = getGroupedAnsweredQuestions(simulateurId)
+    return groupedAnsweredQuestions.map((group) => {
+      const questions = group.questions
+        .filter((question) => {
+          const questionIndex = getQuestionIndex(simulateurId, question.id)
+          return questionIndex !== -1 && questionIndex <= currentQuestionIndex
+        })
+        .map((question) => {
+          return {
+            id: question.id,
+            title: question.title,
+            answer: question.answer,
+            visible: question.visible,
+          }
+        })
+      return {
+        title: group.title,
+        questions,
+      }
+    }
+    ).filter((group) => {
+      return group.questions.length > 0
+    })
   }
 
   const getVisibleQuestions = (simulateurId: string): SurveyQuestion[] => {
@@ -650,6 +695,7 @@ export const useSurveysStore = defineStore('surveys', () => {
     getGroupedQuestions,
     getAnsweredQuestions,
     getGroupedAnsweredQuestions,
+    getGroupedPastAnsweredQuestions,
     isFirstQuestion,
     isLastQuestion,
     resetSurvey,
